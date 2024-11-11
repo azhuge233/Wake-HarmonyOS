@@ -1,0 +1,76 @@
+{
+	"string": [
+		{
+			"name": "module_desc",
+			"value": "模块描述"
+		},
+		{
+			"name": "EntryAbility_desc",
+			"value": "description"
+		},
+		{
+			"name": "EntryAbility_label",
+			"value": "网络唤醒"
+		},
+		{
+			"name": "empty",
+			"value": "空"
+		},
+		{
+			"name": "button_wake_label",
+			"value": "唤醒"
+		},
+		{
+			"name": "button_Add_label",
+			"value": "添加新电脑"
+		},
+		{
+			"name": "button_delete_label",
+			"value": "删除"
+		},
+		{
+			"name": "machine_mac_label",
+			"value": "MAC: %s"
+		},
+		{
+			"name": "machine_alias_label",
+			"value": "%s"
+		},
+		{
+			"name": "machine_id_label",
+			"value": "%s"
+		},
+		{
+			"name": "add_machine_title",
+			"value": "添加新电脑"
+		},
+		{
+			"name": "button_add_machine_confirm",
+			"value": "添加"
+		},
+		{
+			"name": "add_mac_input_label",
+			"value": "MAC"
+		},
+		{
+			"name": "add_mac_input_placeholder",
+			"value": "XX:XX:XX:XX:XX:XX"
+		},
+		{
+			"name": "add_alias_input_label",
+			"value": "名称"
+		},
+		{
+			"name": "add_alias_input_placeholder",
+			"value": "电脑 1"
+		},
+		{
+			"name": "button_back_main_page_label",
+			"value": "返回"
+		},
+		{
+			"name": "title_label",
+			"value": "网络唤醒"
+		}
+	]
+}

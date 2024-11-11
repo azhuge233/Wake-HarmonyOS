@@ -1,0 +1,76 @@
+{
+	"string": [
+		{
+			"name": "module_desc",
+			"value": "module description"
+		},
+		{
+			"name": "EntryAbility_desc",
+			"value": "description"
+		},
+		{
+			"name": "EntryAbility_label",
+			"value": "Wake"
+		},
+		{
+			"name": "empty",
+			"value": "empty"
+		},
+		{
+			"name": "button_wake_label",
+			"value": "Wake"
+		},
+		{
+			"name": "button_Add_label",
+			"value": "Add New Computer"
+		},
+		{
+			"name": "button_delete_label",
+			"value": "Delete"
+		},
+		{
+			"name": "machine_mac_label",
+			"value": "MAC: %s"
+		},
+		{
+			"name": "machine_alias_label",
+			"value": "%s"
+		},
+		{
+			"name": "machine_id_label",
+			"value": "%s"
+		},
+		{
+			"name": "add_machine_title",
+			"value": "Add new PC"
+		},
+		{
+			"name": "button_add_machine_confirm",
+			"value": "Add"
+		},
+		{
+			"name": "add_mac_input_label",
+			"value": "MAC"
+		},
+		{
+			"name": "add_mac_input_placeholder",
+			"value": "XX:XX:XX:XX:XX:XX"
+		},
+		{
+			"name": "add_alias_input_label",
+			"value": "Alias"
+		},
+		{
+			"name": "add_alias_input_placeholder",
+			"value": "PC 1"
+		},
+		{
+			"name": "button_back_main_page_label",
+			"value": "Back"
+		},
+		{
+			"name": "title_label",
+			"value": "Wake"
+		}
+	]
+}
