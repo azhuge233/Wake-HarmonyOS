@@ -107,6 +107,22 @@
 		{
 			"name": "unkown_error",
 			"value": "未知错误"
+		},
+		{
+			"name": "input_cannot_be_null_or_empty",
+			"value": "输入不能为空！"
+		},
+		{
+			"name": "validate_mac_too_short",
+			"value": "MAC 地址长度错误！"
+		},
+		{
+			"name": "validate_mac_regex_fail",
+			"value": "MAC 地址不合法！地址应只包含字符 ':'、'-'、数字以及字母 A 到 F"
+		},
+		{
+			"name": "add_machine_success",
+			"value": "成功添加电脑：%s"
 		}
 	]
 }

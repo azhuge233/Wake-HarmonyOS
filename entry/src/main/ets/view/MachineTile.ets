@@ -14,6 +14,12 @@ export default struct MachineTile {
 
     private LOG_TAG = "[view/MachineTile]";
 
+    alert(message: Resource) {
+        promptAction.showToast({
+            message: message
+        });
+    }
+
     sendMagicPacket(): void {
         if(NET.HAS_BROADCAST_IP) {
             const packet = NET.buildMagicPacket(this.machineMACAddr);
@@ -22,23 +28,17 @@ export default struct MachineTile {
                 if (err) {
                     Logger.error(this.LOG_TAG,
                         `Send magic packet Error. Code: ${err.code}, message: ${err.message}`);
-                    promptAction.showToast({
-                        message: $r("app.string.send_magic_packet_failed", err.code)
-                    });
+                    this.alert($r("app.string.send_magic_packet_failed", err.code));
                     return;
                 }
 
                 Logger.debug(this.LOG_TAG, 'Send magic packet OK!');
-                promptAction.showToast({
-                    message: $r("app.string.send_magic_packet_success")
-                });
+                this.alert($r("app.string.send_magic_packet_success"));
             })
             return;
         } else {
             Logger.debug(this.LOG_TAG, "No broadcast IP, abort.");
-            promptAction.showToast({
-                message: $r("app.string.no_broadcast_ip")
-            });
+            this.alert($r("app.string.no_broadcast_ip"));
             return;
         }
     }

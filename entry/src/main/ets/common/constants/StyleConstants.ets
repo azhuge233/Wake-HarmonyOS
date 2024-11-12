@@ -1,6 +1,7 @@
 class StyleConstants {
     FULL_PERCENT = '100%';
     NINETY_PERCENT = '90%';
+    EIGHTY_FIVE_PERCENT = '85%';
     EIGHTY_PERCENT = '80%';
     SEVENTY_PERCENT = '70%';
     SIXTY_PERCENT = '60%';
@@ -12,6 +13,10 @@ class StyleConstants {
     FIVE_PERCENT = '5%';
 
     MARGIN_TEN_PERCENT = '10%';
+    MARGIN_NINE_PERCENT = '9%';
+    MARGIN_EIGHT_PERCENT = '8%';
+    MARGIN_SEVEN_PERCENT = '7%';
+    MARGIN_SIX_PERCENT = '6%';
     MARGIN_FIVE_PERCENT = '5%';
     MARGIN_FOUR_PERCENT = '4%';
     MARGIN_THREE_PERCENT = '3%';
@@ -19,10 +24,18 @@ class StyleConstants {
     MARGIN_ONE_PERCENT = '1%';
 
     TEXT_INPUT_MAX_LINE = 1;
+    TEXT_INPUT_DEFAULT_MAX_LENGTH = 30;
+    TEXT_INPUT_MAC_MAX_LENGTH = 17;
+    TEXT_INPUT_ALIAS_MAX_LENGTH = 30;
 
     BANNER_MAX_LINE = 1;
     BANNER_FONT_SIZE = 15;
     BANNER_FONT_WEIGHT = 5;
+
+    TOAST_BOTTOM_SPACE = '30vp';
+
+    DELETE_BUTTON_WIDTH = 40;
+    DELETE_BUTTON_HEIGHT = 40;
 }
 
 export default new StyleConstants();

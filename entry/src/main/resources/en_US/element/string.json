@@ -107,6 +107,22 @@
 		{
 			"name": "unkown_error",
 			"value": "Unkown error"
+		},
+		{
+			"name": "input_cannot_be_null_or_empty",
+			"value": "Input cannot be null or empty!"
+		},
+		{
+			"name": "validate_mac_too_short",
+			"value": "MAC address too short!"
+		},
+		{
+			"name": "validate_mac_regex_fail",
+			"value": "Invalid MAC address! Address should only contains ':', '-', numbers and character A to F."
+		},
+		{
+			"name": "add_machine_success",
+			"value": "Successfully added machine: %s"
 		}
 	]
 }

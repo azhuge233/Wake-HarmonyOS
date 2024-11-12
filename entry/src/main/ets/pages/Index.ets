@@ -7,6 +7,7 @@ import Logger from '../common/utils/Logger';
 import DB from '../common/utils/DB';
 import NET from '../common/utils/NET';
 import IPBanner from '../view/IPBanner';
+import StyleConstants from '../common/constants/StyleConstants';
 
 @Entry
 @Component
@@ -48,13 +49,13 @@ struct Index {
             Button() {
                 Image("./media/icon/trash.png")
                     .objectFit(ImageFit.Cover)
-                    .width('60%')
-                    .height('60%')
+                    .width(StyleConstants.SIXTY_PERCENT)
+                    .height(StyleConstants.SIXTY_PERCENT)
             }
             .backgroundColor($r("app.color.red"))
             .type(ButtonType.Circle)
-            .width(40)
-            .height(40)
+            .width(StyleConstants.DELETE_BUTTON_WIDTH)
+            .height(StyleConstants.DELETE_BUTTON_HEIGHT)
             .onClick(() => {
                 DB.deleteMachineByID(id).then(() => {
                     this.machines.splice(index, 1)
@@ -62,7 +63,7 @@ struct Index {
             })
         }
         .margin({
-            left: '7%'
+            left: StyleConstants.MARGIN_TEN_PERCENT
         })
     }
 
@@ -85,22 +86,21 @@ struct Index {
                         }
                     })
                     .margin({
-                        top: '2%',
-                        left: '0%',
-                        right: '5%',
-                        bottom: '2%'
+                        top: StyleConstants.MARGIN_TWO_PERCENT,
+                        right: StyleConstants.MARGIN_FIVE_PERCENT,
+                        bottom: StyleConstants.MARGIN_TWO_PERCENT
                     })
                 })
             }
             .listDirection(Axis.Vertical)
             .alignSelf(ItemAlign.Start)
-            .height('88%')
-            .width('100%')
+            .height(StyleConstants.EIGHTY_FIVE_PERCENT)
+            .width(StyleConstants.FULL_PERCENT)
 
             Button($r("app.string.button_Add_label"))
-                .width('80%')
+                .width(StyleConstants.EIGHTY_PERCENT)
                 .margin({
-                    top: '5%'
+                    top: StyleConstants.MARGIN_EIGHT_PERCENT
                 })
                 .onClick(() => {
                     router.pushUrl({
@@ -108,7 +108,7 @@ struct Index {
                     })
                 })
         }
-        .size({ width: '100%', height: '100%' })
+        .size({ width: StyleConstants.FULL_PERCENT, height: StyleConstants.FULL_PERCENT })
         .titleMode(NavigationTitleMode.Full)
         .title($r("app.string.title_label"))
         .menus([
