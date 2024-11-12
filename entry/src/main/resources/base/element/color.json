@@ -9,12 +9,32 @@
 			"value": "#FFFFFF"
 		},
 		{
+			"name": "darker_grey",
+			"value": "#999999"
+		},
+		{
 			"name": "grey",
 			"value": "#CCCCCC"
 		},
 		{
+			"name": "lighter_black",
+			"value": "#111111"
+		},
+		{
 			"name": "black",
 			"value": "#000000"
+		},
+		{
+			"name": "red",
+			"value": "#FF0000"
+		},
+		{
+			"name": "eva01_purple",
+			"value": "#936dc0"
+		},
+		{
+			"name": "eva01_green",
+			"value": "#a7ff60"
 		},
 		{
 			"name": "main_background_color",

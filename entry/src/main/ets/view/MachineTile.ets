@@ -2,12 +2,12 @@ import NET from "../common/utils/NET";
 import { promptAction } from "@kit.ArkUI";
 import Logger from "../common/utils/Logger";
 import { BusinessError } from "@kit.BasicServicesKit";
+import StyleConstants from "../common/constants/StyleConstants";
 
 @Component
 export default struct MachineTile {
     machineMAC: Resource = $r("app.string.empty");
     machineAlias: Resource = $r("app.string.empty");
-
     textButtonWake: Resource = $r("app.string.button_wake_label");
 
     machineMACAddr: string = '';
@@ -46,28 +46,24 @@ export default struct MachineTile {
     build() {
         Row() {
             Column() {
-                Row() {
-                    Text(this.machineAlias)
-                        .fontColor('#111111')
-                        .align(Alignment.Top)
-                        .textAlign(TextAlign.Start)
-                }
-                Row() {
-                    Text(this.machineMAC)
-                        .fontColor('#888888')
-                }
+                Text(this.machineAlias)
+                    .fontColor($r("app.color.lighter_black"))
+                    .align(Alignment.Top)
+                    .textAlign(TextAlign.Start)
+                Text(this.machineMAC)
+                    .fontColor($r("app.color.darker_grey"))
             }
-            .width('80%')
+            .width(StyleConstants.EIGHTY_PERCENT)
 
             Column() {
                 Button(this.textButtonWake)
-                    .backgroundColor('#936dc0')
-                    .foregroundColor('#a7ff60')
+                    .backgroundColor($r("app.color.eva01_purple"))
+                    .foregroundColor($r("app.color.eva01_green"))
                     .onClick(() => {
                         this.sendMagicPacket();
                     })
             }
-            .width('20%')
+            .width(StyleConstants.TWENTY_PERCENT)
         }
     }
 }

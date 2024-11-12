@@ -1,28 +1,28 @@
 class StyleConstants {
     FULL_PERCENT = '100%';
-    HALF_PERCENT = '50%';
+    NINETY_PERCENT = '90%';
     EIGHTY_PERCENT = '80%';
+    SEVENTY_PERCENT = '70%';
+    SIXTY_PERCENT = '60%';
+    HALF_PERCENT = '50%';
+    FORTY_PERCENT = '40%';
+    THIRTY_PERCENT = '30%';
     TWENTY_PERCENT = '20%';
+    TEN_PERCENT = '10%';
+    FIVE_PERCENT = '5%';
 
-    FONT_SIZE = 20;
-    FONT_WEIGHT = 500;
+    MARGIN_TEN_PERCENT = '10%';
+    MARGIN_FIVE_PERCENT = '5%';
+    MARGIN_FOUR_PERCENT = '4%';
+    MARGIN_THREE_PERCENT = '3%';
+    MARGIN_TWO_PERCENT = '2%';
+    MARGIN_ONE_PERCENT = '1%';
 
-    TEXT_FONT_SIZE = 25;
-    TEXT_HEIGHT = '24vp';
-    TEXT_INPUT_HEIGHT = '7%';
-    TEXT_INPUT_WIDTH = '93%';
-    TEXT_MARGIN_BOTTOM = '3%';
-    TEXT_MARGIN_LEFT = '10%';
+    TEXT_INPUT_MAX_LINE = 1;
 
-    LETTER_SPACING = '1.58';
-
-    MARGIN_TOP = '12%';
-    MARGIN_BOTTOM_SMALL = '6%';
-    MARGIN_BOTTOM_BIG = '250vp';
-
-    BUTTON_HEIGHT = '6%';
-    BUTTON_WIDTH = '87%';
-    BUTTON_MARGIN_BOTTOM = '24vp';
+    BANNER_MAX_LINE = 1;
+    BANNER_FONT_SIZE = 15;
+    BANNER_FONT_WEIGHT = 5;
 }
 
 export default new StyleConstants();
