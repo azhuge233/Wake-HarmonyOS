@@ -71,6 +71,42 @@
 		{
 			"name": "title_label",
 			"value": "网络唤醒"
+		},
+      {
+        "name": "current_broadcast_ip",
+        "value": "当前广播地址："
+      },
+		{
+			"name": "network_permission_reason",
+			"value": "需要网络权限来获取网络信息并发送魔法包"
+		},
+		{
+			"name": "help_info",
+			"value": "- 本应用只支持魔法数据包网络唤醒\n- 点击刷新按钮（右上角内部有 Wi-Fi 标志的圆箭头）可以刷新广播地址，广播地址根据当前设备的 Wi-Fi IP 地址和子网掩码计算\n\n网络唤醒/魔法包：<a href=\"https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E5%94%A4%E9%86%92\" />\n广播地址：https://baike.baidu.com/item/%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80"
+		},
+		{
+			"name": "button_confirm_label",
+			"value": "确认"
+		},
+		{
+			"name": "help_title",
+			"value": "帮助"
+		},
+		{
+			"name": "send_magic_packet_failed",
+			"value": "数据包发送失败，错误码：%s"
+		},
+		{
+			"name": "no_broadcast_ip",
+			"value": "无广播地址！"
+		},
+		{
+			"name": "send_magic_packet_success",
+			"value": "数据包发送成功！"
+		},
+		{
+			"name": "unkown_error",
+			"value": "未知错误"
 		}
 	]
 }

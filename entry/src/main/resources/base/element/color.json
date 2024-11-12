@@ -9,6 +9,14 @@
 			"value": "#FFFFFF"
 		},
 		{
+			"name": "grey",
+			"value": "#CCCCCC"
+		},
+		{
+			"name": "black",
+			"value": "#000000"
+		},
+		{
 			"name": "main_background_color",
 			"value": "#F1F3F5"
 		},

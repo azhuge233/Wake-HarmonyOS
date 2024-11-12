@@ -1,55 +1,55 @@
 {
-	"app": {
-		"signingConfigs": [
-			{
-				"name": "default",
-				"type": "HarmonyOS",
-				"material": {
-					"certpath": "C:\\Users\\40488\\.ohos\\config\\default_Wake_kYXKBZEIARKWKRCe1rL4RyGoo5Onll1koJtceJ5i5co=.cer",
-					"storePassword": "0000001B6FD8DAE7DB7A6DF36239CCFDA05AAC6B20C67B98C4E9ADB16BA78F20455EC9619DCC4E939999E3",
-					"keyAlias": "debugKey",
-					"keyPassword": "0000001B42B6CA0692AE7E666090E4F97400DF890103AE3F0E4C90E08BACA32E1E3D407BDB51713714751E",
-					"profile": "C:\\Users\\40488\\.ohos\\config\\default_Wake_kYXKBZEIARKWKRCe1rL4RyGoo5Onll1koJtceJ5i5co=.p7b",
-					"signAlg": "SHA256withECDSA",
-					"storeFile": "C:\\Users\\40488\\.ohos\\config\\default_Wake_kYXKBZEIARKWKRCe1rL4RyGoo5Onll1koJtceJ5i5co=.p12"
-				}
-			}
-		],
-		"products": [
-			{
-				"name": "default",
-				"signingConfig": "default",
-				"compatibleSdkVersion": "5.0.0(12)",
-				"runtimeOS": "HarmonyOS",
-				"buildOption": {
-					"strictMode": {
-						"caseSensitiveCheck": true,
-						"useNormalizedOHMUrl": true
-					}
-				}
-			}
-		],
-		"buildModeSet": [
-			{
-				"name": "debug",
-			},
-			{
-				"name": "release"
-			}
-		]
-	},
-	"modules": [
-		{
-			"name": "entry",
-			"srcPath": "./entry",
-			"targets": [
-				{
-					"name": "default",
-					"applyToProducts": [
-						"default"
-					]
-				}
-			]
-		}
-	]
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.cer",
+          "storePassword": "0000001AAD1B091E3722B7A4F6B92E4994F23BC34BE3EB518082F4A776C82EBD5920FECCFC804283971B",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001A6AB230B23D63AB008DD1CE29A1E59FD431840A5E0A4862C9E1F3B5F567ECAA3406A97B66C392",
+          "profile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
 }

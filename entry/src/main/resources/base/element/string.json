@@ -71,6 +71,42 @@
 		{
 			"name": "title_label",
 			"value": "Wake"
+		},
+		{
+			"name": "current_broadcast_ip",
+			"value": "Current broadcast IP: "
+		},
+		{
+			"name": "network_permission_reason",
+			"value": "Needs network permission to get network information and send magic packet"
+		},
+		{
+			"name": "help_info",
+			"value": "- This application only support magic packet Wake-on-LAN.\n- Click refresh button (the circle arrow with Wi-Fi symbol in it on the right upper corner) can refresh current broadcast address, which is calculated by this device's Wi-Fi IP address and netmask.\n\nAbout Wake-on-LAN/Magic Packet: https://en.wikipedia.org/wiki/Wake-on-LAN\nBroadcast Address: https://en.wikipedia.org/wiki/Broadcast_address"
+		},
+		{
+			"name": "button_confirm_label",
+			"value": "Confirm"
+		},
+		{
+			"name": "help_title",
+			"value": "Help"
+		},
+		{
+			"name": "send_magic_packet_failed",
+			"value": "Send magic packet failed!, error code: %s"
+		},
+		{
+			"name": "no_broadcast_ip",
+			"value": "No broadcast IP!"
+		},
+		{
+			"name": "send_magic_packet_success",
+			"value": "Send magic packet success!"
+		},
+		{
+			"name": "unkown_error",
+			"value": "Unkown error"
 		}
 	]
 }

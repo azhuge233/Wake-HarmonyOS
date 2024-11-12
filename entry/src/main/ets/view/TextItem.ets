@@ -1,5 +1,3 @@
-import Machine from "../model/Machine"
-
 @Component
 export default struct TextItem {
     @Link text: string;
