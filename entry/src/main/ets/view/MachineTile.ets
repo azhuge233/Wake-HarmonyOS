@@ -47,7 +47,7 @@ export default struct MachineTile {
         Row() {
             Column() {
                 Text(this.machineAlias)
-                    .fontColor($r("app.color.lighter_black"))
+                    //.fontColor($r("app.color.lighter_black"))
                     .align(Alignment.Top)
                     .textAlign(TextAlign.Start)
                 Text(this.machineMAC)
@@ -57,13 +57,13 @@ export default struct MachineTile {
 
             Column() {
                 Button(this.textButtonWake)
-                    .backgroundColor($r("app.color.eva01_purple"))
-                    .foregroundColor($r("app.color.eva01_green"))
                     .onClick(() => {
                         this.sendMagicPacket();
                     })
             }
             .width(StyleConstants.TWENTY_PERCENT)
         }
+        .alignItems(VerticalAlign.Center)
+        .justifyContent(FlexAlign.Center)
     }
 }

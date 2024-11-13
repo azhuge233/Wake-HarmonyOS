@@ -6,7 +6,7 @@
 		},
 		{
 			"name": "EntryAbility_desc",
-			"value": "description"
+			"value": "Wake LAN computer using magic packet"
 		},
 		{
 			"name": "EntryAbility_label",
@@ -82,7 +82,7 @@
 		},
 		{
 			"name": "help_info",
-			"value": "- This application only support magic packet Wake-on-LAN.\n- Click refresh button (the circle arrow with Wi-Fi symbol in it on the right upper corner) can refresh current broadcast address, which is calculated by this device's Wi-Fi IP address and netmask.\n\nAbout Wake-on-LAN/Magic Packet: https://en.wikipedia.org/wiki/Wake-on-LAN\nBroadcast Address: https://en.wikipedia.org/wiki/Broadcast_address"
+			"value": "- This application only support magic packet Wake-on-LAN.\n- Click refresh button (the circle arrow with Wi-Fi symbol in it on the right upper corner) can refresh current broadcast address, which is calculated by this device's Wi-Fi IP address and netmask."
 		},
 		{
 			"name": "button_confirm_label",
@@ -110,7 +110,7 @@
 		},
 		{
 			"name": "input_cannot_be_null_or_empty",
-			"value": "Input cannot be null or empty!"
+			"value": "Input cannot be empty!"
 		},
 		{
 			"name": "validate_mac_too_short",
@@ -123,6 +123,10 @@
 		{
 			"name": "add_machine_success",
 			"value": "Successfully added machine: %s"
+		},
+		{
+			"name": "network_refreshed",
+			"value": "Network refreshed!"
 		}
 	]
 }

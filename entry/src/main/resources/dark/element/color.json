@@ -1,0 +1,48 @@
+{
+	"color": [
+		{
+			"name": "start_window_background",
+			"value": "#FFFFFF"
+		},
+		{
+			"name": "white",
+			"value": "#FFFFFF"
+		},
+		{
+			"name": "darker_grey",
+			"value": "#777777"
+		},
+		{
+			"name": "grey",
+			"value": "#555555"
+		},
+		{
+			"name": "lighter_black",
+			"value": "#111111"
+		},
+		{
+			"name": "black",
+			"value": "#FFFFFF"
+		},
+		{
+			"name": "red",
+			"value": "#FF0000"
+		},
+		{
+			"name": "main_background_color",
+			"value": "#000000"
+		},
+		{
+			"name": "button_background_color",
+			"value": "#007DFF"
+		},
+		{
+			"name": "text_font_color",
+			"value": "#FFFFFF"
+		},
+		{
+			"name": "placeholder_color",
+			"value": "#BDC1C4"
+		}
+	]
+}

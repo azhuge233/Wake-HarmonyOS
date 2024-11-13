@@ -14,7 +14,10 @@ import StyleConstants from '../common/constants/StyleConstants';
 struct Index {
     @State machines: Array<Machine> = [];
     @State ipBannerText: string = '';
+
     private LOG_TAG = '[pages/Index]';
+
+    private scrollerForList: ListScroller = new ListScroller();
 
     refreshIPBanner() {
         NET.refreshCurrentNetwork();
@@ -41,6 +44,7 @@ struct Index {
     }
 
     onPageHide(): void {
+        this.scrollerForList.closeAllSwipeActions();
         this.refreshIPBanner();
     }
 
@@ -69,46 +73,52 @@ struct Index {
 
     build() {
         Navigation() {
-            IPBanner({ ipBannerText: $ipBannerText })
+            Column() {
+                IPBanner({ ipBannerText: $ipBannerText })
 
-            List() {
-                ForEach(this.machines, (machine: Machine, index) => {
-                    ListItem() {
-                        MachineTile({
-                            machineMAC: $r("app.string.machine_mac_label", machine.MAC),
-                            machineAlias: $r("app.string.machine_alias_label", machine.Alias),
-                            machineMACAddr: machine.MAC
-                        })
-                    }
-                    .swipeAction({
-                        end: {
-                            builder: () => { this.DeleteButton(machine.ID, index); }
+                List({ scroller: this.scrollerForList }) {
+                    ForEach(this.machines, (machine: Machine, index) => {
+                        ListItem() {
+                            MachineTile({
+                                machineMAC: $r("app.string.machine_mac_label", machine.MAC),
+                                machineAlias: $r("app.string.machine_alias_label", machine.Alias),
+                                machineMACAddr: machine.MAC
+                            })
                         }
+                        .swipeAction({
+                            end: {
+                                builder: () => {
+                                    this.DeleteButton(machine.ID, index);
+                                }
+                            }
+                        })
+                        .margin({
+                            top: StyleConstants.MARGIN_TWO_PERCENT,
+                            left: StyleConstants.MARGIN_ONE_PERCENT,
+                            right: StyleConstants.MARGIN_THREE_PERCENT,
+                            bottom: StyleConstants.MARGIN_TWO_PERCENT
+                        })
                     })
-                    .margin({
-                        top: StyleConstants.MARGIN_TWO_PERCENT,
-                        right: StyleConstants.MARGIN_FIVE_PERCENT,
-                        bottom: StyleConstants.MARGIN_TWO_PERCENT
-                    })
-                })
-            }
-            .listDirection(Axis.Vertical)
-            .alignSelf(ItemAlign.Start)
-            .height(StyleConstants.EIGHTY_FIVE_PERCENT)
-            .width(StyleConstants.FULL_PERCENT)
+                }
+                .listDirection(Axis.Vertical)
+                .alignSelf(ItemAlign.Start)
+                .height(StyleConstants.EIGHTY_FIVE_PERCENT)
+                .width(StyleConstants.FULL_PERCENT)
 
-            Button($r("app.string.button_Add_label"))
-                .width(StyleConstants.EIGHTY_PERCENT)
-                .margin({
-                    top: StyleConstants.MARGIN_EIGHT_PERCENT
-                })
-                .onClick(() => {
-                    router.pushUrl({
-                        url: "pages/AddMachine"
+                Button($r("app.string.button_Add_label"))
+                    .width(StyleConstants.EIGHTY_PERCENT)
+                    .margin({
+                        top: StyleConstants.MARGIN_FIVE_PERCENT
                     })
-                })
+                    .onClick(() => {
+                        router.pushUrl({
+                            url: "pages/AddMachine"
+                        })
+                    })
+            }
+            .alignItems(HorizontalAlign.Center)
+            .justifyContent(FlexAlign.SpaceBetween)
         }
-        .size({ width: StyleConstants.FULL_PERCENT, height: StyleConstants.FULL_PERCENT })
         .titleMode(NavigationTitleMode.Full)
         .title($r("app.string.title_label"))
         .menus([
@@ -117,6 +127,9 @@ struct Index {
                 icon: "./media/icon/network_refresh.png",
                 action: () => {
                     this.refreshIPBanner();
+                    promptAction.showToast({
+                        message: $r("app.string.network_refreshed")
+                    })
                 }
             },
             {

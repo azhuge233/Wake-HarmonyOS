@@ -13,6 +13,8 @@ export default struct TextItem {
     placeholderResource: Resource = $r("app.string.empty");
 
     inputType: INPUT_TYPE = INPUT_TYPE.NONE;
+    inputId: string = '';
+    isDefaultFocus: boolean = false;
 
     private maxLength: number = StyleConstants.TEXT_INPUT_DEFAULT_MAX_LENGTH;
 
@@ -26,13 +28,15 @@ export default struct TextItem {
             Text(this.textResource)
                 .margin({
                     right: StyleConstants.MARGIN_FIVE_PERCENT,
-                    bottom: StyleConstants.MARGIN_SEVEN_PERCENT
+                    bottom: StyleConstants.MARGIN_SIX_PERCENT
                 })
 
             TextInput({
                 placeholder: this.placeholderResource,
                 text: this.text
             })
+                .id(this.inputId)
+                .defaultFocus(this.isDefaultFocus)
                 .width(StyleConstants.EIGHTY_PERCENT)
                 .placeholderColor($r("app.color.grey"))
                 .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
@@ -46,6 +50,7 @@ export default struct TextItem {
                 })
         }
         .alignItems(VerticalAlign.Center)
+        .justifyContent(FlexAlign.SpaceEvenly)
         .margin({
             top: StyleConstants.MARGIN_TWO_PERCENT,
             bottom: StyleConstants.MARGIN_TWO_PERCENT

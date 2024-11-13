@@ -6,7 +6,7 @@
 		},
 		{
 			"name": "EntryAbility_desc",
-			"value": "description"
+			"value": "使用魔法数据包唤醒内网电脑"
 		},
 		{
 			"name": "EntryAbility_label",
@@ -82,7 +82,7 @@
 		},
 		{
 			"name": "help_info",
-			"value": "- 本应用只支持魔法数据包网络唤醒\n- 点击刷新按钮（右上角内部有 Wi-Fi 标志的圆箭头）可以刷新广播地址，广播地址根据当前设备的 Wi-Fi IP 地址和子网掩码计算\n\n网络唤醒/魔法包：<a href=\"https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E5%94%A4%E9%86%92\" />\n广播地址：https://baike.baidu.com/item/%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80"
+			"value": "- 本应用只支持魔法数据包网络唤醒\n- 点击刷新按钮（右上角内部有 Wi-Fi 标志的圆箭头）可以刷新广播地址，广播地址根据当前设备的 Wi-Fi IP 地址和子网掩码计算"
 		},
 		{
 			"name": "button_confirm_label",
@@ -110,7 +110,7 @@
 		},
 		{
 			"name": "input_cannot_be_null_or_empty",
-			"value": "输入不能为空！"
+          "value": "输入不能为空！"
 		},
 		{
 			"name": "validate_mac_too_short",
@@ -123,6 +123,10 @@
 		{
 			"name": "add_machine_success",
 			"value": "成功添加电脑：%s"
-		}
-	]
+		},
+      {
+        "name": "network_refreshed",
+		  "value": "网络已刷新！"
+      }
+    ]
 }
