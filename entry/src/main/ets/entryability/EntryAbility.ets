@@ -1,6 +1,6 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
-import { window, KeyboardAvoidMode } from '@kit.ArkUI';
+import { window } from '@kit.ArkUI';
 import DB from '../common/utils/DB';
 import NET from '../common/utils/NET';
 

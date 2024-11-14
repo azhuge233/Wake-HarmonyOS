@@ -33,12 +33,10 @@ class NET {
             this.CURRENT_IP = this.getIpAddrFromNum(this.CURRENT_IP_NUM);
             this.CURRENT_NET_MASK = this.getIpAddrFromNum(this.CURRENT_NET_MASK_NUM);
 
-            // Logger.debug(this.LOG_TAG, `Get device network - IP(number): ${this.CURRENT_IP_NUM}, MASK(Number): ${this.CURRENT_NET_MASK_NUM}`);
             Logger.debug(this.LOG_TAG, `Get device network - IP: ${this.CURRENT_IP}, MASK: ${this.CURRENT_NET_MASK}`);
 
             this.calcBroadcastIP();
 
-            // Logger.debug(this.LOG_TAG, `Broadcast IP(Number): ${this.BROADCAST_IP_NUM}`)
             Logger.debug(this.LOG_TAG, `Broadcast IP: ${this.BROADCAST_IP}`)
 
             this.HAS_BROADCAST_IP = true;
@@ -90,11 +88,9 @@ class NET {
         let dataStr = 'ff'.repeat(6) + macAddrFinal.repeat(16);
 
         Logger.debug(this.LOG_TAG, `Final MAC Address string: ${macAddrFinal}`);
-        // Logger.debug(this.LOG_TAG, `Data string content: ${dataStr}`);
 
         let buff = buffer.from(dataStr, 'hex').buffer;
 
-        // Logger.debug(this.LOG_TAG, `Data array length: ${new Uint8Array(buffer.from(dataStr, 'hex').buffer).length.toString()}`);
         Logger.debug(this.LOG_TAG, `Data array content: ${new Uint8Array(buffer.from(dataStr, 'hex').buffer).toString()}`);
 
         const sendOptions: socket.UDPSendOptions = {
