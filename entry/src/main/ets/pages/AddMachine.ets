@@ -1,6 +1,6 @@
 import Logger from '../common/utils/Logger';
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
-import DB from '../common/utils/DB';
+import { DB } from '../common/utils/DB';
 import { BusinessError } from '@kit.BasicServicesKit';
 import StyleConstants from '../common/constants/StyleConstants';
 import { promptAction, window } from '@kit.ArkUI';
@@ -17,6 +17,8 @@ struct AddMachine {
     private LOG_TAG = '[pages/AddMachine]'
     private focusController = this.getUIContext().getFocusController();
     private totalHeight: number = 0;
+
+    private db = DB.getInstance();
 
     aboutToAppear(): void {
         window.getLastWindow(getContext(this)).then(currentWindow =>{
@@ -39,7 +41,7 @@ struct AddMachine {
     }
 
     addMachine(mac: string, alias: string) {
-        DB.addMachine(mac, alias)?.then(id => {
+        this.db.addMachine(mac, alias).then(id => {
             Logger.debug(this.LOG_TAG, `Added machine - ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
             this.alert($r("app.string.add_machine_success", alias));
         }).catch((err: BusinessError) => {

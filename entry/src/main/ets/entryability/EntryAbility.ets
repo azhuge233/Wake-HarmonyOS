@@ -1,7 +1,7 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import DB from '../common/utils/DB';
+import { DB } from '../common/utils/DB';
 import NET from '../common/utils/NET';
 
 const DOMAIN = 0x0000;
@@ -11,7 +11,10 @@ export default class EntryAbility extends UIAbility {
         this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
         hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
 
-        DB.initDB(this.context);
+        // DB for getting machines
+        DB.getInstance().initDB(this.context);
+
+        // net for sending magic packet
         NET.init();
     }
 

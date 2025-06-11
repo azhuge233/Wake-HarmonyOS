@@ -4,7 +4,7 @@ import { promptAction, router } from '@kit.ArkUI';
 import Machine from '../model/Machine';
 import MachineTile from '../view/MachineTile';
 import Logger from '../common/utils/Logger';
-import DB from '../common/utils/DB';
+import { DB } from '../common/utils/DB';
 import NET from '../common/utils/NET';
 import IPBanner from '../view/IPBanner';
 import StyleConstants from '../common/constants/StyleConstants';
@@ -19,15 +19,19 @@ struct Index {
 
     private scrollerForList: ListScroller = new ListScroller();
 
+    private db = DB.getInstance();
+
     refreshIPBanner() {
         NET.refreshCurrentNetwork();
         this.ipBannerText =
             `${getContext(this).resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
     }
 
-    getMachineList(): void {
-        DB.getMachineList().then((list) => {
+    async getMachineList(): Promise<void> {
+        await this.db.waitForReady();
+        this.db.getMachineList().then((list) => {
             if (list === undefined) {
+                Logger.info(this.LOG_TAG, 'No Machine found!');
                 return;
             }
 
@@ -38,9 +42,9 @@ struct Index {
         })
     }
 
-    onPageShow(): void {
+    async onPageShow(): Promise<void> {
         this.refreshIPBanner();
-        this.getMachineList();
+        await this.getMachineList();
     }
 
     onPageHide(): void {
@@ -61,7 +65,7 @@ struct Index {
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
             .onClick(() => {
-                DB.deleteMachineByID(id).then(() => {
+                this.db.deleteMachineByID(id).then(() => {
                     this.machines.splice(index, 1)
                 });
             })

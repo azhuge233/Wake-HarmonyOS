@@ -3,8 +3,15 @@ import Logger from '../utils/Logger';
 import { Context } from '@kit.AbilityKit';
 import Machine from '../../model/Machine';
 import { JSON } from '@kit.ArkTS';
+import { BusinessError } from '@kit.BasicServicesKit';
 
-class DB {
+export class DB {
+    private static instance: DB | null = null;
+
+    private isInitialized: boolean = false; // 初始化标志
+    private initPromise: Promise<void> | null = null;
+    private resolveInit: (() => void) | null = null;
+
     private rdbStore: relationalStore.RdbStore | undefined;
 
     private LOG_TAG = '[DB]'
@@ -21,26 +28,48 @@ class DB {
 
     private SQL_CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${this.TABLE_NAME} (ID INTEGER PRIMARY KEY AUTOINCREMENT, MAC TEXT NOT NULL, ALIAS TEXT NOT NULL)`;
 
-    initDB(context: Context) {
-        relationalStore.getRdbStore(context, this.STORE_CONFIG, (err, store) => {
-            if (err) {
-                Logger.error(this.LOG_TAG, `Failed to get RdbStore. Code:${err.code}, message:${err.message}`);
-                return;
-            }
-            Logger.info(this.LOG_TAG, 'Succeeded in getting RdbStore.');
+    private constructor() { }
 
-            store.executeSql(this.SQL_CREATE_TABLE);
+    public static getInstance(): DB {
+        if (!DB.instance) DB.instance = new DB();
+        return DB.instance;
+    }
 
-            this.rdbStore = store;
+    public initDB(context: Context) {
+        if (this.initPromise) return;
+
+        this.initPromise = new Promise((resolve) => {
+            this.resolveInit = resolve;
+
+            // 异步初始化数据库
+            relationalStore.getRdbStore(context, this.STORE_CONFIG).then((store) => {
+                store.executeSync(this.SQL_CREATE_TABLE);
+
+                this.rdbStore = store;
+                this.isInitialized = true;
+                resolve(); // 解析Promise表示初始化完成
+            }).catch((err: BusinessError) => {
+                Logger.error(this.LOG_TAG, "DB initialization failed");
+                resolve(); // 即使失败也要resolve，避免永久阻塞
+            });
         });
     }
 
+    public async waitForReady(): Promise<void> {
+        if (!this.initPromise) throw new Error("DB not initialized. Call initialize() first.");
+        await this.initPromise;
+    }
+
     async getMachineList() {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("Database not available");
+
         const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
 
         const machines: Array<Machine> = [];
 
-        const queryResult = await this.rdbStore?.query(predicates, [this.ID_KEY, this.MAC_KEY, this.ALIAS_KEY]);
+        const queryResult = await this.rdbStore.query(predicates, [this.ID_KEY, this.MAC_KEY, this.ALIAS_KEY]);
 
         if(queryResult === undefined) return;
 
@@ -59,12 +88,21 @@ class DB {
         return machines;
     }
 
-    addMachine(mac: string, alias: string) {
+    async addMachine(mac: string, alias: string) {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("Database not available");
+
         Logger.debug(this.LOG_TAG, `New machine - MAC: ${mac}, Alias: ${alias}`);
-        return this.rdbStore?.insert(this.TABLE_NAME, { mac, alias });
+
+        return this.rdbStore.insert(this.TABLE_NAME, { mac, alias });
     }
 
     async deleteMachineByID(id: number) {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("Database not available");
+
         const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
         predicates.equalTo(this.ID_KEY, id);
 
@@ -79,8 +117,6 @@ class DB {
 
         Logger.debug(this.LOG_TAG, `Deleting machine. ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
 
-        return this.rdbStore?.delete(predicates);
+        return this.rdbStore.delete(predicates);
     }
 }
-
-export default new DB() as DB;
