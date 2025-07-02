@@ -20,8 +20,10 @@ struct AddMachine {
 
     private db = DB.getInstance();
 
+    private uiContext = this.getUIContext();
+
     aboutToAppear(): void {
-        window.getLastWindow(getContext(this)).then(currentWindow =>{
+        window.getLastWindow(this.uiContext.getHostContext()).then(currentWindow =>{
             let property = currentWindow.getWindowProperties();
             this.totalHeight = property.windowRect.height;
 
@@ -50,9 +52,8 @@ struct AddMachine {
     }
 
     alert(message: string | Resource) {
-        promptAction.showToast({
-            message: message,
-            bottom: StyleConstants.TOAST_BOTTOM_SPACE
+        promptAction.openToast({
+            message: message
         })
     }
 

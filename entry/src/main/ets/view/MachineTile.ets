@@ -15,7 +15,7 @@ export default struct MachineTile {
     private LOG_TAG = "[view/MachineTile]";
 
     alert(message: Resource) {
-        promptAction.showToast({
+        promptAction.openToast({
             message: message
         });
     }

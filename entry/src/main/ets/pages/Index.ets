@@ -1,6 +1,6 @@
 import { JSON } from '@kit.ArkTS';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { promptAction, router } from '@kit.ArkUI';
+import { promptAction } from '@kit.ArkUI';
 import Machine from '../model/Machine';
 import MachineTile from '../view/MachineTile';
 import Logger from '../common/utils/Logger';
@@ -21,10 +21,12 @@ struct Index {
 
     private db = DB.getInstance();
 
+    private uiContext = this.getUIContext();
+
     refreshIPBanner() {
         NET.refreshCurrentNetwork();
         this.ipBannerText =
-            `${getContext(this).resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
+            `${this.uiContext.getHostContext()?.resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
     }
 
     async getMachineList(): Promise<void> {
@@ -115,7 +117,7 @@ struct Index {
                         top: StyleConstants.MARGIN_FIVE_PERCENT
                     })
                     .onClick(() => {
-                        router.pushUrl({
+                        this.uiContext.getRouter().pushUrl({
                             url: "pages/AddMachine"
                         })
                     })
@@ -131,7 +133,7 @@ struct Index {
                 icon: "./media/icon/network_refresh.png",
                 action: () => {
                     this.refreshIPBanner();
-                    promptAction.showToast({
+                    promptAction.openToast({
                         message: $r("app.string.network_refreshed")
                     })
                 }
@@ -140,7 +142,7 @@ struct Index {
                 value: 'Help',
                 icon: "./media/icon/info_circle.png",
                 action: () => {
-                    promptAction.showDialog({
+                    this.uiContext.getPromptAction().showDialog({
                         title: $r("app.string.help_title"),
                         message: $r("app.string.help_info"),
                         buttons: [
