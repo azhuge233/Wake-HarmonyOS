@@ -1,6 +1,10 @@
 import { JSON } from '@kit.ArkTS';
-import { BusinessError } from '@kit.BasicServicesKit';
+import { BusinessError, systemDateTime } from '@kit.BasicServicesKit';
 import { promptAction } from '@kit.ArkUI';
+import { picker } from '@kit.CoreFileKit';
+import { fileIo as fs } from '@kit.CoreFileKit';
+import { common } from '@kit.AbilityKit';
+
 import Machine from '../model/Machine';
 import MachineTile from '../view/MachineTile';
 import Logger from '../common/utils/Logger';
@@ -22,6 +26,8 @@ struct Index {
     private db = DB.getInstance();
 
     private uiContext = this.getUIContext();
+    private context = this.uiContext.getHostContext() as common.UIAbilityContext;
+    // private applicationContext = this.context.getApplicationContext();
 
     refreshIPBanner() {
         NET.refreshCurrentNetwork();
@@ -42,6 +48,50 @@ struct Index {
         }).catch((err: BusinessError) => {
             Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
         })
+    }
+
+    getDate(): string {
+        let date = new Date(systemDateTime.getTime());
+
+        const year = date.getFullYear().toString();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+
+        const formattedTime = `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
+        Logger.debug(this.LOG_TAG, formattedTime);
+
+        return formattedTime;
+    }
+
+    async saveToFile(json: string): Promise<void> {
+        let jsonFilename = `config-backup-${this.getDate()}.json`;
+
+        const documentSaveOptions = new picker.DocumentSaveOptions();
+        documentSaveOptions.newFileNames = [jsonFilename];
+        documentSaveOptions.fileSuffixChoices = [".json"];
+
+        const documentViewPicker = new picker.DocumentViewPicker(this.context);
+
+        try {
+            const uris = await documentViewPicker.save(documentSaveOptions);
+            Logger.debug(this.LOG_TAG, `Pick save path succeed: ${uris}`);
+
+            if (uris.length > 0) {
+                let savePath: string = uris[0];
+
+                let jsonFile = fs.openSync(savePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+
+                let writeLen = fs.writeSync(jsonFile.fd, json);
+                Logger.debug(this.LOG_TAG, `config saved, path: ${jsonFile.path}, written length: ${writeLen}`);
+
+                fs.closeSync(jsonFile);
+            } else Logger.error(this.LOG_TAG, "No path selected");
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `Save failed, code is ${err.code}, message is ${err.message}`);
+        }
     }
 
     async onPageShow(): Promise<void> {
@@ -151,6 +201,33 @@ struct Index {
                                 color: $r("app.color.black")
                             }
                         ]
+                    })
+                }
+            },
+            {
+                value: $r("app.string.navigation_menu_import"),
+                icon: "./media/icon/arrow_down_circle.png",
+                action: () => {
+                }
+            },
+            {
+                value: $r("app.string.navigation_menu_export"),
+                icon: "./media/icon/arrow_up_circle.png",
+                action: async () => {
+                    await this.db.waitForReady();
+                    this.db.getMachineList().then((list) => {
+                        if (list === undefined) {
+                            Logger.info(this.LOG_TAG, 'No Machine found!');
+                            return;
+                        }
+
+                        // formatting data to json
+                        let jsonString = JSON.stringify(this.machines, null, 4);
+                        Logger.debug(this.LOG_TAG, `Machines found: ${jsonString}`);
+
+                        this.saveToFile(jsonString);
+                    }).catch((err: BusinessError) => {
+                        Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
                     })
                 }
             }
