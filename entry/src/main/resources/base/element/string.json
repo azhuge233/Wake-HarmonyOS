@@ -143,6 +143,30 @@
 		{
 			"name": "navigation_menu_export",
 			"value": "Export"
+		},
+		{
+			"name": "parse_json_data_failed",
+			"value": "Parse json data failed!"
+		},
+		{
+			"name": "import_success",
+			"value": "Import success!"
+		},
+      {
+        "name": "import_failed",
+        "value": "Import failed!"
+      },
+		{
+			"name": "button_cancel_label",
+			"value": "Cancel"
+		},
+		{
+			"name": "import_title",
+			"value": "Warning"
+		},
+		{
+			"name": "import_message",
+			"value": "Importing backup will wipe all the current listed devices.\nContinue?"
 		}
-    ]
+	]
 }

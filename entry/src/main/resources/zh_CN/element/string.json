@@ -143,6 +143,30 @@
 		{
 			"name": "navigation_menu_export",
 			"value": "导出"
+		},
+		{
+			"name": "parse_json_data_failed",
+			"value": "Json 数据解析失败！"
+		},
+		{
+			"name": "import_success",
+			"value": "导入成功！"
+		},
+		{
+			"name": "import_failed",
+			"value": "导入失败！"
+		},
+		{
+			"name": "button_cancel_label",
+			"value": "取消"
+		},
+		{
+			"name": "import_title",
+			"value": "注意"
+		},
+		{
+			"name": "import_message",
+			"value": "导入备份将清除当前列出的所有设备\n是否继续？"
 		}
 	]
 }
