@@ -127,6 +127,22 @@
       {
         "name": "network_refreshed",
 		  "value": "网络已刷新！"
-      }
-    ]
+      },
+		{
+			"name": "navigation_menu_refresh",
+			"value": "刷新"
+		},
+		{
+			"name": "navigation_menu_about",
+			"value": "关于"
+		},
+		{
+			"name": "navigation_menu_import",
+			"value": "导入"
+		},
+		{
+			"name": "navigation_menu_export",
+			"value": "导出"
+		}
+	]
 }

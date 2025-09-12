@@ -127,6 +127,22 @@
 		{
 			"name": "network_refreshed",
 			"value": "Network refreshed!"
+		},
+		{
+			"name": "navigation_menu_refresh",
+			"value": "Refresh"
+		},
+		{
+			"name": "navigation_menu_about",
+			"value": "About"
+		},
+		{
+			"name": "navigation_menu_import",
+			"value": "Import"
+		},
+		{
+			"name": "navigation_menu_export",
+			"value": "Export"
 		}
-	]
+    ]
 }
