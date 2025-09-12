@@ -93,6 +93,24 @@ struct Index {
         }
     }
 
+    async export(): Promise<void> {
+        await this.db.waitForReady();
+        this.db.getMachineList().then((list) => {
+            if (list === undefined) {
+                Logger.info(this.LOG_TAG, 'No Machine found!');
+                return;
+            }
+
+            // formatting data to json
+            let jsonString = JSON.stringify(this.machines, null, 4);
+            Logger.debug(this.LOG_TAG, `Machines found: ${jsonString}`);
+
+            this.saveToFile(jsonString);
+        }).catch((err: BusinessError) => {
+            Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
+        })
+    }
+
     async onPageShow(): Promise<void> {
         this.refreshIPBanner();
         await this.getMachineList();
@@ -211,21 +229,7 @@ struct Index {
                 value: $r("app.string.navigation_menu_export"),
                 icon: "./media/icon/arrow_up_circle.png",
                 action: async () => {
-                    await this.db.waitForReady();
-                    this.db.getMachineList().then((list) => {
-                        if (list === undefined) {
-                            Logger.info(this.LOG_TAG, 'No Machine found!');
-                            return;
-                        }
-
-                        // formatting data to json
-                        let jsonString = JSON.stringify(this.machines, null, 4);
-                        Logger.debug(this.LOG_TAG, `Machines found: ${jsonString}`);
-
-                        this.saveToFile(jsonString);
-                    }).catch((err: BusinessError) => {
-                        Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
-                    })
+                    await this.export();
                 }
             }
         ])
