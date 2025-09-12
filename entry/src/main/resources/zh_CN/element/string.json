@@ -6,7 +6,7 @@
 		},
 		{
 			"name": "EntryAbility_desc",
-			"value": "使用魔法数据包唤醒内网电脑"
+			"value": "使用魔法数据包唤醒内网设备"
 		},
 		{
 			"name": "EntryAbility_label",
@@ -22,7 +22,7 @@
 		},
 		{
 			"name": "button_Add_label",
-			"value": "添加新电脑"
+			"value": "添加新设备"
 		},
 		{
 			"name": "button_delete_label",
@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "add_machine_title",
-			"value": "添加新电脑"
+			"value": "添加新设备"
 		},
 		{
 			"name": "button_add_machine_confirm",
@@ -62,7 +62,7 @@
 		},
 		{
 			"name": "add_alias_input_placeholder",
-			"value": "电脑 1"
+			"value": "设备 1"
 		},
 		{
 			"name": "button_back_main_page_label",
@@ -122,7 +122,7 @@
 		},
 		{
 			"name": "add_machine_success",
-			"value": "成功添加电脑：%s"
+			"value": "成功添加设备：%s"
 		},
       {
         "name": "network_refreshed",

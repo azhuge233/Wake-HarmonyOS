@@ -6,7 +6,7 @@
 		},
 		{
 			"name": "EntryAbility_desc",
-			"value": "Wake LAN computer using magic packet"
+			"value": "Wake LAN devices using magic packet"
 		},
 		{
 			"name": "EntryAbility_label",
@@ -22,7 +22,7 @@
 		},
 		{
 			"name": "button_Add_label",
-			"value": "Add New Computer"
+			"value": "Add New Device"
 		},
 		{
 			"name": "button_delete_label",
@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "add_machine_title",
-			"value": "Add new PC"
+			"value": "Add New Device"
 		},
 		{
 			"name": "button_add_machine_confirm",
@@ -62,7 +62,7 @@
 		},
 		{
 			"name": "add_alias_input_placeholder",
-			"value": "PC 1"
+			"value": "Device 1"
 		},
 		{
 			"name": "button_back_main_page_label",
@@ -122,7 +122,7 @@
 		},
 		{
 			"name": "add_machine_success",
-			"value": "Successfully added machine: %s"
+			"value": "Successfully added device: %s"
 		},
 		{
 			"name": "network_refreshed",
