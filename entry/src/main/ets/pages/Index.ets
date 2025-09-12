@@ -111,6 +111,84 @@ struct Index {
         })
     }
 
+    async parseData(jsonStr: string): Promise<Array<Machine>> {
+        let machines = new Array<Machine>();
+
+        try {
+            const parsedData = JSON.parse(jsonStr);
+
+            if (Array.isArray(parsedData)) {
+                machines = parsedData.map((item: Record<string, Object>) => {
+                    const id = Number(Reflect.get(item, 'ID')) | 0;
+                    const mac = String(Reflect.get(item, 'MAC'));
+                    const alias = String(Reflect.get(item, 'Alias'));
+
+                    return new Machine(id, mac, alias);
+                });
+                Logger.debug(this.LOG_TAG, `Data parsing succeed, count: ${machines.length}`);
+            } else {
+                Logger.error(this.LOG_TAG, `Parsed data is not an array`);
+                this.alert($r("app.string.parse_json_data_failed"));
+            }
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `Parse json data failed, code is ${err.code}, message is ${err.message}`);
+            this.alert($r("app.string.parse_json_data_failed"));
+            throw new Error("Json date parse error");
+        }
+
+        return machines;
+    }
+
+    async import(): Promise<void> {
+        const documentSelectOptions = new picker.DocumentSelectOptions();
+        documentSelectOptions.maxSelectNumber = 1;
+        documentSelectOptions.fileSuffixFilters = [".json"];
+
+        const documentViewPicker = new picker.DocumentViewPicker(this.context);
+
+        try {
+            const uris = await documentViewPicker.select(documentSelectOptions);
+            Logger.debug(this.LOG_TAG, `Pick file succeed: ${uris}`);
+
+            if(uris.length > 0) {
+                let backupFilePath: string = uris[0];
+                Logger.debug(this.LOG_TAG, `backup file path: ${backupFilePath}`);
+
+                // open file
+                let file = fs.openSync(backupFilePath, fs.OpenMode.READ_ONLY);
+
+                // read file
+                // cannot use readText(Sync), throws 13900002 error(No such file or directory)
+                let arrayBuffer = new ArrayBuffer(4096);
+                let readLen = fs.readSync(file.fd, arrayBuffer);
+                let jsonString = buffer.from(arrayBuffer, 0, readLen).toString();
+                Logger.debug(this.LOG_TAG, `read succeed, content: ${jsonString}`);
+
+                // close file
+                fs.closeSync(file);
+
+                let machines = await this.parseData(jsonString);
+
+                await this.db.clearTable();
+
+                for(let machine of machines) {
+                    await this.db.addMachine(machine.MAC, machine.Alias).then(id => {
+                        Logger.debug(this.LOG_TAG, `Added machine - ID: ${id}, MAC: ${machine.MAC}, Alias: ${machine.Alias}`);
+                    }).catch((err: BusinessError) => {
+                        Logger.error(this.LOG_TAG, `Add Error! Code: ${err.code}, message: ${err.message}`);
+                    })
+                }
+
+                await this.getMachineList();
+
+                this.alert($r("app.string.import_success"));
+            } else Logger.error(this.LOG_TAG, "No backup file selected");
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `Import failed, code: ${err.code}, message: ${err.message}`);
+            this.alert($r("app.string.import_failed"))
+        }
+    }
+
     async onPageShow(): Promise<void> {
         this.refreshIPBanner();
         await this.getMachineList();
