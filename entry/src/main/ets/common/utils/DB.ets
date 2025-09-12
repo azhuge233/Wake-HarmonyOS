@@ -27,6 +27,7 @@ export class DB {
     private ALIAS_KEY = 'ALIAS';
 
     private SQL_CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${this.TABLE_NAME} (ID INTEGER PRIMARY KEY AUTOINCREMENT, MAC TEXT NOT NULL, ALIAS TEXT NOT NULL)`;
+    private SQL_DELETE_TABLE = `DELETE FROM ${this.TABLE_NAME}`;
 
     private constructor() { }
 
@@ -118,5 +119,19 @@ export class DB {
         Logger.debug(this.LOG_TAG, `Deleting machine. ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
 
         return this.rdbStore.delete(predicates);
+    }
+
+    async clearTable() {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("Database not available");
+
+        try {
+            await this.rdbStore.executeSql(this.SQL_DELETE_TABLE);
+            Logger.info(this.LOG_TAG, "Clear table succeed");
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `Clear table failed, code: ${err.code}, message: ${err.message}`);
+            throw new Error("Clear table error");
+        }
     }
 }
