@@ -96,7 +96,7 @@ struct Index {
 
     async export(): Promise<void> {
         await this.db.waitForReady();
-        this.db.getMachineList().then((list) => {
+        this.db.getMachineList().then(async (list) => {
             if (list === undefined) {
                 Logger.info(this.LOG_TAG, 'No Machine found!');
                 return;
@@ -106,7 +106,7 @@ struct Index {
             let jsonString = JSON.stringify(this.machines, null, 4);
             Logger.debug(this.LOG_TAG, `Machines found: ${jsonString}`);
 
-            this.saveToFile(jsonString);
+            await this.saveToFile(jsonString);
 
             this.alert($r("app.string.export_success"));
         }).catch((err: BusinessError) => {
