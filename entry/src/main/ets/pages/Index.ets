@@ -29,6 +29,12 @@ struct Index {
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
     // private applicationContext = this.context.getApplicationContext();
 
+    alert(message: Resource) {
+        promptAction.showToast({
+            message: message
+        })
+    }
+
     refreshIPBanner() {
         NET.refreshCurrentNetwork();
         this.ipBannerText =
@@ -176,9 +182,7 @@ struct Index {
                 icon: "./media/icon/network_refresh.png",
                 action: () => {
                     this.refreshIPBanner();
-                    promptAction.showToast({
-                        message: $r("app.string.network_refreshed")
-                    })
+                    this.alert($r("app.string.network_refreshed"));
                 }
             },
             {
