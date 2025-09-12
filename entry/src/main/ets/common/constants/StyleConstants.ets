@@ -32,6 +32,8 @@ class StyleConstants {
     BANNER_FONT_SIZE = 15;
     BANNER_FONT_WEIGHT = 5;
 
+    TOAST_BOTTOM_SPACE = '10px';
+
     DELETE_BUTTON_WIDTH = 40;
     DELETE_BUTTON_HEIGHT = 40;
 }

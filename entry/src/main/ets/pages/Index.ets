@@ -133,7 +133,7 @@ struct Index {
                 icon: "./media/icon/network_refresh.png",
                 action: () => {
                     this.refreshIPBanner();
-                    promptAction.openToast({
+                    promptAction.showToast({
                         message: $r("app.string.network_refreshed")
                     })
                 }

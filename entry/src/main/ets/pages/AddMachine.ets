@@ -52,8 +52,9 @@ struct AddMachine {
     }
 
     alert(message: string | Resource) {
-        promptAction.openToast({
-            message: message
+        promptAction.showToast({
+            message: message,
+            bottom: StyleConstants.TOAST_BOTTOM_SPACE
         })
     }
 
