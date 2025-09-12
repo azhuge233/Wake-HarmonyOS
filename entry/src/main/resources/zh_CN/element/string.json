@@ -167,6 +167,10 @@
 		{
 			"name": "import_message",
 			"value": "导入备份将清除当前列出的所有设备\n是否继续？"
+		},
+		{
+			"name": "export_success",
+			"value": "导出成功！"
 		}
 	]
 }

@@ -167,6 +167,10 @@
 		{
 			"name": "import_message",
 			"value": "Importing backup will wipe all the current listed devices.\nContinue?"
+		},
+		{
+			"name": "export_success",
+			"value": "Export success!"
 		}
 	]
 }
