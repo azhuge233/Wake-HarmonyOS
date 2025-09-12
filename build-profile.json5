@@ -1,56 +1,56 @@
 {
-	"app": {
-		"signingConfigs": [
-			{
-				"name": "default",
-				"type": "HarmonyOS",
-				"material": {
-					"certpath": "C:\\Users\\40488\\.ohos\\config\\default_Wake_kYXKBZEIARKWKRCe1rL4RyGoo5Onll1koJtceJ5i5co=.cer",
-					"storePassword": "0000001A4A39DC20C9C3D19E7516ABB280CDB7F5B7CD728C6604A496AC6D7A4FE58069107E4716763470",
-					"keyAlias": "debugKey",
-					"keyPassword": "0000001A24D978648F571E1E1E58921668FA4D1296F8FF1F2796CB4BB0FC97E4E6F3DF9961A0FE828A55",
-					"profile": "C:\\Users\\40488\\.ohos\\config\\default_Wake_kYXKBZEIARKWKRCe1rL4RyGoo5Onll1koJtceJ5i5co=.p7b",
-					"signAlg": "SHA256withECDSA",
-					"storeFile": "C:\\Users\\40488\\.ohos\\config\\default_Wake_kYXKBZEIARKWKRCe1rL4RyGoo5Onll1koJtceJ5i5co=.p12"
-				}
-			}
-		],
-		"products": [
-			{
-				"name": "default",
-				"signingConfig": "default",
-				"compatibleSdkVersion": "5.1.0(18)",
-				"targetSdkVersion": "5.1.1(19)",
-				"runtimeOS": "HarmonyOS",
-				"buildOption": {
-					"strictMode": {
-						"caseSensitiveCheck": true,
-						"useNormalizedOHMUrl": true
-					}
-				}
-			}
-		],
-		"buildModeSet": [
-			{
-				"name": "debug",
-			},
-			{
-				"name": "release"
-			}
-		]
-	},
-	"modules": [
-		{
-			"name": "entry",
-			"srcPath": "./entry",
-			"targets": [
-				{
-					"name": "default",
-					"applyToProducts": [
-						"default"
-					]
-				}
-			]
-		}
-	]
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B8B84647551E9B6A8621A17C542E03294B3944145D46006525EFEA091817A18690797E2821E24A2",
+          "profile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p12",
+          "storePassword": "0000001B65A515CC529C832EA6D69A31D1FD5953A3361647892E0EAD7D1C3EFE470A7ECCEC3F42A20CB755"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.5(17)",
+        "targetSdkVersion": "5.1.1(19)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
 }
