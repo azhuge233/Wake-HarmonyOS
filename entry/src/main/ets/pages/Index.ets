@@ -129,7 +129,7 @@ struct Index {
         .title($r("app.string.title_label"))
         .menus([
             {
-                value: 'Refresh',
+                value: $r("app.string.navigation_menu_refresh"),
                 icon: "./media/icon/network_refresh.png",
                 action: () => {
                     this.refreshIPBanner();
@@ -139,7 +139,7 @@ struct Index {
                 }
             },
             {
-                value: 'Help',
+                value: $r("app.string.navigation_menu_about"),
                 icon: "./media/icon/info_circle.png",
                 action: () => {
                     this.uiContext.getPromptAction().showDialog({
