@@ -42,8 +42,8 @@ struct AddMachine {
         })
     }
 
-    addMachine(mac: string, alias: string) {
-        this.db.addMachine(mac, alias).then(id => {
+    async addMachine(mac: string, alias: string) {
+        await this.db.addMachine(mac, alias).then(id => {
             Logger.debug(this.LOG_TAG, `Added machine - ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
             this.alert($r("app.string.add_machine_success", alias));
         }).catch((err: BusinessError) => {
@@ -109,7 +109,7 @@ struct AddMachine {
 
                 Button($r("app.string.button_add_machine_confirm"))
                     .width(StyleConstants.SEVENTY_PERCENT)
-                    .onClick(() => {
+                    .onClick(async () => {
                         const mac = this.mac;
                         const alias = this.alias;
 
@@ -132,7 +132,7 @@ struct AddMachine {
                             return;
                         }
 
-                        this.addMachine(this.mac, this.alias);
+                        await this.addMachine(this.mac, this.alias);
 
                         this.mac = '';
                         this.alias = '';
