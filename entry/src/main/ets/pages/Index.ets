@@ -4,6 +4,7 @@ import { promptAction } from '@kit.ArkUI';
 import { picker } from '@kit.CoreFileKit';
 import { fileIo as fs } from '@kit.CoreFileKit';
 import { common } from '@kit.AbilityKit';
+import { buffer } from '@kit.ArkTS';
 
 import Machine from '../model/Machine';
 import MachineTile from '../view/MachineTile';
@@ -300,7 +301,24 @@ struct Index {
             {
                 value: $r("app.string.navigation_menu_import"),
                 icon: "./media/icon/arrow_down_circle.png",
-                action: () => {
+                action: async () => {
+                    this.uiContext.getPromptAction().showDialog({
+                        title: $r("app.string.import_title"),
+                        message: $r("app.string.import_message"),
+                        buttons: [
+                            {
+                                text: $r("app.string.button_confirm_label"),
+                                color: $r("app.color.black")
+                            },
+                            {
+                                text: $r("app.string.button_cancel_label"),
+                                color: $r("app.color.black")
+                            }
+                        ]
+                    }).then(async (result) => {
+                        if(result.index == 0) await this.import();
+                        else Logger.debug(this.LOG_TAG, "Import canceled");
+                    })
                 }
             },
             {
