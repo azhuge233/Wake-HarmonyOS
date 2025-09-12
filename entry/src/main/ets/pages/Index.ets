@@ -107,6 +107,8 @@ struct Index {
             Logger.debug(this.LOG_TAG, `Machines found: ${jsonString}`);
 
             this.saveToFile(jsonString);
+
+            this.alert($r("app.string.export_success"));
         }).catch((err: BusinessError) => {
             Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
         })
