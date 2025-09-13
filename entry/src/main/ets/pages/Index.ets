@@ -66,7 +66,7 @@ struct Index {
         return formattedTime;
     }
 
-    async saveToFile(json: string): Promise<void> {
+    async saveToFile(json: string): Promise<boolean> {
         let jsonFilename = `Wake-backup-${this.getDate()}.json`;
 
         const documentSaveOptions = new picker.DocumentSaveOptions();
@@ -88,9 +88,15 @@ struct Index {
                 Logger.debug(this.LOG_TAG, `config saved, path: ${jsonFile.path}, written length: ${writeLen}`);
 
                 fs.closeSync(jsonFile);
-            } else Logger.error(this.LOG_TAG, "No path selected");
+
+                return true;
+            }
+
+            Logger.warn(this.LOG_TAG, "No path selected");
+            return false;
         } catch (err) {
             Logger.error(this.LOG_TAG, `Save failed, code is ${err.code}, message is ${err.message}`);
+            throw new Error("Save backup to file failed");
         }
     }
 
@@ -106,9 +112,9 @@ struct Index {
             let jsonString = JSON.stringify(this.machines, null, 4);
             Logger.debug(this.LOG_TAG, `Machines found: ${jsonString}`);
 
-            await this.saveToFile(jsonString);
+            let result = await this.saveToFile(jsonString);
 
-            this.alert($r("app.string.export_success"));
+            if(result) this.alert($r("app.string.export_success"));
         }).catch((err: BusinessError) => {
             Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
         })
