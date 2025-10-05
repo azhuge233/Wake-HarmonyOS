@@ -13,6 +13,19 @@
           "storeFile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p12",
           "storePassword": "0000001B65A515CC529C832EA6D69A31D1FD5953A3361647892E0EAD7D1C3EFE470A7ECCEC3F42A20CB755"
         }
+      },
+      {
+        "name": "Release",
+        "type": "HarmonyOS",
+        "material": {
+          "storeFile": "C:/Users/azhuge233/Source/DevEco/Wake-Release-Certs/wake-release.p12",
+          "storePassword": "0000001CA0362A402B35ECF308E891912FA4533E50D699EA4D1210CB5BD5738DC82C45D943F91478C235770A",
+          "keyAlias": "wake-release",
+          "keyPassword": "0000001C8D629AF531791F61E60FA019363ECFD5D4320B20916FA6CA0E23BA2F2E9B63E5084AD1333D74AB8B",
+          "signAlg": "SHA256withECDSA",
+          "profile": "C:/Users/azhuge233/Source/DevEco/Wake-Release-Certs/Wake-ReleaseRelease.p7b",
+          "certpath": "C:/Users/azhuge233/Source/DevEco/Wake-Release-Certs/Wake-Release.cer"
+        }
       }
     ],
     "products": [
