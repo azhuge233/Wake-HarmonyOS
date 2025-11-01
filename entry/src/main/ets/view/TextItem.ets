@@ -38,7 +38,7 @@ export default struct TextItem {
                 .id(this.inputId)
                 .defaultFocus(this.isDefaultFocus)
                 .width(StyleConstants.EIGHTY_PERCENT)
-                .placeholderColor($r("app.color.grey"))
+                .placeholderColor($r("app.color.input_placeholder_grey"))
                 .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
                 .showCounter(true, {
                     thresholdPercentage: undefined

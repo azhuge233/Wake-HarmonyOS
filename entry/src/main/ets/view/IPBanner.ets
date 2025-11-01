@@ -9,7 +9,7 @@ export default struct IPBanner {
             .maxLines(StyleConstants.BANNER_MAX_LINE)
             .fontSize(StyleConstants.BANNER_FONT_SIZE)
             .fontWeight(StyleConstants.BANNER_FONT_WEIGHT)
-            .backgroundColor($r("app.color.grey"))
+            .backgroundColor($r("app.color.banner_grey"))
             .width(StyleConstants.FULL_PERCENT)
             .textAlign(TextAlign.Center)
     }

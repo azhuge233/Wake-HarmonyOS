@@ -13,7 +13,11 @@
 			"value": "#777777"
 		},
 		{
-			"name": "grey",
+			"name": "input_placeholder_grey",
+			"value": "#555555"
+		},
+		{
+			"name": "banner_grey",
 			"value": "#555555"
 		},
 		{
