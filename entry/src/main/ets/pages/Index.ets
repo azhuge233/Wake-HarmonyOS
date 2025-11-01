@@ -39,7 +39,7 @@ struct Index {
     refreshIPBanner() {
         NET.refreshCurrentNetwork();
         this.ipBannerText =
-            `${this.uiContext.getHostContext()?.resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
+            `${this.context.resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
     }
 
     async getMachineList(): Promise<void> {
