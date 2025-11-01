@@ -143,30 +143,41 @@ struct More {
                 // open file
                 let file = fs.openSync(backupFilePath, fs.OpenMode.READ_ONLY);
 
-                // read file
-                // cannot use readText(Sync), throws 13900002 error(No such file or directory)
-                let arrayBuffer = new ArrayBuffer(8192);
-                let readLen = fs.readSync(file.fd, arrayBuffer);
-                let jsonString = buffer.from(arrayBuffer, 0, readLen).toString();
-                Logger.debug(this.LOG_TAG, `read succeed, content: ${jsonString}`);
+                try {
+                    // get file size
+                    let fileStat = fs.statSync(file.fd);
+                    let fileSize = fileStat.size;
+                    Logger.debug(this.LOG_TAG, `File size: ${fileSize} bytes`);
 
-                // close file
-                fs.closeSync(file);
+                    // read file
+                    // cannot use readText(Sync), throws 13900002 error(No such file or directory)
+                    let arrayBuffer = new ArrayBuffer(fileSize);
+                    let readLen = fs.readSync(file.fd, arrayBuffer);
 
-                let machines = await this.parseData(jsonString);
+                    Logger.debug(this.LOG_TAG, `Read ${readLen} bytes from file`);
+                    if (readLen !== fileSize) Logger.warn(this.LOG_TAG, `Expected to read ${fileSize} bytes, but got ${readLen}`);
 
-                await this.db.clearTable();
+                    let jsonString = buffer.from(arrayBuffer, 0, readLen).toString();
+                    Logger.debug(this.LOG_TAG, `Read succeed, content length: ${jsonString.length}`);
 
-                for (let machine of machines) {
-                    await this.db.addMachine(machine.MAC, machine.Alias).then(id => {
-                        Logger.debug(this.LOG_TAG,
-                            `Added machine - ID: ${id}, MAC: ${machine.MAC}, Alias: ${machine.Alias}`);
-                    }).catch((err: BusinessError) => {
-                        Logger.error(this.LOG_TAG, `Add Error! Code: ${err.code}, message: ${err.message}`);
-                    })
+                    let machines = await this.parseData(jsonString);
+
+                    await this.db.clearTable();
+
+                    for (let machine of machines) {
+                        await this.db.addMachine(machine.MAC, machine.Alias).then(id => {
+                            Logger.debug(this.LOG_TAG,
+                                `Added machine - ID: ${id}, MAC: ${machine.MAC}, Alias: ${machine.Alias}`);
+                        }).catch((err: BusinessError) => {
+                            Logger.error(this.LOG_TAG, `Add Error! Code: ${err.code}, message: ${err.message}`);
+                        })
+                    }
+
+                    this.alert($r("app.string.import_success"));
+                } finally {
+                    // close file
+                    fs.closeSync(file);
                 }
-
-                this.alert($r("app.string.import_success"));
             } else Logger.error(this.LOG_TAG, "No backup file selected");
         } catch (err) {
             Logger.error(this.LOG_TAG, `Import failed, code: ${err.code}, message: ${err.message}`);
