@@ -178,7 +178,7 @@
 		},
 		{
 			"name": "help_info_span2",
-			"value": "Click the refresh button (the circular arrow with a Wi-Fi icon in the upper-right corner of the main page) to update the broadcast address, which is locally calculated based on the current device's Wi-Fi IP address and subnet mask.\n\n"
+			"value": "Click the refresh button (the circular arrow with a Wi-Fi icon in the upper-right corner of the main page) to update the broadcast address.\n\n"
 		},
 		{
 			"name": "help_info_span3",
