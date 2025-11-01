@@ -81,10 +81,6 @@
 			"value": "Needs network permission to get network information and send magic packet"
 		},
 		{
-			"name": "help_info",
-			"value": "- This application only support magic packet Wake-on-LAN.\n- Click refresh button (the circle arrow with Wi-Fi symbol in it on the right upper corner) can refresh current broadcast address, which is calculated by this device's Wi-Fi IP address and netmask."
-		},
-		{
 			"name": "button_confirm_label",
 			"value": "Confirm"
 		},
@@ -133,18 +129,6 @@
 			"value": "Refresh"
 		},
 		{
-			"name": "navigation_menu_about",
-			"value": "About"
-		},
-		{
-			"name": "navigation_menu_import",
-			"value": "Import"
-		},
-		{
-			"name": "navigation_menu_export",
-			"value": "Export"
-		},
-		{
 			"name": "parse_json_data_failed",
 			"value": "Parse json data failed!"
 		},
@@ -171,6 +155,38 @@
 		{
 			"name": "export_success",
 			"value": "Export success!"
+		},
+		{
+			"name": "more_title",
+			"value": "More"
+		},
+		{
+			"name": "page_more_import",
+			"value": "Import"
+		},
+		{
+			"name": "page_more_export",
+			"value": "Export"
+		},
+		{
+			"name": "page_more_help",
+			"value": "Help"
+		},
+		{
+			"name": "help_info_span1",
+			"value": "This application only supports standard magic packet Wake-on-LAN.\n\n"
+		},
+		{
+			"name": "help_info_span2",
+			"value": "Click the refresh button (the circular arrow with a Wi-Fi icon in the upper-right corner of the main interface) to update the broadcast address.\n\n"
+		},
+		{
+			"name": "help_info_span3",
+			"value": "The broadcast address is locally calculated based on the current device's Wi-Fi IP address and subnet mask.\n\n"
+		},
+		{
+			"name": "import_waiting_message",
+			"value": "Importing, please wait..."
 		}
 	]
 }
