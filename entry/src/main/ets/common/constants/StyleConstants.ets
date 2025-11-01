@@ -52,6 +52,7 @@ class StyleConstants {
     ICON_WIDTH = 28;
 
     PROGRESS_WIDTH = 100;
+    PROGRESS_COLUMN_BLUR_LEVEL = 8;
 }
 
 export default new StyleConstants();

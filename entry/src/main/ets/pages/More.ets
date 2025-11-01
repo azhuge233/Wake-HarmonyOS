@@ -262,6 +262,7 @@ struct More {
                 .height(StyleConstants.FULL_PERCENT)
                 .justifyContent(FlexAlign.Center)
                 .backgroundColor(StyleConstants.TRANSPARENT_BACKGROUND)
+                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
                 .onClick(() => {})
                 .onAppear(() => {
                     Logger.debug(this.LOG_TAG, "Blocking progress loaded!");
