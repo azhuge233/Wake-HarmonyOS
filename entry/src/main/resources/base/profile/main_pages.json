@@ -1,6 +1,8 @@
 {
-	"src": [
-		"pages/Index",
-		"pages/AddMachine"
-	]
+  "src": [
+    "pages/Index",
+    "pages/AddMachine",
+    "pages/More",
+    "pages/Help"
+  ]
 }
