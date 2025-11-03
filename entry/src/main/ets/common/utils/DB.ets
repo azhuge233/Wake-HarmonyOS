@@ -107,7 +107,7 @@ export class DB {
         const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
         predicates.equalTo(this.ID_KEY, id);
 
-        const queryResult = await this.rdbStore?.query(predicates, [this.MAC_KEY, this.ALIAS_KEY]);
+        const queryResult = await this.rdbStore.query(predicates, [this.MAC_KEY, this.ALIAS_KEY]);
 
         if(queryResult === undefined) return;
 
@@ -119,6 +119,32 @@ export class DB {
         Logger.debug(this.LOG_TAG, `Deleting machine. ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
 
         return this.rdbStore.delete(predicates);
+    }
+
+    async updateMachineByID(id: number, newMac: string, newAlias: string) {
+        await this.waitForReady();
+
+        if(!this.rdbStore) throw new Error("Database not available");
+
+        const newValueBucket: relationalStore.ValuesBucket = {
+            "MAC": newMac,
+            "ALIAS": newAlias
+        };
+
+        const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
+        predicates.equalTo(this.ID_KEY, id);
+
+        const queryResult = await this.rdbStore.query(predicates, [this.MAC_KEY, this.ALIAS_KEY]);
+
+        if(queryResult === undefined) return;
+
+        queryResult.goToNextRow();
+        const mac = queryResult.getString(queryResult.getColumnIndex(this.MAC_KEY));
+        const alias = queryResult.getString(queryResult.getColumnIndex(this.ALIAS_KEY));
+
+        Logger.debug(this.LOG_TAG, `Updating machine. ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
+
+        return this.rdbStore.update(newValueBucket, predicates);
     }
 
     async clearTable() {
