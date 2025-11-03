@@ -187,6 +187,18 @@
 		{
 			"name": "import_waiting_message",
 			"value": "Importing, please wait..."
+		},
+		{
+			"name": "edit_title",
+			"value": "Edit"
+		},
+		{
+			"name": "update_machine_success",
+			"value": "Successfully updated device: %s"
+		},
+		{
+			"name": "button_edit_confirm",
+			"value": "Save"
 		}
 	]
 }
