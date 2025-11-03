@@ -33,6 +33,10 @@
 			"value": "#FF0000"
 		},
 		{
+			"name": "green",
+			"value": "#00C000"
+		},
+		{
 			"name": "main_background_color",
 			"value": "#F1F3F5"
 		},
