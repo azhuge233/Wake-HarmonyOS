@@ -7,9 +7,16 @@ import { promptAction, window } from '@kit.ArkUI';
 import CommonConstants from '../common/constants/CommonConstants';
 import { Decimal } from '@kit.ArkTS';
 
+@Builder
+export function AddMachineBuilder() {
+    AddMachine();
+}
+
 @Entry
 @Component
 struct AddMachine {
+    pathStack: NavPathStack | undefined = undefined;
+
     @State mac: string = '';
     @State alias: string = '';
     @State screenHeight: string = StyleConstants.FULL_PERCENT;
@@ -79,7 +86,7 @@ struct AddMachine {
     }
 
     build() {
-        Navigation() {
+        NavDestination() {
             Column() {
                 TextItem({
                     inputType: INPUT_TYPE.MAC,
@@ -141,10 +148,12 @@ struct AddMachine {
             .height(this.screenHeight)
             .justifyContent(FlexAlign.Center)
         }
-        .titleMode(NavigationTitleMode.Mini)
         .title($r("app.string.add_machine_title"))
         .alignSelf(ItemAlign.Center)
         .align(Alignment.Center)
+        .onReady((context: NavDestinationContext) => {
+            this.pathStack = context.pathStack;
+        })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })

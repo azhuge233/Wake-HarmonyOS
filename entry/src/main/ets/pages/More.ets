@@ -12,9 +12,16 @@ import { DB } from '../common/utils/DB';
 import MoreMenuItem from '../view/MoreMenuItem';
 import StyleConstants from '../common/constants/StyleConstants';
 
+@Builder
+export function MoreBuilder() {
+    More();
+}
+
 @Entry
 @Component
 struct More {
+    pathStack: NavPathStack | undefined = undefined;
+
     private LOG_TAG = '[pages/More]';
 
     private db = DB.getInstance();
@@ -203,7 +210,7 @@ struct More {
 
     build() {
         Stack() {
-            Navigation() {
+            NavDestination() {
                 Column() {
                     MoreMenuItem({
                         menuText: $r("app.string.page_more_export"),
@@ -244,15 +251,15 @@ struct More {
                         menuIcon: "./media/icon/info_circle.png"
                     }).onClick(() => {
                         if (!this.isProcessing) {
-                            this.uiContext.getRouter().pushUrl({
-                                url: "pages/Help"
-                            })
+                            this.pathStack?.pushPath({ name: "Help" });
                         }
                     })
                 }
             }
-            .titleMode(NavigationTitleMode.Mini)
             .title($r("app.string.more_title"))
+            .onReady((context: NavDestinationContext) => {
+                this.pathStack = context.pathStack;
+            })
             .onAppear(() => {
                 Logger.debug(this.LOG_TAG, "Main menu loaded!");
             })

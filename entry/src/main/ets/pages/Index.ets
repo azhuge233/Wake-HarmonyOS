@@ -14,6 +14,8 @@ import StyleConstants from '../common/constants/StyleConstants';
 @Entry
 @Component
 struct Index {
+    pageStack: NavPathStack = new NavPathStack();
+
     @State machines: Array<Machine> = [];
     @State ipBannerText: string = '';
 
@@ -88,7 +90,7 @@ struct Index {
     }
 
     build() {
-        Navigation() {
+        Navigation(this.pageStack) {
             Column() {
                 IPBanner({ ipBannerText: $ipBannerText })
 
@@ -127,14 +129,13 @@ struct Index {
                         top: StyleConstants.MARGIN_FIVE_PERCENT
                     })
                     .onClick(() => {
-                        this.uiContext.getRouter().pushUrl({
-                            url: "pages/AddMachine"
-                        })
+                        this.pageStack.pushPath({ name: "AddMachine" });
                     })
             }
             .alignItems(HorizontalAlign.Center)
             .justifyContent(FlexAlign.SpaceBetween)
         }
+        .mode(NavigationMode.Auto)
         .titleMode(NavigationTitleMode.Full)
         .title($r("app.string.title_label"))
         .menus([
@@ -150,9 +151,7 @@ struct Index {
                 value: $r("app.string.navigation_menu_refresh"),
                 icon: "./media/icon/gearshape.png",
                 action: () => {
-                    this.uiContext.getRouter().pushUrl({
-                        url: "pages/More"
-                    });
+                    this.pageStack.pushPath({ name: "More" })
                 }
             }
         ])

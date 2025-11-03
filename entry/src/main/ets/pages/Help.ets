@@ -1,13 +1,20 @@
 import Logger from '../common/utils/Logger';
 import StyleConstants from '../common/constants/StyleConstants';
 
+@Builder
+export function HelpBuilder() {
+    Help();
+}
+
 @Entry
 @Component
 struct Help {
+    pathStack: NavPathStack | undefined = undefined;
+
     private LOG_TAG = '[pages/Help]';
 
     build() {
-        Navigation() {
+        NavDestination() {
             Column() {
                 Scroll() {
                     Text() {
@@ -23,8 +30,10 @@ struct Help {
                 .scrollBar(BarState.Off)
             }
         }
-        .titleMode(NavigationTitleMode.Mini)
         .title($r("app.string.help_title"))
+        .onReady((context: NavDestinationContext) => {
+            this.pathStack = context.pathStack;
+        })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })
