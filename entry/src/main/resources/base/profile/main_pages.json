@@ -3,6 +3,7 @@
     "pages/Index",
     "pages/AddMachine",
     "pages/More",
-    "pages/Help"
+    "pages/Help",
+    "pages/Edit"
   ]
 }

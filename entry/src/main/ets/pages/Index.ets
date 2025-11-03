@@ -85,7 +85,37 @@ struct Index {
             })
         }
         .margin({
-            left: StyleConstants.MARGIN_TEN_PERCENT
+            left: StyleConstants.MARGIN_THREE_PERCENT
+        })
+    }
+
+    @Builder EditButton(machine: Machine) {
+        Row() {
+            Button() {
+                Image("./media/icon/square_and_pencil.png")
+                    .objectFit(ImageFit.Cover)
+                    .width(StyleConstants.SIXTY_PERCENT)
+                    .height(StyleConstants.SIXTY_PERCENT)
+            }
+            .backgroundColor($r("app.color.green"))
+            .type(ButtonType.Circle)
+            .width(StyleConstants.DELETE_BUTTON_WIDTH)
+            .height(StyleConstants.DELETE_BUTTON_HEIGHT)
+            .onClick(async () => {
+                this.scrollerForList.closeAllSwipeActions();
+                this.pageStack.pushPath({
+                    name: "Edit",
+                    param: machine,
+                    onPop: async (popInfo: PopInfo) => {
+                        await this.getMachineList();
+                        Logger.debug(this.LOG_TAG,
+                            `Returned from page [${popInfo.info.name}], result: ${JSON.stringify(popInfo.result)}`);
+                    }
+                });
+            })
+        }
+        .margin({
+            left: StyleConstants.MARGIN_THREE_PERCENT
         })
     }
 
@@ -106,6 +136,7 @@ struct Index {
                         .swipeAction({
                             end: {
                                 builder: () => {
+                                    this.EditButton(machine);
                                     this.DeleteButton(machine.ID, index);
                                 }
                             }
