@@ -10,6 +10,7 @@
 		"compressNativeLibs": true,
 		"deliveryWithInstall": true,
 		"installationFree": false,
+		"routerMap": "$profile:route_map",
 		"pages": "$profile:main_pages",
 		"abilities": [
 			{

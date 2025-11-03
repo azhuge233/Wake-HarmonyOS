@@ -1,0 +1,36 @@
+{
+  "routerMap": [
+    {
+      "name": "Edit",
+      "pageSourceFile": "src/main/ets/pages/Edit.ets",
+      "buildFunction": "EditBuilder",
+      "data": {
+        "description" : "Device edit page"
+      }
+    },
+    {
+      "name": "Help",
+      "pageSourceFile": "src/main/ets/pages/Help.ets",
+      "buildFunction": "HelpBuilder",
+      "data": {
+        "description" : "Help page"
+      }
+    },
+    {
+      "name": "More",
+      "pageSourceFile": "src/main/ets/pages/More.ets",
+      "buildFunction": "MoreBuilder",
+      "data": {
+        "description" : "More function page"
+      }
+    },
+    {
+      "name": "AddMachine",
+      "pageSourceFile": "src/main/ets/pages/AddMachine.ets",
+      "buildFunction": "AddMachineBuilder",
+      "data": {
+        "description" : "Add machine page"
+      }
+    }
+  ]
+}
