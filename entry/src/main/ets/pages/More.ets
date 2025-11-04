@@ -196,8 +196,8 @@ struct More {
     }
 
     build() {
-        Stack() {
-            NavDestination() {
+        NavDestination() {
+            Stack({ alignContent: Alignment.Top }) {
                 Column() {
                     MoreMenuItem({
                         menuText: $r("app.string.page_more_export"),
@@ -205,14 +205,17 @@ struct More {
                     }).onClick(async () => {
                         if (!this.isProcessing) {
                             await this.export();
-                        }
+                        } else this.alert($r("app.string.import_waiting_message"));
                     })
 
                     MoreMenuItem({
                         menuText: $r("app.string.page_more_import"),
                         menuIcon: "./media/icon/arrow_down_circle.png"
                     }).onClick(async () => {
-                        if (this.isProcessing) return;
+                        if (this.isProcessing) {
+                            this.alert($r("app.string.import_waiting_message"));
+                            return;
+                        }
 
                         this.uiContext.getPromptAction().showDialog({
                             title: $r("app.string.import_title"),
@@ -239,43 +242,57 @@ struct More {
                     }).onClick(() => {
                         if (!this.isProcessing) {
                             this.pathStack?.pushPath({ name: "Help" });
+                        } else this.alert($r("app.string.import_waiting_message"));
+                    })
+                }
+
+                if (this.isProcessing) {
+                    Stack() {
+                        Column()
+                        .width(StyleConstants.FULL_PERCENT)
+                        .height(StyleConstants.FULL_PERCENT)
+                        .backgroundColor(StyleConstants.TRANSPARENT_BACKGROUND)
+                        .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
+                        .onClick(() => {})
+
+
+                        Column() {
+                            Progress({ value: 0, total: 100, type: ProgressType.Ring })
+                                .width(StyleConstants.PROGRESS_WIDTH)
+                                .color(Color.Blue)
+                                .style({
+                                    strokeWidth: StyleConstants.PROGRESS_STROKE_WIDTH,
+                                    status: ProgressStatus.LOADING
+                                })
+
+                            Text($r("app.string.import_waiting_message"))
+                                .margin({ top: StyleConstants.MARGIN_TWENTY })
+                                .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
+                                .fontColor($r("app.color.text_font_color"))
                         }
+                        .width(StyleConstants.FULL_PERCENT)
+                        .height(StyleConstants.FULL_PERCENT)
+                        .justifyContent(FlexAlign.Center)
+                        .onClick(() => {})
+                    }
+                    .onClick(() => {})
+                    .onAppear(() => {
+                        Logger.debug(this.LOG_TAG, "Blocking stack loaded!");
                     })
                 }
             }
-            .title($r("app.string.more_title"))
-            .onReady((context: NavDestinationContext) => {
-                this.pathStack = context.pathStack;
-            })
-            .onAppear(() => {
-                Logger.debug(this.LOG_TAG, "Main menu loaded!");
-            })
-
-            if(this.isProcessing) {
-                Column() {
-                    Progress({ value: 0, total: 100, type: ProgressType.Ring })
-                        .width(StyleConstants.PROGRESS_WIDTH)
-                        .color(Color.Blue)
-                        .style({ strokeWidth: 18, status: ProgressStatus.LOADING })
-
-                    Text($r("app.string.import_waiting_message"))
-                        .margin({ top: StyleConstants.MARGIN_TWENTY })
-                        .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                        .fontColor(Color.White)
-                }
-                .width(StyleConstants.FULL_PERCENT)
-                .height(StyleConstants.FULL_PERCENT)
-                .justifyContent(FlexAlign.Center)
-                .backgroundColor(StyleConstants.TRANSPARENT_BACKGROUND)
-                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
-                .onClick(() => {})
-                .onAppear(() => {
-                    Logger.debug(this.LOG_TAG, "Blocking progress loaded!");
-                })
-            }
         }
-        .width(StyleConstants.FULL_PERCENT)
-        .height(StyleConstants.FULL_PERCENT)
+        .title($r("app.string.more_title"))
+        .onReady((context: NavDestinationContext) => {
+            this.pathStack = context.pathStack;
+        })
+        .onBackPressed(() => {
+            if(this.isProcessing) {
+                this.alert($r("app.string.import_waiting_message"));
+                return true;
+            }
+            return false;
+        })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })
