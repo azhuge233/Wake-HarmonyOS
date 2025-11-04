@@ -56,6 +56,12 @@ struct Index {
         })
     }
 
+    async returnFromSubPage(popInfo: PopInfo): Promise<void> {
+        await this.getMachineList();
+        Logger.debug(this.LOG_TAG,
+            `Returned from page [${popInfo.info.name}], result: ${JSON.stringify(popInfo.result)}`);
+    }
+
     async onPageShow(): Promise<void> {
         this.refreshIPBanner();
         await this.getMachineList();
@@ -107,9 +113,7 @@ struct Index {
                     name: "Edit",
                     param: machine,
                     onPop: async (popInfo: PopInfo) => {
-                        await this.getMachineList();
-                        Logger.debug(this.LOG_TAG,
-                            `Returned from page [${popInfo.info.name}], result: ${JSON.stringify(popInfo.result)}`);
+                        await this.returnFromSubPage(popInfo);
                     }
                 });
             })
