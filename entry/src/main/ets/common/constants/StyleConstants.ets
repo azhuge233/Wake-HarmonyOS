@@ -53,6 +53,7 @@ class StyleConstants {
 
     PROGRESS_WIDTH = 100;
     PROGRESS_COLUMN_BLUR_LEVEL = 8;
+    PROGRESS_STROKE_WIDTH = 18;
 }
 
 export default new StyleConstants();
