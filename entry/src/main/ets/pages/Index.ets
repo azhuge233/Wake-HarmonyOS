@@ -191,7 +191,12 @@ struct Index {
                 value: $r("app.string.navigation_menu_more"),
                 icon: "./media/icon/gearshape.png",
                 action: () => {
-                    this.pageStack.pushPath({ name: "More" })
+                    this.pageStack.pushPath({
+                        name: "More",
+                        onPop: async (popInfo: PopInfo) => {
+                            await this.returnFromSubPage(popInfo);
+                        }
+                    })
                 }
             }
         ])

@@ -191,21 +191,8 @@ struct More {
             this.alert($r("app.string.import_failed"));
         } finally {
             this.isProcessing = false;
+            this.pathStack?.pop("OK");
         }
-    }
-
-    async onPageShow(): Promise<void> {}
-
-    onPageHide(): void {}
-
-    onBackPress(): boolean | void {
-        if (this.isProcessing) {
-            promptAction.showToast({
-                message: $r("app.string.import_waiting_message")
-            })
-            return true;
-        }
-        return false;
     }
 
     build() {
