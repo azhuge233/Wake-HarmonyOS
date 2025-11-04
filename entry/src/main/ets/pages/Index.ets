@@ -179,7 +179,7 @@ struct Index {
                 }
             },
             {
-                value: $r("app.string.navigation_menu_refresh"),
+                value: $r("app.string.navigation_menu_more"),
                 icon: "./media/icon/gearshape.png",
                 action: () => {
                     this.pageStack.pushPath({ name: "More" })

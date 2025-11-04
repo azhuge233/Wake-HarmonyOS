@@ -199,6 +199,10 @@
 		{
 			"name": "button_edit_confirm",
 			"value": "Save"
-		}
-	]
+		},
+      {
+        "name": "navigation_menu_more",
+        "value": "More"
+      }
+    ]
 }

@@ -199,6 +199,10 @@
 		{
 			"name": "button_edit_confirm",
 			"value": "保存"
-		}
-	]
+		},
+      {
+        "name": "navigation_menu_more",
+        "value": "更多"
+      }
+    ]
 }
