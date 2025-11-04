@@ -154,6 +154,10 @@ struct AddMachine {
         .onReady((context: NavDestinationContext) => {
             this.pathStack = context.pathStack;
         })
+        .onBackPressed(() => {
+            this.pathStack?.pop("OK");
+            return true;
+        })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })

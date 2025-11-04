@@ -164,7 +164,12 @@ struct Index {
                         top: StyleConstants.MARGIN_FIVE_PERCENT
                     })
                     .onClick(() => {
-                        this.pageStack.pushPath({ name: "AddMachine" });
+                        this.pageStack.pushPath({
+                            name: "AddMachine",
+                            onPop: async (popInfo: PopInfo) => {
+                                await this.returnFromSubPage(popInfo);
+                            }
+                        });
                     })
             }
             .alignItems(HorizontalAlign.Center)
