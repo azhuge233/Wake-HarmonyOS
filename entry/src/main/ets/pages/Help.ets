@@ -19,6 +19,7 @@ struct Help {
                 Scroll() {
                     Text() {
                         Span($r("app.string.help_info_span1"))
+                        Span($r("app.string.help_info_span4"))
                         Span($r("app.string.help_info_span2"))
                         Span($r("app.string.help_info_span3"))
                     }

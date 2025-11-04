@@ -203,6 +203,10 @@
 		{
 			"name": "navigation_menu_more",
 			"value": "More"
+		},
+		{
+			"name": "help_info_span4",
+			"value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
 		}
 	]
 }
