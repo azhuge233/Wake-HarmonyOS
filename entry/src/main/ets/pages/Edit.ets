@@ -1,5 +1,5 @@
 import { promptAction, window } from '@kit.ArkUI';
-import { BusinessError } from '@kit.BasicServicesKit';
+import { deviceInfo, BusinessError } from '@kit.BasicServicesKit';
 import { Decimal } from '@kit.ArkTS';
 
 import Machine from '../model/Machine';
@@ -30,6 +30,7 @@ struct Edit {
     private db = DB.getInstance();
 
     private uiContext = this.getUIContext();
+    private promptAction = this.uiContext.getPromptAction();
     private focusController = this.uiContext.getFocusController();
     private totalHeight: number = 0;
 
@@ -54,10 +55,17 @@ struct Edit {
     }
 
     alert(message: string | Resource) {
-        promptAction.showToast({
-            message: message,
-            bottom: StyleConstants.TOAST_BOTTOM_SPACE
-        })
+        if(deviceInfo.sdkApiVersion <= 17) {
+            promptAction.showToast({
+                message: message,
+                bottom: StyleConstants.TOAST_BOTTOM_SPACE
+            });
+        } else {
+            this.promptAction.openToast({
+                message: message,
+                bottom: StyleConstants.TOAST_BOTTOM_SPACE
+            });
+        }
     }
 
     async updateMachine(id: number, mac: string, alias: string) {

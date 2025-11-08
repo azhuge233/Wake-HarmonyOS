@@ -1,10 +1,8 @@
-import { JSON } from '@kit.ArkTS';
-import { BusinessError, systemDateTime } from '@kit.BasicServicesKit';
+import { buffer, JSON } from '@kit.ArkTS';
+import { deviceInfo, BusinessError, systemDateTime } from '@kit.BasicServicesKit';
 import { promptAction } from '@kit.ArkUI';
-import { picker } from '@kit.CoreFileKit';
-import { fileIo as fs } from '@kit.CoreFileKit';
+import { picker, fileIo as fs } from '@kit.CoreFileKit';
 import { common } from '@kit.AbilityKit';
-import { buffer } from '@kit.ArkTS';
 
 import Machine from '../model/Machine';
 import Logger from '../common/utils/Logger';
@@ -28,14 +26,20 @@ struct More {
 
     private uiContext = this.getUIContext();
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
-    // private promptAction = this.uiContext.getPromptAction();
+    private promptAction = this.uiContext.getPromptAction();
 
     @State isProcessing: boolean = false;
 
     alert(message: Resource) {
-        promptAction.showToast({
-            message: message
-        })
+        if(deviceInfo.sdkApiVersion <= 17) {
+            promptAction.showToast({
+                message: message
+            });
+        } else {
+            this.promptAction.openToast({
+                message: message
+            });
+        }
     }
 
     getDate(): string {
@@ -233,7 +237,7 @@ struct More {
                         }).then(async (result) => {
                             if (result.index == 0) await this.import();
                             else Logger.debug(this.LOG_TAG, "Import canceled");
-                        })
+                        });
                     })
 
                     MoreMenuItem({

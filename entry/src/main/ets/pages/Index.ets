@@ -1,5 +1,5 @@
 import { JSON } from '@kit.ArkTS';
-import { BusinessError } from '@kit.BasicServicesKit';
+import { deviceInfo, BusinessError } from '@kit.BasicServicesKit';
 import { promptAction } from '@kit.ArkUI';
 import { common } from '@kit.AbilityKit';
 
@@ -27,12 +27,19 @@ struct Index {
 
     private uiContext = this.getUIContext();
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
+    private promptAction = this.uiContext.getPromptAction();
     // private applicationContext = this.context.getApplicationContext();
 
     alert(message: Resource) {
-        promptAction.showToast({
-            message: message
-        })
+        if(deviceInfo.sdkApiVersion <= 17) {
+            promptAction.showToast({
+                message: message
+            });
+        } else {
+            this.promptAction.openToast({
+                message: message
+            });
+        }
     }
 
     refreshIPBanner() {

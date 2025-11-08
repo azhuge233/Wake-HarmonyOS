@@ -1,11 +1,13 @@
+import { Decimal } from '@kit.ArkTS';
+import { deviceInfo, BusinessError } from '@kit.BasicServicesKit';
+import { promptAction, window } from '@kit.ArkUI';
+
 import Logger from '../common/utils/Logger';
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
 import { DB } from '../common/utils/DB';
-import { BusinessError } from '@kit.BasicServicesKit';
 import StyleConstants from '../common/constants/StyleConstants';
-import { promptAction, window } from '@kit.ArkUI';
 import CommonConstants from '../common/constants/CommonConstants';
-import { Decimal } from '@kit.ArkTS';
+
 
 @Builder
 export function AddMachineBuilder() {
@@ -28,6 +30,7 @@ struct AddMachine {
     private db = DB.getInstance();
 
     private uiContext = this.getUIContext();
+    private promptAction = this.uiContext.getPromptAction();
 
     aboutToAppear(): void {
         window.getLastWindow(this.uiContext.getHostContext()).then(currentWindow =>{
@@ -59,10 +62,17 @@ struct AddMachine {
     }
 
     alert(message: string | Resource) {
-        promptAction.showToast({
-            message: message,
-            bottom: StyleConstants.TOAST_BOTTOM_SPACE
-        })
+        if(deviceInfo.sdkApiVersion <= 17) {
+            promptAction.showToast({
+                message: message,
+                bottom: StyleConstants.TOAST_BOTTOM_SPACE
+            });
+        } else {
+            this.promptAction.openToast({
+                message: message,
+                bottom: StyleConstants.TOAST_BOTTOM_SPACE
+            });
+        }
     }
 
     isStringNullOrEmpty(str: string): boolean {
