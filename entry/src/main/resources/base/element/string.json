@@ -81,6 +81,10 @@
 			"value": "Needs network permission to get network information and send magic packet"
 		},
 		{
+			"name": "vibrate_permission_reason",
+			"value": "Needs vibrate permission to vibrate after pressing wake button"
+		},
+		{
 			"name": "button_confirm_label",
 			"value": "Confirm"
 		},
@@ -136,10 +140,10 @@
 			"name": "import_success",
 			"value": "Import success!"
 		},
-      {
-        "name": "import_failed",
-        "value": "Import failed!"
-      },
+		{
+        	"name": "import_failed",
+			"value": "Import failed!"
+		},
 		{
 			"name": "button_cancel_label",
 			"value": "Cancel"

@@ -72,13 +72,17 @@
 			"name": "title_label",
 			"value": "Wake"
 		},
-      {
-        "name": "current_broadcast_ip",
-        "value": "Current broadcast IP: "
-      },
+		{
+        	"name": "current_broadcast_ip",
+        	"value": "Current broadcast IP: "
+		},
 		{
 			"name": "network_permission_reason",
 			"value": "Needs network permission to get network information and send magic packet"
+		},
+		{
+			"name": "vibrate_permission_reason",
+			"value": "Needs vibrate permission to vibrate after pressing wake button"
 		},
 		{
 			"name": "button_confirm_label",
@@ -90,7 +94,7 @@
 		},
 		{
 			"name": "send_magic_packet_failed",
-          "value": "Send magic packet failed!, error code: %s"
+			"value": "Send magic packet failed!, error code: %s"
 		},
 		{
 			"name": "no_broadcast_ip",
@@ -106,7 +110,7 @@
 		},
 		{
 			"name": "input_cannot_be_null_or_empty",
-          "value": "Input cannot be empty!"
+			"value": "Input cannot be empty!"
 		},
 		{
 			"name": "validate_mac_too_short",
@@ -120,10 +124,10 @@
 			"name": "add_machine_success",
 			"value": "Successfully added device: %s"
 		},
-      {
-        "name": "network_refreshed",
-        "value": "Network refreshed!"
-      },
+		{
+        	"name": "network_refreshed",
+        	"value": "Network refreshed!"
+		},
 		{
 			"name": "navigation_menu_refresh",
 			"value": "Refresh"
@@ -188,10 +192,10 @@
 			"name": "import_waiting_message",
 			"value": "Importing, please wait..."
 		},
-      {
-        "name": "edit_title",
-        "value": "Edit"
-      },
+		{
+        	"name": "edit_title",
+        	"value": "Edit"
+		},
 		{
 			"name": "update_machine_success",
 			"value": "Successfully updated device: %s"
@@ -200,13 +204,13 @@
 			"name": "button_edit_confirm",
 			"value": "Save"
 		},
-      {
-        "name": "navigation_menu_more",
-        "value": "More"
-      },
-      {
-        "name": "help_info_span4",
-        "value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
-      }
+		{
+        	"name": "navigation_menu_more",
+        	"value": "More"
+		},
+		{
+        	"name": "help_info_span4",
+        	"value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
+		}
     ]
 }

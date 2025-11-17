@@ -72,13 +72,17 @@
 			"name": "title_label",
 			"value": "网络唤醒"
 		},
-      {
-        "name": "current_broadcast_ip",
-        "value": "当前广播地址："
-      },
+		{
+        	"name": "current_broadcast_ip",
+        	"value": "当前广播地址："
+		},
 		{
 			"name": "network_permission_reason",
 			"value": "需要网络权限来获取网络信息并发送魔法包"
+		},
+		{
+			"name": "vibrate_permission_reason",
+			"value": "需要振动权限来实现点击唤醒按钮后振动"
 		},
 		{
 			"name": "button_confirm_label",
@@ -106,7 +110,7 @@
 		},
 		{
 			"name": "input_cannot_be_null_or_empty",
-          "value": "输入不能为空！"
+			"value": "输入不能为空！"
 		},
 		{
 			"name": "validate_mac_too_short",
@@ -120,10 +124,10 @@
 			"name": "add_machine_success",
 			"value": "成功添加设备：%s"
 		},
-      {
-        "name": "network_refreshed",
-		  "value": "网络已刷新！"
-      },
+		{
+        	"name": "network_refreshed",
+			"value": "网络已刷新！"
+		},
 		{
 			"name": "navigation_menu_refresh",
 			"value": "刷新"
@@ -188,10 +192,10 @@
 			"name": "import_waiting_message",
 			"value": "正在导入，请稍候..."
 		},
-      {
-        "name": "edit_title",
-        "value": "编辑"
-      },
+		{
+        	"name": "edit_title",
+        	"value": "编辑"
+		},
 		{
 			"name": "update_machine_success",
 			"value": "成功更新设备：%s"
@@ -200,13 +204,13 @@
 			"name": "button_edit_confirm",
 			"value": "保存"
 		},
-      {
-        "name": "navigation_menu_more",
-        "value": "更多"
-      },
-      {
-        "name": "help_info_span4",
-		  "value": "对主界面设备列表的单个设备左滑可以编辑/删除设备。\n\n"
-      }
+		{
+        	"name": "navigation_menu_more",
+        	"value": "更多"
+		},
+      	{
+        	"name": "help_info_span4",
+			"value": "对主界面设备列表的单个设备左滑可以编辑/删除设备。\n\n"
+		}
     ]
 }
