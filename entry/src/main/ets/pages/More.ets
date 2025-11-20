@@ -203,52 +203,65 @@ struct More {
         NavDestination() {
             Stack({ alignContent: Alignment.Top }) {
                 Column() {
-                    MoreMenuItem({
-                        menuText: $r("app.string.page_more_export"),
-                        menuIcon: "./media/icon/arrow_up_circle.png"
-                    }).onClick(async () => {
-                        if (!this.isProcessing) {
-                            await this.export();
-                        } else this.alert($r("app.string.import_waiting_message"));
-                    })
+                    Column() {
+                        MoreMenuItem({
+                            menuText: $r("app.string.page_more_export"),
+                            menuIcon: "./media/icon/arrow_up_circle.png"
+                        }).onClick(async () => {
+                            if (!this.isProcessing) {
+                                await this.export();
+                            } else this.alert($r("app.string.import_waiting_message"));
+                        })
 
-                    MoreMenuItem({
-                        menuText: $r("app.string.page_more_import"),
-                        menuIcon: "./media/icon/arrow_down_circle.png"
-                    }).onClick(async () => {
-                        if (this.isProcessing) {
-                            this.alert($r("app.string.import_waiting_message"));
-                            return;
-                        }
+                        MoreMenuItem({
+                            menuText: $r("app.string.page_more_import"),
+                            menuIcon: "./media/icon/arrow_down_circle.png"
+                        }).onClick(async () => {
+                            if (this.isProcessing) {
+                                this.alert($r("app.string.import_waiting_message"));
+                                return;
+                            }
 
-                        this.uiContext.getPromptAction().showDialog({
-                            title: $r("app.string.import_title"),
-                            message: $r("app.string.import_message"),
-                            buttons: [
-                                {
-                                    text: $r("app.string.button_confirm_label"),
-                                    color: $r("app.color.black")
-                                },
-                                {
-                                    text: $r("app.string.button_cancel_label"),
-                                    color: $r("app.color.black")
-                                }
-                            ]
-                        }).then(async (result) => {
-                            if (result.index == 0) await this.import();
-                            else Logger.debug(this.LOG_TAG, "Import canceled");
-                        });
-                    })
+                            this.uiContext.getPromptAction().showDialog({
+                                title: $r("app.string.import_title"),
+                                message: $r("app.string.import_message"),
+                                buttons: [
+                                    {
+                                        text: $r("app.string.button_confirm_label"),
+                                        color: $r("app.color.black")
+                                    },
+                                    {
+                                        text: $r("app.string.button_cancel_label"),
+                                        color: $r("app.color.black")
+                                    }
+                                ]
+                            }).then(async (result) => {
+                                if (result.index == 0) await this.import(); else Logger.debug(this.LOG_TAG,
+                                    "Import canceled");
+                            });
+                        })
 
-                    MoreMenuItem({
-                        menuText: $r("app.string.page_more_help"),
-                        menuIcon: "./media/icon/info_circle.png"
-                    }).onClick(() => {
-                        if (!this.isProcessing) {
-                            this.pathStack?.pushPath({ name: "Help" });
-                        } else this.alert($r("app.string.import_waiting_message"));
-                    })
+                        MoreMenuItem({
+                            menuText: $r("app.string.page_more_help"),
+                            menuIcon: "./media/icon/info_circle.png"
+                        }).onClick(() => {
+                            if (!this.isProcessing) {
+                                this.pathStack?.pushPath({ name: "Help" });
+                            } else this.alert($r("app.string.import_waiting_message"));
+                        })
+                    }
+                    .height(StyleConstants.FULL_PERCENT)
+                    .width(StyleConstants.FULL_PERCENT)
+
+                    Text($r("app.string.app_version"))
+                        .width(StyleConstants.FULL_PERCENT)
+                        .fontColor(Color.Grey)
+                        .fontSize(StyleConstants.TEXT_FONT_SIZE_THIRTEEN)
+                        .alignSelf(ItemAlign.End)
+                        .textAlign(TextAlign.Center)
                 }
+                .height(StyleConstants.FULL_PERCENT)
+                .width(StyleConstants.FULL_PERCENT)
 
                 if (this.isProcessing) {
                     Stack() {
