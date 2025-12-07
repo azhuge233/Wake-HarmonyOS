@@ -2,7 +2,7 @@
 	"string": [
 		{
 			"name": "app_version",
-			"value": "1.3.6 (1360000)"
+			"value": "2.0.0 (2000000)"
 		},
 		{
 			"name": "module_desc",
@@ -129,6 +129,10 @@
 			"value": "Successfully added device: %s"
 		},
 		{
+			"name": "add_machine_failed",
+			"value": "Failed to add device: %s"
+		},
+		{
         	"name": "network_refreshed",
         	"value": "Network refreshed!"
 		},
@@ -165,6 +169,10 @@
 			"value": "Export success!"
 		},
 		{
+			"name": "export_failed",
+			"value": "Export failed!"
+		},
+		{
 			"name": "more_title",
 			"value": "More"
 		},
@@ -186,7 +194,7 @@
 		},
 		{
 			"name": "help_info_span2",
-			"value": "Click the refresh button (the circular arrow with a Wi-Fi icon in the upper-right corner of the main page) to update the broadcast address.\n\n"
+			"value": "The app automatically refreshes the broadcast address when the Wi-Fi network changes.\nIf the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main page (a circular arrow with a Wi‑Fi icon inside, located in the upper‑right corner).\n\n"
 		},
 		{
 			"name": "help_info_span3",
@@ -205,6 +213,10 @@
 			"value": "Successfully updated device: %s"
 		},
 		{
+			"name": "update_machine_failed",
+			"value": "Failed to updated device: %s"
+		},
+		{
 			"name": "button_edit_confirm",
 			"value": "Save"
 		},
@@ -215,6 +227,14 @@
 		{
         	"name": "help_info_span4",
         	"value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
+		},
+		{
+			"name": "no_device_message",
+			"value": "No devices"
+		},
+		{
+			"name": "create_new_device_message",
+			"value": "Press the \"Add New Device\" button to add device"
 		}
     ]
 }
