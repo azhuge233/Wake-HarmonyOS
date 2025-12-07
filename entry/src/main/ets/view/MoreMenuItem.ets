@@ -1,11 +1,11 @@
 import StyleConstants from "../common/constants/StyleConstants";
 
-@Component
+@ComponentV2
 export default struct MoreMenuItem {
-    menuText: Resource = $r("app.string.empty");
-    menuIcon: Resource | string = $r("app.string.empty");
-
     private LOG_TAG = "[view/MenuItem]";
+
+    @Param menuText: Resource = $r("app.string.empty");
+    @Param menuIcon: Resource | string = $r("app.string.empty");
 
     build() {
         Row() {

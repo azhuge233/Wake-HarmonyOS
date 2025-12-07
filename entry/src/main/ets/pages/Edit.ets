@@ -1,13 +1,12 @@
-import { promptAction, window } from '@kit.ArkUI';
-import { deviceInfo, BusinessError } from '@kit.BasicServicesKit';
-import { Decimal } from '@kit.ArkTS';
+import { KeyboardAvoidMode } from '@kit.ArkUI';
 
-import Machine from '../model/Machine';
 import Logger from '../common/utils/Logger';
-import { DB } from '../common/utils/DB';
 import StyleConstants from '../common/constants/StyleConstants';
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
 import CommonConstants from '../common/constants/CommonConstants';
+import CommonUtils from '../common/utils/CommonUtils';
+import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
+import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
 
 @Builder
 export function EditBuilder() {
@@ -15,86 +14,58 @@ export function EditBuilder() {
 }
 
 @Entry
-@Component
+@ComponentV2
 struct Edit {
-    pathStack: NavPathStack | undefined = undefined;
-
-    @State editId: number = -1;
-    @State newMAC: string = "";
-    @State newAlias: string = "";
-
-    @State screenHeight: string = StyleConstants.FULL_PERCENT;
-
     private LOG_TAG = '[pages/Edit]';
 
-    private db = DB.getInstance();
+    @Local updatingDevice: DeviceViewModel = new DeviceViewModel();
 
     private uiContext = this.getUIContext();
     private promptAction = this.uiContext.getPromptAction();
     private focusController = this.uiContext.getFocusController();
-    private totalHeight: number = 0;
 
-    aboutToAppear(): void {
-        window.getLastWindow(this.uiContext.getHostContext()).then(currentWindow =>{
-            let property = currentWindow.getWindowProperties();
-            this.totalHeight = property.windowRect.height;
+    private deviceList: DeviceListViewModel = new DeviceListViewModel();
 
-            Logger.debug(this.LOG_TAG, `screenHeight initialized to: ${this.screenHeight}`);
+    pathStack: NavPathStack | undefined = undefined;
 
-            // 监视软键盘的弹出和收起
-            currentWindow.on('keyboardHeightChange', async keyboardHeight => {
-                if(keyboardHeight == 0) {
-                    this.screenHeight = StyleConstants.FULL_PERCENT;
-                    return;
-                }
-                let keyboardHeightPercent: number = new Decimal(keyboardHeight / this.totalHeight * 100).ceil().toNumber();
-                this.screenHeight = `${100 - keyboardHeightPercent}%`;
-                Logger.debug(this.LOG_TAG, `screenHeight changed to: ${this.screenHeight}`);
-            })
-        })
+    aboutToAppear() {
+        // 设置软键盘避让
+        this.uiContext.setKeyboardAvoidMode(KeyboardAvoidMode.RESIZE);
     }
 
-    alert(message: string | Resource) {
-        if(deviceInfo.sdkApiVersion <= 17) {
-            promptAction.showToast({
-                message: message,
-                bottom: StyleConstants.TOAST_BOTTOM_SPACE
-            });
-        } else {
-            this.promptAction.openToast({
-                message: message,
-                bottom: StyleConstants.TOAST_BOTTOM_SPACE
-            });
-        }
-    }
+    async updateDevice() {
+        const mac = this.updatingDevice.MAC.trim();
+        const alias = this.updatingDevice.Alias.trim();
 
-    async updateMachine(id: number, mac: string, alias: string) {
-        await this.db.updateMachineByID(id, mac, alias).then(id => {
-            Logger.debug(this.LOG_TAG, `Updated machine - ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
-            this.alert($r("app.string.update_machine_success", alias));
-        }).catch((err: BusinessError) => {
-            Logger.error(this.LOG_TAG, `Update device Error! Code: ${err.code}, message: ${err.message}`);
-        })
-    }
-
-    isStringNullOrEmpty(str: string): boolean {
-        return str == null || str == '' || str.length == 0;
-    }
-
-    macValidate(mac: string): Resource | string {
-        if (mac.length < StyleConstants.TEXT_INPUT_MAC_MAX_LENGTH) {
-            return $r("app.string.validate_mac_too_short");
+        if (CommonUtils.isStringNullOrEmpty(mac)) {
+            CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
+            this.focusController.requestFocus(CommonConstants.MAC_INPUT_ID);
+            return;
         }
 
-        const regex = /^(?:[0-9A-Fa-f]{2}([-:]))(?:[0-9A-Fa-f]{2}\1){4}[0-9A-Fa-f]{2}$/
-
-        if (!regex.test(mac)) {
-            return $r("app.string.validate_mac_regex_fail");
+        if (CommonUtils.isStringNullOrEmpty(alias)) {
+            CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
+            this.focusController.requestFocus(CommonConstants.ALIAS_INPUT_ID);
+            return;
         }
 
-        Logger.info(this.LOG_TAG, `MAC validateion passed. MAC: ${mac}`);
+        const validateResult = CommonUtils.macValidate(mac);
 
-        return '';
+        if (validateResult != '') {
+            CommonUtils.alert(validateResult, this.promptAction);
+            return;
+        }
+
+        try {
+            const success = await this.deviceList.updateDevice(this.updatingDevice.toDevice());
+            if (success) {
+                CommonUtils.alert($r("app.string.update_machine_success"), this.promptAction);
+                this.pathStack?.pop("Button pressed");
+            }
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `更新设备失败: ${err}`);
+            CommonUtils.alert($r("app.string.update_machine_failed", err), this.promptAction);
+        }
     }
 
     build() {
@@ -106,7 +77,8 @@ struct Edit {
                     isDefaultFocus: true,
                     textResource: $r("app.string.add_mac_input_label"),
                     placeholderResource: $r("app.string.add_mac_input_placeholder"),
-                    text: this.newMAC
+                    text: this.updatingDevice.MAC,
+                    onInputChange: (value: string) => { this.updatingDevice.MAC = value }
                 })
                     .width(StyleConstants.EIGHTY_PERCENT)
                     .margin({
@@ -119,7 +91,8 @@ struct Edit {
                     isDefaultFocus: false,
                     textResource: $r("app.string.add_alias_input_label"),
                     placeholderResource: $r("app.string.add_alias_input_placeholder"),
-                    text: this.newAlias
+                    text: this.updatingDevice.Alias,
+                    onInputChange: (value: string) => { this.updatingDevice.Alias = value }
                 })
                     .width(StyleConstants.EIGHTY_PERCENT)
                     .margin({
@@ -129,34 +102,10 @@ struct Edit {
                 Button($r("app.string.button_edit_confirm"))
                     .width(StyleConstants.SEVENTY_PERCENT)
                     .onClick(async () => {
-                        const mac = this.newMAC;
-                        const alias = this.newAlias;
-
-                        if (this.isStringNullOrEmpty(mac)) {
-                            this.alert($r("app.string.input_cannot_be_null_or_empty"));
-                            this.focusController.requestFocus(CommonConstants.MAC_INPUT_ID);
-                            return;
-                        }
-
-                        if (this.isStringNullOrEmpty(alias)) {
-                            this.alert($r("app.string.input_cannot_be_null_or_empty"));
-                            this.focusController.requestFocus(CommonConstants.ALIAS_INPUT_ID);
-                            return;
-                        }
-
-                        const validate_result = this.macValidate(mac);
-
-                        if (validate_result != '') {
-                            this.alert(validate_result);
-                            return;
-                        }
-
-                        await this.updateMachine(this.editId, mac, alias);
-
-                        this.pathStack?.pop("OK");
+                        await this.updateDevice();
                     })
             }
-            .height(this.screenHeight)
+            .height(StyleConstants.FULL_PERCENT)
             .justifyContent(FlexAlign.Center)
         }
         .title($r("app.string.edit_title"))
@@ -164,11 +113,13 @@ struct Edit {
         .align(Alignment.Center)
         .onReady((context: NavDestinationContext) => {
             this.pathStack = context.pathStack;
-            const editMachine = context.pathInfo.param as Machine;
-
-            this.editId = editMachine.ID;
-            this.newMAC = editMachine.MAC;
-            this.newAlias = editMachine.Alias;
+            const param = this.pathStack.getParamByIndex(0) as Array<object>;
+            this.deviceList = param[0] as DeviceListViewModel;
+            this.updatingDevice = param[1] as DeviceViewModel;
+        })
+        .onBackPressed(() => {
+            this.pathStack?.pop("Back pressed");
+            return true;
         })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");

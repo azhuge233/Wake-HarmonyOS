@@ -25,11 +25,11 @@
       }
     },
     {
-      "name": "AddMachine",
-      "pageSourceFile": "src/main/ets/pages/AddMachine.ets",
-      "buildFunction": "AddMachineBuilder",
+      "name": "AddDevice",
+      "pageSourceFile": "src/main/ets/pages/AddDevice.ets",
+      "buildFunction": "AddDeviceBuilder",
       "data": {
-        "description" : "Add machine page"
+        "description" : "Add device page"
       }
     }
   ]

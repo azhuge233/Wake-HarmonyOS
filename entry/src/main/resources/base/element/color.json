@@ -51,6 +51,10 @@
 		{
 			"name": "placeholder_color",
 			"value": "#BDC1C4"
+		},
+		{
+			"name": "background_transparent",
+			"value": "#00000080"
 		}
 	]
 }

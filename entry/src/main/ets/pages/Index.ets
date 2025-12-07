@@ -1,85 +1,69 @@
-import { JSON } from '@kit.ArkTS';
-import { deviceInfo, BusinessError } from '@kit.BasicServicesKit';
-import { promptAction } from '@kit.ArkUI';
+import { BusinessError } from '@kit.BasicServicesKit';
 import { common } from '@kit.AbilityKit';
 
-import Machine from '../model/Machine';
-import MachineTile from '../view/MachineTile';
+import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
+import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
 import Logger from '../common/utils/Logger';
-import { DB } from '../common/utils/DB';
 import NET from '../common/utils/NET';
 import IPBanner from '../view/IPBanner';
 import StyleConstants from '../common/constants/StyleConstants';
+import CommonUtils from '../common/utils/CommonUtils';
+import CommonConstants from '../common/constants/CommonConstants';
+import DeviceTile from '../view/DeviceTile';
 
 @Entry
-@Component
+@ComponentV2
 struct Index {
-    pageStack: NavPathStack = new NavPathStack();
-
-    @State machines: Array<Machine> = [];
-    @State ipBannerText: string = '';
-
     private LOG_TAG = '[pages/Index]';
 
-    private scrollerForList: ListScroller = new ListScroller();
-
-    private db = DB.getInstance();
+    @Local deviceList: DeviceListViewModel = new DeviceListViewModel();
+    @Local ipBannerText: string = '';
+    @Local isLoading: boolean = false;
 
     private uiContext = this.getUIContext();
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
     private promptAction = this.uiContext.getPromptAction();
-    // private applicationContext = this.context.getApplicationContext();
 
-    alert(message: Resource) {
-        if(deviceInfo.sdkApiVersion <= 17) {
-            promptAction.showToast({
-                message: message
-            });
-        } else {
-            this.promptAction.openToast({
-                message: message
-            });
-        }
+    private scrollerForList: ListScroller = new ListScroller();
+
+    pageStack: NavPathStack = new NavPathStack();
+
+    async onPageShow(): Promise<void> {
+        this.refreshIPBanner();
+        await this.loadDevices();
     }
 
-    refreshIPBanner() {
+    onPageHide(): void {
+        this.safeCloseSwipeActions();
+        this.refreshIPBanner();
+    }
+
+    // 刷新广播地址
+    private refreshIPBanner() {
         NET.refreshCurrentNetwork();
         this.ipBannerText =
             `${this.context.resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
     }
 
-    async getMachineList(): Promise<void> {
-        await this.db.waitForReady();
-        this.db.getMachineList().then((list) => {
-            if (list === undefined) {
-                Logger.info(this.LOG_TAG, 'No Machine found!');
-                return;
+    // 加载设备列表
+    private async loadDevices() {
+        this.isLoading = true;
+        await this.deviceList.loadDevices();
+        this.isLoading = false;
+    }
+
+    private safeCloseSwipeActions(): void {
+        try {
+            if (this.deviceList.devices.length > 0) {
+                this.scrollerForList.closeAllSwipeActions();
             }
-
-            this.machines = list;
-            Logger.debug(this.LOG_TAG, `Machines found: ${JSON.stringify(this.machines)}`);
-        }).catch((err: BusinessError) => {
-            Logger.error(this.LOG_TAG, `Query failed. Code: ${err.code}, message: ${err.message}`)
-        })
+        } catch (err) {
+            Logger.debug(this.LOG_TAG, `关闭左滑菜单失败, ${err}`);
+        }
     }
 
-    async returnFromSubPage(popInfo: PopInfo): Promise<void> {
-        await this.getMachineList();
-        Logger.debug(this.LOG_TAG,
-            `Returned from page [${popInfo.info.name}], result: ${JSON.stringify(popInfo.result)}`);
-    }
-
-    async onPageShow(): Promise<void> {
-        this.refreshIPBanner();
-        await this.getMachineList();
-    }
-
-    onPageHide(): void {
-        this.scrollerForList.closeAllSwipeActions();
-        this.refreshIPBanner();
-    }
-
-    @Builder DeleteButton(id: number, index: number) {
+    @Builder
+    DeleteButton(device: DeviceViewModel) {
         Row() {
             Button() {
                 Image("./media/icon/trash.png")
@@ -92,9 +76,7 @@ struct Index {
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
             .onClick(() => {
-                this.db.deleteMachineByID(id).then(() => {
-                    this.machines.splice(index, 1)
-                });
+                this.deviceList.deleteDevice(device.toDevice());
             })
         }
         .margin({
@@ -102,7 +84,8 @@ struct Index {
         })
     }
 
-    @Builder EditButton(machine: Machine) {
+    @Builder
+    EditButton(device: DeviceViewModel) {
         Row() {
             Button() {
                 Image("./media/icon/square_and_pencil.png")
@@ -115,12 +98,13 @@ struct Index {
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
             .onClick(async () => {
-                this.scrollerForList.closeAllSwipeActions();
+                this.safeCloseSwipeActions();
                 this.pageStack.pushPath({
                     name: "Edit",
-                    param: machine,
+                    param: [this.deviceList, device],
                     onPop: async (popInfo: PopInfo) => {
-                        await this.returnFromSubPage(popInfo);
+                        this.refreshIPBanner();
+                        CommonUtils.returnFromSubPage(popInfo);
                     }
                 });
             })
@@ -130,25 +114,95 @@ struct Index {
         })
     }
 
-    build() {
-        Navigation(this.pageStack) {
-            Column() {
-                IPBanner({ ipBannerText: $ipBannerText })
+    @Builder
+    LoadingContent() {
+        Stack() {
+            Column()
+                .width(StyleConstants.FULL_PERCENT)
+                .height(StyleConstants.FULL_PERCENT)
+                .backgroundColor($r("app.color.background_transparent"))
+                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
+                .onClick(() => {})
 
+
+            Column() {
+                Progress({ value: 0, total: 100, type: ProgressType.Ring })
+                    .width(StyleConstants.PROGRESS_WIDTH)
+                    .color(Color.Blue)
+                    .style({
+                        strokeWidth: StyleConstants.PROGRESS_STROKE_WIDTH,
+                        status: ProgressStatus.LOADING
+                    })
+
+                Text($r("app.string.import_waiting_message"))
+                    .margin({ top: StyleConstants.MARGIN_TWENTY })
+                    .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
+                    .fontColor($r("app.color.text_font_color"))
+            }
+            .width(StyleConstants.FULL_PERCENT)
+            .height(StyleConstants.FULL_PERCENT)
+            .justifyContent(FlexAlign.Center)
+            .onClick(() => {})
+        }
+        .onClick(() => {})
+        .onAppear(() => {
+            Logger.debug(this.LOG_TAG, "Blocking stack loaded!");
+        })
+    }
+
+    @Builder
+    MainContent() {
+        Column() {
+            if (!this.isLoading && this.deviceList.devices.length === 0) {
+                Column() {
+                    Text($r("app.string.no_device_message"))
+                        .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHTEEN)
+                        .fontColor(Color.Gray)
+                    Text($r("app.string.create_new_device_message"))
+                        .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
+                        .fontColor(Color.Gray)
+                        .margin({ top: StyleConstants.MARGIN_TEN })
+                }
+                .height(StyleConstants.EIGHTY_FIVE_PERCENT)
+                .justifyContent(FlexAlign.Center)
+                .width(StyleConstants.FULL_PERCENT)
+            } else {
                 List({ scroller: this.scrollerForList }) {
-                    ForEach(this.machines, (machine: Machine, index) => {
+                    ForEach(this.deviceList.devices, (device: DeviceViewModel) => {
                         ListItem() {
-                            MachineTile({
-                                machineMAC: $r("app.string.machine_mac_label", machine.MAC),
-                                machineAlias: $r("app.string.machine_alias_label", machine.Alias),
-                                machineMACAddr: machine.MAC
+                            DeviceTile({
+                                deviceMAC: $r("app.string.machine_mac_label", device.MAC),
+                                deviceAlias: $r("app.string.machine_alias_label", device.Alias),
+                                deviceMACAddr: device.MAC,
+                                sendPacket: (macAddr: string) => {
+                                    if (NET.HAS_BROADCAST_IP) {
+                                        const packet = NET.buildMagicPacket(macAddr);
+
+                                        NET.UDP.send(packet, (err: BusinessError) => {
+                                            if (err) {
+                                                Logger.error(this.LOG_TAG,
+                                                    `Send magic packet Error. Code: ${err.code}, message: ${err.message}`);
+                                                CommonUtils.alert($r("app.string.send_magic_packet_failed", err.code),
+                                                    this.promptAction);
+                                                return;
+                                            }
+
+                                            Logger.debug(this.LOG_TAG, 'Send magic packet OK!');
+                                            CommonUtils.alert($r("app.string.send_magic_packet_success"),
+                                                this.promptAction);
+                                        });
+                                    } else {
+                                        Logger.debug(this.LOG_TAG, "No broadcast IP, abort.");
+                                        CommonUtils.alert($r("app.string.no_broadcast_ip"), this.promptAction);
+                                    }
+                                }
                             })
                         }
                         .swipeAction({
                             end: {
                                 builder: () => {
-                                    this.EditButton(machine);
-                                    this.DeleteButton(machine.ID, index);
+                                    this.EditButton(device);
+                                    this.DeleteButton(device);
                                 }
                             }
                         })
@@ -159,28 +213,56 @@ struct Index {
                             bottom: StyleConstants.MARGIN_TWO_PERCENT
                         })
                     })
+                        .onMove((from: number, to: number) => {
+                            const success = this.deviceList.reorderDevices(from, to);
+                            return success;
+                        }, {
+                            onLongPress: () => {
+                                CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_SOFT);
+                            }
+                        })
                 }
                 .listDirection(Axis.Vertical)
                 .alignSelf(ItemAlign.Start)
                 .height(StyleConstants.EIGHTY_FIVE_PERCENT)
                 .width(StyleConstants.FULL_PERCENT)
-
-                Button($r("app.string.button_Add_label"))
-                    .width(StyleConstants.EIGHTY_PERCENT)
-                    .margin({
-                        top: StyleConstants.MARGIN_FIVE_PERCENT
-                    })
-                    .onClick(() => {
-                        this.pageStack.pushPath({
-                            name: "AddMachine",
-                            onPop: async (popInfo: PopInfo) => {
-                                await this.returnFromSubPage(popInfo);
-                            }
-                        });
-                    })
             }
-            .alignItems(HorizontalAlign.Center)
-            .justifyContent(FlexAlign.SpaceBetween)
+
+            Button($r("app.string.button_Add_label"))
+                .width(StyleConstants.EIGHTY_PERCENT)
+                .margin({
+                    top: StyleConstants.MARGIN_FIVE_PERCENT
+                })
+                .onClick(() => {
+                    this.safeCloseSwipeActions();
+                    this.pageStack.pushPath({
+                        name: "AddDevice",
+                        param: this.deviceList,
+                        onPop: async (popInfo: PopInfo) => {
+                            this.refreshIPBanner();
+                            CommonUtils.returnFromSubPage(popInfo);
+                        }
+                    });
+                })
+        }
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.SpaceBetween)
+    }
+
+    build() {
+        Navigation(this.pageStack) {
+            IPBanner({
+                ipBannerText: this.ipBannerText,
+                onRefresh: () => {
+                    this.refreshIPBanner();
+                }
+            })
+
+            Stack({ alignContent: Alignment.Top }) {
+                this.MainContent();
+
+                if(this.isLoading) this.LoadingContent();
+            }
         }
         .mode(NavigationMode.Auto)
         .titleMode(NavigationTitleMode.Full)
@@ -191,17 +273,20 @@ struct Index {
                 icon: "./media/icon/network_refresh.png",
                 action: () => {
                     this.refreshIPBanner();
-                    this.alert($r("app.string.network_refreshed"));
+                    CommonUtils.alert($r("app.string.network_refreshed"), this.promptAction);
                 }
             },
             {
                 value: $r("app.string.navigation_menu_more"),
-                icon: "./media/icon/gearshape.png",
+                icon: "./media/icon/dot_grid_2x2.png",
                 action: () => {
+                    this.safeCloseSwipeActions();
                     this.pageStack.pushPath({
                         name: "More",
+                        param: this.deviceList,
                         onPop: async (popInfo: PopInfo) => {
-                            await this.returnFromSubPage(popInfo);
+                            this.refreshIPBanner();
+                            CommonUtils.returnFromSubPage(popInfo);
                         }
                     })
                 }

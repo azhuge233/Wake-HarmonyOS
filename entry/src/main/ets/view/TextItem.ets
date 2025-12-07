@@ -6,15 +6,16 @@ export enum INPUT_TYPE {
     ALIAS = 2
 }
 
-@Component
+@ComponentV2
 export default struct TextItem {
-    @Link text: string;
-    textResource: Resource = $r("app.string.empty");
-    placeholderResource: Resource = $r("app.string.empty");
+    @Param text: string = '';
+    @Param inputType: INPUT_TYPE = INPUT_TYPE.NONE;
+    @Param inputId: string = '';
+    @Param isDefaultFocus: boolean = false;
+    @Param textResource: Resource = $r("app.string.empty");
+    @Param placeholderResource: Resource = $r("app.string.empty");
 
-    inputType: INPUT_TYPE = INPUT_TYPE.NONE;
-    inputId: string = '';
-    isDefaultFocus: boolean = false;
+    @Event onInputChange: (value: string) => void = (value: string) => {};
 
     private maxLength: number = StyleConstants.TEXT_INPUT_DEFAULT_MAX_LENGTH;
 
@@ -46,7 +47,7 @@ export default struct TextItem {
                 .maxLength(this.maxLength)
                 .type(InputType.Normal)
                 .onChange((value: string) => {
-                    this.text = value;
+                    this.onInputChange(value);
                 })
         }
         .alignItems(VerticalAlign.Center)

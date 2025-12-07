@@ -7,7 +7,7 @@ export function HelpBuilder() {
 }
 
 @Entry
-@Component
+@ComponentV2
 struct Help {
     pathStack: NavPathStack | undefined = undefined;
 

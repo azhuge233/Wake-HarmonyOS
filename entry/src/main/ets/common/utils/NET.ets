@@ -1,8 +1,9 @@
 import wifiManager from '@ohos.wifiManager';
-import Logger from "./Logger";
 import { socket } from '@kit.NetworkKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { buffer } from '@kit.ArkTS';
+
+import Logger from "./Logger";
 
 class NET {
     private LOG_TAG = '[NET]';

@@ -1,8 +1,7 @@
 import { relationalStore } from '@kit.ArkData';
 import Logger from '../utils/Logger';
 import { Context } from '@kit.AbilityKit';
-import Machine from '../../model/Machine';
-import { JSON } from '@kit.ArkTS';
+import Device from '../../model/Device';
 import { BusinessError } from '@kit.BasicServicesKit';
 
 export class DB {
@@ -17,16 +16,23 @@ export class DB {
     private LOG_TAG = '[DB]'
 
     private STORE_CONFIG: relationalStore.StoreConfig = {
-        name: 'LoadTest.db',
+        name: 'Wake.db',
         securityLevel: relationalStore.SecurityLevel.S1
     };
 
-    private TABLE_NAME = 'MACHINE';
-    private ID_KEY = 'ID';
-    private MAC_KEY = 'MAC';
-    private ALIAS_KEY = 'ALIAS';
+    private TABLE_NAME = 'DEVICE';
 
-    private SQL_CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${this.TABLE_NAME} (ID INTEGER PRIMARY KEY AUTOINCREMENT, MAC TEXT NOT NULL, ALIAS TEXT NOT NULL)`;
+    private KEY_ID = 'ID';
+    private KEY_MAC = 'MAC';
+    private KEY_ALIAS = 'ALIAS';
+    private KEY_ORDERINDEX = 'ORDERINDEX';
+
+    private SQL_CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${this.TABLE_NAME} (
+        ${this.KEY_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${this.KEY_MAC} TEXT NOT NULL,
+        ${this.KEY_ALIAS} TEXT NOT NULL,
+        ${this.KEY_ORDERINDEX} INTEGER DEFAULT 0
+    )`;
     private SQL_DELETE_TABLE = `DELETE FROM ${this.TABLE_NAME}`;
 
     private constructor() { }
@@ -50,114 +56,183 @@ export class DB {
                 this.isInitialized = true;
                 resolve(); // 解析Promise表示初始化完成
             }).catch((err: BusinessError) => {
-                Logger.error(this.LOG_TAG, "DB initialization failed");
+                Logger.error(this.LOG_TAG, `数据库初始化失败, ${err}`);
                 resolve(); // 即使失败也要resolve，避免永久阻塞
             });
         });
     }
 
     public async waitForReady(): Promise<void> {
-        if (!this.initPromise) throw new Error("DB not initialized. Call initialize() first.");
+        if (!this.initPromise) throw new Error("数据库未初始化，先执行initialize()");
         await this.initPromise;
     }
 
-    async getMachineList() {
+    async getDevices() {
         await this.waitForReady();
 
-        if (!this.rdbStore) throw new Error("Database not available");
+        if (!this.rdbStore) throw new Error("数据库实例不存在");
 
         const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
 
-        const machines: Array<Machine> = [];
+        const queryResult = await this.rdbStore.query(predicates, [
+          this.KEY_ID, this.KEY_MAC, this.KEY_ALIAS, this.KEY_ORDERINDEX
+        ]);
 
-        const queryResult = await this.rdbStore.query(predicates, [this.ID_KEY, this.MAC_KEY, this.ALIAS_KEY]);
+        if(queryResult === undefined) throw new Error("查询为空");
 
-        if(queryResult === undefined) return;
+        Logger.debug(this.LOG_TAG, `查询结果，行数: ${queryResult.rowCount}, 列数: ${queryResult.columnCount}`)
 
-        while (!queryResult.isAtLastRow) {
-            queryResult.goToNextRow();
+        try {
+            const devices: Array<Device> = [];
 
-            const id = queryResult.getLong(queryResult.getColumnIndex(this.ID_KEY));
-            const mac = queryResult.getString(queryResult.getColumnIndex(this.MAC_KEY));
-            const alias = queryResult.getString(queryResult.getColumnIndex(this.ALIAS_KEY));
+            while (queryResult.goToNextRow()) {
+                const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
+                const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
+                const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
+                const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
 
-            machines.push(new Machine(id, mac, alias));
+                devices.push(new Device(id, mac, alias, orderIndex));
+            }
+
+            devices.sort((a, b) => a.OrderIndex - b.OrderIndex);
+
+            Logger.debug(this.LOG_TAG, `设备列表长度: ${devices.length}`);
+
+            return devices;
+        } catch (err) {
+            throw new Error(`获取设备列表失败, ${err}`);
+        } finally {
+            queryResult.close();
+        }
+    }
+
+    async addDevice(device: Device) {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("数据库实例不存在");
+
+        try {
+            const valueBucket: relationalStore.ValuesBucket = {
+                "MAC": device.MAC,
+                "ALIAS": device.Alias,
+                "ORDERINDEX": device.OrderIndex
+            };
+
+            Logger.debug(this.LOG_TAG,
+                `添加新设备 -
+                    MAC: ${device.MAC},
+                    Alias: ${device.Alias},
+                    OrderIndex: ${device.OrderIndex}`
+            );
+
+            const result = await this.rdbStore.insert(this.TABLE_NAME, valueBucket);
+            return result;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async updateDeviceByID(device: Device) {
+        await this.waitForReady();
+
+        if(!this.rdbStore) throw new Error("数据库实例不存在");
+
+        Logger.debug(this.LOG_TAG, `更新设备 -
+            ID: ${device.ID},
+            MAC: ${device.MAC},
+            Alias: ${device.Alias},
+            OrderIndex: ${device.OrderIndex}`
+        );
+
+        try {
+            let predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
+            predicates.equalTo(this.KEY_ID, device.ID);
+
+            const valueBucket: relationalStore.ValuesBucket = {
+                "MAC": device.MAC,
+                "ALIAS": device.Alias,
+                "ORDERINDEX": device.OrderIndex,
+            };
+
+            const result = await this.rdbStore.update(valueBucket, predicates);
+
+            return result;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async deleteDeviceByID(device: Device) {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("数据库实例不存在");
+
+        const id = device.ID;
+
+        Logger.debug(this.LOG_TAG, `删除设备, ID: ${id}`);
+
+        let predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
+        predicates.equalTo(this.KEY_ID, id);
+
+        try {
+            const result = await this.rdbStore.delete(predicates);
+
+            return result;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async batchUpdateOrderIndices(orderUpdates: Array<Array<number>>): Promise<boolean> {
+        await this.waitForReady();
+
+        if (!this.rdbStore) {
+            Logger.error(this.LOG_TAG, "数据库实例不存在");
+            return false;
         }
 
-        Logger.debug(this.LOG_TAG, `Query result: ${JSON.stringify(machines)}`);
+        try {
+            // 开始事务
+            this.rdbStore.beginTransaction();
 
-        return machines;
-    }
+            for (const update of orderUpdates) {
+                const id = update[0];
+                const orderIndex = update[1];
 
-    async addMachine(mac: string, alias: string) {
-        await this.waitForReady();
+                const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
+                predicates.equalTo(this.KEY_ID, id);
 
-        if (!this.rdbStore) throw new Error("Database not available");
+                const valueBucket: relationalStore.ValuesBucket = {
+                    "ORDERINDEX": orderIndex // 只更新排序字段
+                };
 
-        Logger.debug(this.LOG_TAG, `New machine - MAC: ${mac}, Alias: ${alias}`);
+                await this.rdbStore.update(valueBucket, predicates);
+                // Logger.debug(this.LOG_TAG, `已更新条目 ID：${id} 的排序索引为：${orderIndex}`);
+            }
 
-        return this.rdbStore.insert(this.TABLE_NAME, { mac, alias });
-    }
-
-    async deleteMachineByID(id: number) {
-        await this.waitForReady();
-
-        if (!this.rdbStore) throw new Error("Database not available");
-
-        const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
-        predicates.equalTo(this.ID_KEY, id);
-
-        const queryResult = await this.rdbStore.query(predicates, [this.MAC_KEY, this.ALIAS_KEY]);
-
-        if(queryResult === undefined) return;
-
-        queryResult.goToNextRow();
-
-        const mac = queryResult.getString(queryResult.getColumnIndex(this.MAC_KEY));
-        const alias = queryResult.getString(queryResult.getColumnIndex(this.ALIAS_KEY));
-
-        Logger.debug(this.LOG_TAG, `Deleting machine. ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
-
-        return this.rdbStore.delete(predicates);
-    }
-
-    async updateMachineByID(id: number, newMac: string, newAlias: string) {
-        await this.waitForReady();
-
-        if(!this.rdbStore) throw new Error("Database not available");
-
-        const newValueBucket: relationalStore.ValuesBucket = {
-            "MAC": newMac,
-            "ALIAS": newAlias
-        };
-
-        const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
-        predicates.equalTo(this.ID_KEY, id);
-
-        const queryResult = await this.rdbStore.query(predicates, [this.MAC_KEY, this.ALIAS_KEY]);
-
-        if(queryResult === undefined) return;
-
-        queryResult.goToNextRow();
-        const mac = queryResult.getString(queryResult.getColumnIndex(this.MAC_KEY));
-        const alias = queryResult.getString(queryResult.getColumnIndex(this.ALIAS_KEY));
-
-        Logger.debug(this.LOG_TAG, `Updating machine. ID: ${id}, MAC: ${mac}, Alias: ${alias}`);
-
-        return this.rdbStore.update(newValueBucket, predicates);
+            // 提交事务
+            this.rdbStore.commit();
+            Logger.info(this.LOG_TAG, `批量排序更新成功，共处理 ${orderUpdates.length} 个条目。`);
+            return true;
+        } catch (err) {
+            // 回滚事务
+            this.rdbStore.rollBack();
+            Logger.error(this.LOG_TAG, `批量更新排序索引失败，已回滚: ${err}`);
+            return false;
+        }
     }
 
     async clearTable() {
         await this.waitForReady();
 
-        if (!this.rdbStore) throw new Error("Database not available");
+        if (!this.rdbStore) throw new Error("数据库实例不存在");
 
         try {
             await this.rdbStore.executeSql(this.SQL_DELETE_TABLE);
-            Logger.info(this.LOG_TAG, "Clear table succeed");
+            Logger.debug(this.LOG_TAG, "成功清除表");
         } catch (err) {
-            Logger.error(this.LOG_TAG, `Clear table failed, code: ${err.code}, message: ${err.message}`);
-            throw new Error("Clear table error");
+            Logger.error(this.LOG_TAG, `清除表失败, 代码: ${err.code}, 错误信息: ${err.message}`);
+            throw new Error("清除表失败");
         }
     }
 }

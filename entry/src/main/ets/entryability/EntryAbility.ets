@@ -4,6 +4,7 @@ import { window } from '@kit.ArkUI';
 import { DB } from '../common/utils/DB';
 import NET from '../common/utils/NET';
 
+
 const DOMAIN = 0x0000;
 
 export default class EntryAbility extends UIAbility {
@@ -11,10 +12,10 @@ export default class EntryAbility extends UIAbility {
         this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
         hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
 
-        // DB for getting machines
+        // 数据库
         DB.getInstance().initDB(this.context);
 
-        // net for sending magic packet
+        // 网络
         NET.init();
     }
 
