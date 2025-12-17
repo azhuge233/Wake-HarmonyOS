@@ -97,7 +97,7 @@ struct Index {
     DeleteButton(device: DeviceViewModel) {
         Row() {
             Button() {
-                Image("./media/icon/trash.png")
+                Image($r("app.media.trash"))
                     .objectFit(ImageFit.Cover)
                     .width(StyleConstants.SIXTY_PERCENT)
                     .height(StyleConstants.SIXTY_PERCENT)
@@ -119,7 +119,7 @@ struct Index {
     EditButton(device: DeviceViewModel) {
         Row() {
             Button() {
-                Image("./media/icon/square_and_pencil.png")
+                Image($r("app.media.square_and_pencil"))
                     .objectFit(ImageFit.Cover)
                     .width(StyleConstants.SIXTY_PERCENT)
                     .height(StyleConstants.SIXTY_PERCENT)

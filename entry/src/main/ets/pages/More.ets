@@ -149,7 +149,7 @@ struct More {
             Column() {
                 MoreMenuItem({
                     menuText: $r("app.string.page_more_export"),
-                    menuIcon: "./media/icon/arrow_up_circle.png"
+                    menuIcon: $r("app.media.arrow_up_circle")
                 }).onClick(async () => {
                     if (!this.isProcessing) {
                         await this.export();
@@ -158,7 +158,7 @@ struct More {
 
                 MoreMenuItem({
                     menuText: $r("app.string.page_more_import"),
-                    menuIcon: "./media/icon/arrow_down_circle.png"
+                    menuIcon: $r("app.media.arrow_down_circle")
                 }).onClick(async () => {
                     if (this.isProcessing) {
                         CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
@@ -170,7 +170,7 @@ struct More {
 
                 MoreMenuItem({
                     menuText: $r("app.string.page_more_help"),
-                    menuIcon: "./media/icon/info_circle.png"
+                    menuIcon: $r("app.media.info_circle")
                 }).onClick(() => {
                     if (!this.isProcessing) {
                         this.pathStack?.pushPath({ name: "Help" });
