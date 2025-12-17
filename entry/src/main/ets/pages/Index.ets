@@ -1,5 +1,5 @@
 import { BusinessError } from '@kit.BasicServicesKit';
-import { common } from '@kit.AbilityKit';
+import { common, Want } from '@kit.AbilityKit';
 
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
@@ -31,6 +31,14 @@ struct Index {
     async onPageShow(): Promise<void> {
         this.refreshIPBanner();
         await this.loadDevices();
+
+        if(AppStorage.has('want')) {
+            let want: Want | undefined = AppStorage.get('want');
+            if (want) {
+                this.goToSpecifyPage(want);
+                AppStorage.delete('want');
+            }
+        }
     }
 
     onPageHide(): void {
@@ -59,6 +67,29 @@ struct Index {
             }
         } catch (err) {
             Logger.debug(this.LOG_TAG, `关闭左滑菜单失败, ${err}`);
+        }
+    }
+
+    // 快捷方式跳转判断
+    private async goToSpecifyPage(want?: Want): Promise<void> {
+        // 如果应用内已经进入其他页面，返回到主页面
+        if(this.pageStack.size() > 0) this.pageStack.clear();
+
+        let shortCutKey = want?.parameters?.shortCutKey;
+
+        try {
+            if (shortCutKey && shortCutKey === 'AddDevice') {
+                this.pageStack.pushPath({
+                    name: "AddDevice",
+                    param: this.deviceList,
+                    onPop: async (popInfo) => {
+                        this.refreshIPBanner();
+                        CommonUtils.returnFromSubPage(popInfo);
+                    }
+                });
+            }
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `快捷方式跳转失败, ${err}`);
         }
     }
 

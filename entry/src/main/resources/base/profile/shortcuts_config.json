@@ -1,0 +1,20 @@
+{
+  "shortcuts": [
+    {
+      "shortcutId": "id_add_new_device",
+      "label": "$string:app_shortcut_label_add_device",
+      "icon": "$media:plus_shortcut",
+      "wants": [
+        {
+          "bundleName": "com.azhuge233.Wake",
+          "moduleName": "entry",
+          "abilityName": "EntryAbility",
+          "parameters": {
+            "isFromShortcut": "true",
+            "shortCutKey": "AddDevice"
+          }
+        }
+      ]
+    }
+  ]
+}

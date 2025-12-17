@@ -26,6 +26,15 @@ export default class EntryAbility extends UIAbility {
 
         // 网络
         NET.init();
+
+        // 应用冷启动，添加快捷方式
+        if(want?.parameters?.isFromShortcut ?? false) AppStorage.setOrCreate('want', want);
+    }
+
+    // 应用启动后，由后台转前台，添加快捷方式
+    onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+        if(want?.parameters?.isFromShortcut ?? false) AppStorage.setOrCreate('want', want);
+        hilog.debug(DOMAIN, this.LOG_PREFIX, this.LOG_FORMAT, this.LOG_TAG, 'Ability onNewWant');
     }
 
     onDestroy(): void {
