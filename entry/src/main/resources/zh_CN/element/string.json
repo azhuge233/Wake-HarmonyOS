@@ -17,6 +17,10 @@
 			"value": "网络唤醒"
 		},
 		{
+			"name": "app_shortcut_label_add_device",
+			"value": "添加新设备"
+		},
+		{
 			"name": "empty",
 			"value": "空"
 		},

@@ -17,6 +17,10 @@
 			"value": "Wake"
 		},
 		{
+			"name": "app_shortcut_label_add_device",
+			"value": "Add New Device"
+		},
+		{
 			"name": "empty",
 			"value": "empty"
 		},
