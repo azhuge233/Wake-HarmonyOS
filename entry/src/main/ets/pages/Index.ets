@@ -301,7 +301,7 @@ struct Index {
         .menus([
             {
                 value: $r("app.string.navigation_menu_refresh"),
-                icon: "./media/icon/network_refresh.png",
+                icon: $r("app.media.network_refresh"),
                 action: () => {
                     this.refreshIPBanner();
                     CommonUtils.alert($r("app.string.network_refreshed"), this.promptAction);
@@ -309,7 +309,7 @@ struct Index {
             },
             {
                 value: $r("app.string.navigation_menu_more"),
-                icon: "./media/icon/dot_grid_2x2.png",
+                icon: $r("app.media.dot_grid_2x2"),
                 action: () => {
                     this.safeCloseSwipeActions();
                     this.pageStack.pushPath({
