@@ -5,13 +5,21 @@ import { picker, fileIo as fs } from '@kit.CoreFileKit';
 import { common } from '@kit.AbilityKit';
 import { vibrator } from '@kit.SensorServiceKit';
 import { buffer } from '@kit.ArkTS';
+import { formBindingData } from '@kit.FormKit';
 
 import Logger from './Logger';
 import StyleConstants from '../constants/StyleConstants';
 import { DeviceJsonObject } from '../../model/JsonObject';
+import FormData from '../../wakewidget/model/FormData'
 
 class CommonUtils {
     private LOG_TAG = "[CommonUtils]";
+
+    // Debug
+    // 等待 time 秒
+    public async sleep(time: number): Promise<void> {
+        await new Promise<void>(resolve => setTimeout(resolve, time));
+    }
 
     // 按照 API 版本显示 Toast 提醒
     public alert(message: string | Resource, newerPromptAction: PromptAction) {
@@ -94,16 +102,6 @@ class CommonUtils {
         } catch (error) {
             Logger.error(this.LOG_TAG, `振动发生未知错误, ${error}`);
         }
-    }
-
-    // 获取时间（毫秒）
-    public getDate(): string {
-        let date = new Date(systemDateTime.getTime());
-
-        const formattedTime = `${date.getTime().toString()}`;
-        Logger.debug(this.LOG_TAG, formattedTime);
-
-        return formattedTime;
     }
 
     // 导出功能
@@ -200,6 +198,47 @@ class CommonUtils {
             Logger.error(this.LOG_TAG, `数据解析失败, 代码: ${err.code}, 错误信息: ${err.message}`);
             throw new Error(err);
         }
+    }
+
+    // 关闭应用
+    public closeApplication(from: string, context: common.UIAbilityContext) {
+        Logger.info(from, `关闭应用`);
+        context.terminateSelf().catch((err: BusinessError) => {
+            Logger.error(from, `关闭应用失败, ${err}`);
+        });
+    }
+
+    // 根据 data 类型创建 FormBindingData
+    public createFormBindingData(data: string | FormData): formBindingData.FormBindingData {
+        if(typeof(data) === "string") return this.createEmptyFormBindingData(data);
+        else return formBindingData.createFormBindingData(data);
+    }
+
+    // 获取资源字符串，方便异常处理
+    public getStringFromResource(context: common.UIAbilityContext, stringResource: Resource): string {
+        try {
+            return context.resourceManager.getStringSync(stringResource.id);
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `获取资源字符串失败, ${err}`);
+            return '';
+        }
+    }
+
+    // 获取时间（毫秒）
+    private getDate(): string {
+        let date = new Date(systemDateTime.getTime());
+
+        const formattedTime = `${date.getTime().toString()}`;
+        Logger.debug(this.LOG_TAG, formattedTime);
+
+        return formattedTime;
+    }
+
+    // 创建对应 formID 的空 FormData
+    private createEmptyFormBindingData(formID: string): formBindingData.FormBindingData {
+        const formData: FormData = new FormData(formID, false);
+
+        return formBindingData.createFormBindingData(formData);
     }
 }
 
