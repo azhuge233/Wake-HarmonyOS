@@ -1,244 +1,296 @@
 {
-	"string": [
-		{
-			"name": "app_version",
-			"value": "2.0.2 (2020000)"
-		},
-		{
-			"name": "module_desc",
-			"value": "module description"
-		},
-		{
-			"name": "EntryAbility_desc",
-			"value": "Wake LAN devices using magic packet"
-		},
-		{
-			"name": "EntryAbility_label",
-			"value": "Wake"
-		},
-		{
-			"name": "app_shortcut_label_add_device",
-			"value": "Add New Device"
-		},
-		{
-			"name": "empty",
-			"value": "empty"
-		},
-		{
-			"name": "button_wake_label",
-			"value": "Wake"
-		},
-		{
-			"name": "button_Add_label",
-			"value": "Add New Device"
-		},
-		{
-			"name": "button_delete_label",
-			"value": "Delete"
-		},
-		{
-			"name": "machine_mac_label",
-			"value": "MAC %s"
-		},
-		{
-			"name": "machine_alias_label",
-			"value": "%s"
-		},
-		{
-			"name": "machine_id_label",
-			"value": "%s"
-		},
-		{
-			"name": "add_machine_title",
-			"value": "Add New Device"
-		},
-		{
-			"name": "button_add_machine_confirm",
-			"value": "Add"
-		},
-		{
-			"name": "add_mac_input_label",
-			"value": " MAC"
-		},
-		{
-			"name": "add_mac_input_placeholder",
-			"value": "XX:XX:XX:XX:XX:XX"
-		},
-		{
-			"name": "add_alias_input_label",
-			"value": "Alias"
-		},
-		{
-			"name": "add_alias_input_placeholder",
-			"value": "Device 1"
-		},
-		{
-			"name": "button_back_main_page_label",
-			"value": "Back"
-		},
-		{
-			"name": "title_label",
-			"value": "Wake"
-		},
-		{
-			"name": "current_broadcast_ip",
-			"value": "Current broadcast IP: "
-		},
-		{
-			"name": "network_permission_reason",
-			"value": "Needs network permission to get network information and send magic packet"
-		},
-		{
-			"name": "vibrate_permission_reason",
-			"value": "Needs vibrate permission to vibrate after pressing wake button"
-		},
-		{
-			"name": "button_confirm_label",
-			"value": "Confirm"
-		},
-		{
-			"name": "help_title",
-			"value": "Help"
-		},
-		{
-			"name": "send_magic_packet_failed",
-			"value": "Send magic packet failed!, error code: %s"
-		},
-		{
-			"name": "no_broadcast_ip",
-			"value": "No broadcast IP!"
-		},
-		{
-			"name": "send_magic_packet_success",
-			"value": "Send magic packet success!"
-		},
-		{
-			"name": "unkown_error",
-			"value": "Unkown error"
-		},
-		{
-			"name": "input_cannot_be_null_or_empty",
-			"value": "Input cannot be empty!"
-		},
-		{
-			"name": "validate_mac_too_short",
-			"value": "MAC address too short!"
-		},
-		{
-			"name": "validate_mac_regex_fail",
-			"value": "Invalid MAC address! Address should only contains ':', '-', numbers and character A to F."
-		},
-		{
-			"name": "add_machine_success",
-			"value": "Successfully added device: %s"
-		},
-		{
-			"name": "add_machine_failed",
-			"value": "Failed to add device: %s"
-		},
-		{
-			"name": "network_refreshed",
-			"value": "Network refreshed!"
-		},
-		{
-			"name": "navigation_menu_refresh",
-			"value": "Refresh"
-		},
-		{
-			"name": "parse_json_data_failed",
-			"value": "Parse json data failed!"
-		},
-		{
-			"name": "import_success",
-			"value": "Import success!"
-		},
-		{
-        	"name": "import_failed",
-			"value": "Import failed!"
-		},
-		{
-			"name": "button_cancel_label",
-			"value": "Cancel"
-		},
-		{
-			"name": "import_title",
-			"value": "Warning"
-		},
-		{
-			"name": "import_message",
-			"value": "Importing backup will wipe all the current listed devices.\nContinue?"
-		},
-		{
-			"name": "export_success",
-			"value": "Export success!"
-		},
-		{
-			"name": "export_failed",
-			"value": "Export failed!"
-		},
-		{
-			"name": "more_title",
-			"value": "More"
-		},
-		{
-			"name": "page_more_import",
-			"value": "Import"
-		},
-		{
-			"name": "page_more_export",
-			"value": "Export"
-		},
-		{
-			"name": "page_more_help",
-			"value": "Help"
-		},
-		{
-			"name": "help_info_span1",
-			"value": "This application only supports standard magic packet Wake-on-LAN.\n\n"
-		},
-		{
-			"name": "help_info_span2",
-			"value": "The app automatically refreshes the broadcast address when the Wi-Fi network changes.\nIf the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main page (a circular arrow with a Wi‑Fi icon inside, located in the upper‑right corner).\n\n"
-		},
-		{
-			"name": "help_info_span3",
-			"value": "The broadcast address is locally calculated based on the current device's Wi-Fi IP address and subnet mask.\n\n"
-		},
-		{
-			"name": "import_waiting_message",
-			"value": "Importing, please wait..."
-		},
-		{
-			"name": "edit_title",
-			"value": "Edit"
-		},
-		{
-			"name": "update_machine_success",
-			"value": "Successfully updated device: %s"
-		},
-		{
-			"name": "update_machine_failed",
-			"value": "Failed to updated device: %s"
-		},
-		{
-			"name": "button_edit_confirm",
-			"value": "Save"
-		},
-		{
-			"name": "navigation_menu_more",
-			"value": "More"
-		},
-		{
-			"name": "help_info_span4",
-			"value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
-		},
-		{
-			"name": "no_device_message",
-			"value": "No devices"
-		},
-		{
-			"name": "create_new_device_message",
-			"value": "Press the \"Add New Device\" button to add device"
-		}
-	]
+  "string": [
+    {
+      "name": "app_version",
+      "value": "2.0.2 (2020000)"
+    },
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Wake LAN devices using magic packet"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Wake"
+    },
+    {
+      "name": "WakeFormAbility_desc",
+      "value": "Wake widget"
+    },
+    {
+      "name": "WakeFormAbility_label",
+      "value": "Wake"
+    },
+    {
+      "name": "WakeWidgetEntryAbility_desc",
+      "value": "Wake widget"
+    },
+    {
+      "name": "WakeWidgetEntryAbility_label",
+      "value": "Wake widget"
+    },
+    {
+      "name": "WakeWidget_desc",
+      "value": "Wake desktop widget"
+    },
+    {
+      "name": "WakeWidget_display_name",
+      "value": "Wake"
+    },
+    {
+      "name": "app_shortcut_label_add_device",
+      "value": "Add New Device"
+    },
+    {
+      "name": "empty",
+      "value": "empty"
+    },
+    {
+      "name": "button_wake_label",
+      "value": "Wake"
+    },
+    {
+      "name": "button_Add_label",
+      "value": "Add New Device"
+    },
+    {
+      "name": "button_delete_label",
+      "value": "Delete"
+    },
+    {
+      "name": "machine_mac_label",
+      "value": "MAC %s"
+    },
+    {
+      "name": "machine_alias_label",
+      "value": "%s"
+    },
+    {
+      "name": "machine_id_label",
+      "value": "%s"
+    },
+    {
+      "name": "add_machine_title",
+      "value": "Add New Device"
+    },
+    {
+      "name": "button_add_machine_confirm",
+      "value": "Add"
+    },
+    {
+      "name": "add_mac_input_label",
+      "value": " MAC"
+    },
+    {
+      "name": "add_mac_input_placeholder",
+      "value": "XX:XX:XX:XX:XX:XX"
+    },
+    {
+      "name": "add_alias_input_label",
+      "value": "Alias"
+    },
+    {
+      "name": "add_alias_input_placeholder",
+      "value": "Device 1"
+    },
+    {
+      "name": "button_back_main_page_label",
+      "value": "Back"
+    },
+    {
+      "name": "title_label",
+      "value": "Wake"
+    },
+    {
+      "name": "current_broadcast_ip",
+      "value": "Current broadcast IP: "
+    },
+    {
+      "name": "network_permission_reason",
+      "value": "Needs network permission to get network information and send magic packet"
+    },
+    {
+      "name": "vibrate_permission_reason",
+      "value": "Needs vibrate permission to vibrate after pressing wake button"
+    },
+    {
+      "name": "background_permission_reason",
+      "value": "For card(form) interaction"
+    },
+    {
+      "name": "button_confirm_label",
+      "value": "Confirm"
+    },
+    {
+      "name": "help_title",
+      "value": "Help"
+    },
+    {
+      "name": "send_magic_packet_failed",
+      "value": "Send magic packet failed!, error code: %s"
+    },
+    {
+      "name": "no_broadcast_ip",
+      "value": "No broadcast IP!"
+    },
+    {
+      "name": "send_magic_packet_success",
+      "value": "Send magic packet success!"
+    },
+    {
+      "name": "unkown_error",
+      "value": "Unkown error"
+    },
+    {
+      "name": "input_cannot_be_null_or_empty",
+      "value": "Input cannot be empty!"
+    },
+    {
+      "name": "validate_mac_too_short",
+      "value": "MAC address too short!"
+    },
+    {
+      "name": "validate_mac_regex_fail",
+      "value": "Invalid MAC address! Address should only contains ':', '-', numbers and character A to F."
+    },
+    {
+      "name": "add_machine_success",
+      "value": "Successfully added device: %s"
+    },
+    {
+      "name": "add_machine_failed",
+      "value": "Failed to add device: %s"
+    },
+    {
+      "name": "network_refreshed",
+      "value": "Network refreshed!"
+    },
+    {
+      "name": "navigation_menu_refresh",
+      "value": "Refresh"
+    },
+    {
+      "name": "parse_json_data_failed",
+      "value": "Parse json data failed!"
+    },
+    {
+      "name": "import_success",
+      "value": "Import success!"
+    },
+    {
+      "name": "import_failed",
+      "value": "Import failed!"
+    },
+    {
+      "name": "button_cancel_label",
+      "value": "Cancel"
+    },
+    {
+      "name": "import_title",
+      "value": "Warning"
+    },
+    {
+      "name": "import_message",
+      "value": "Importing backup will wipe all the current listed devices.\nContinue?"
+    },
+    {
+      "name": "export_success",
+      "value": "Export success!"
+    },
+    {
+      "name": "export_failed",
+      "value": "Export failed!"
+    },
+    {
+      "name": "more_title",
+      "value": "More"
+    },
+    {
+      "name": "page_more_import",
+      "value": "Import"
+    },
+    {
+      "name": "page_more_export",
+      "value": "Export"
+    },
+    {
+      "name": "page_more_help",
+      "value": "Help"
+    },
+    {
+      "name": "help_info_span1",
+      "value": "This application only supports standard magic packet Wake-on-LAN.\n\n"
+    },
+    {
+      "name": "help_info_span2",
+      "value": "The app automatically refreshes the broadcast address when the Wi-Fi network changes.\nIf the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main page (a circular arrow with a Wi‑Fi icon inside, located in the upper‑right corner).\n\n"
+    },
+    {
+      "name": "help_info_span3",
+      "value": "The broadcast address is locally calculated based on the current device's Wi-Fi IP address and subnet mask.\n\n"
+    },
+    {
+      "name": "import_waiting_message",
+      "value": "Importing, please wait..."
+    },
+    {
+      "name": "edit_title",
+      "value": "Edit"
+    },
+    {
+      "name": "update_machine_success",
+      "value": "Successfully updated device: %s"
+    },
+    {
+      "name": "update_machine_failed",
+      "value": "Failed to updated device: %s"
+    },
+    {
+      "name": "button_edit_confirm",
+      "value": "Save"
+    },
+    {
+      "name": "navigation_menu_more",
+      "value": "More"
+    },
+    {
+      "name": "help_info_span4",
+      "value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
+    },
+    {
+      "name": "no_device_message",
+      "value": "No devices"
+    },
+    {
+      "name": "create_new_device_message",
+      "value": "Press the \"Add New Device\" button to add device"
+    },
+    {
+      "name": "form_edit_create_new_device_message",
+      "value": "Add new device in app"
+    },
+    {
+      "name": "form_edit_title",
+      "value": "Select device"
+    },
+    {
+      "name": "form_run_failed",
+      "value": "Failed"
+    },
+    {
+      "name": "form_run_success",
+      "value": "Success"
+    },
+    {
+      "name": "form_init_label",
+      "value": "Press to select device"
+    },
+    {
+      "name": "form_run_complete_label",
+      "value": "Press again to restore"
+    }
+  ]
 }

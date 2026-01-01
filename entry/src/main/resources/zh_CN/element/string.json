@@ -17,6 +17,30 @@
 			"value": "网络唤醒"
 		},
 		{
+			"name": "WakeFormAbility_desc",
+			"value": "网络唤醒卡片"
+		},
+		{
+			"name": "WakeWidgetEntryAbility_desc",
+			"value": "网络唤醒卡片"
+		},
+		{
+			"name": "WakeWidgetEntryAbility_label",
+			"value": "网络唤醒"
+		},
+		{
+			"name": "WakeFormAbility_label",
+			"value": "网络唤醒"
+		},
+		{
+			"name": "WakeWidget_desc",
+			"value": "网络唤醒卡片"
+		},
+		{
+			"name": "WakeWidget_display_name",
+			"value": "网络唤醒"
+		},
+		{
 			"name": "app_shortcut_label_add_device",
 			"value": "添加新设备"
 		},
@@ -91,6 +115,10 @@
 		{
 			"name": "vibrate_permission_reason",
 			"value": "需要振动权限来实现点击唤醒按钮后振动"
+		},
+		{
+			"name": "background_permission_reason",
+			"value": "用于桌面卡片互动"
 		},
 		{
 			"name": "button_confirm_label",
@@ -239,6 +267,30 @@
 		{
 			"name": "create_new_device_message",
 			"value": "点击\"添加新设备\"按钮来新建设备"
+		},
+		{
+			"name": "form_edit_create_new_device_message",
+			"value": "在应用中添加设备"
+		},
+		{
+			"name": "form_edit_title",
+			"value": "选择设备"
+		},
+		{
+			"name": "form_run_failed",
+			"value": "唤醒失败"
+		},
+		{
+			"name": "form_run_success",
+			"value": "唤醒成功"
+		},
+		{
+			"name": "form_init_label",
+			"value": "点击选择设备"
+		},
+		{
+			"name": "form_run_complete_label",
+			"value": "再次点击以恢复"
 		}
     ]
 }
