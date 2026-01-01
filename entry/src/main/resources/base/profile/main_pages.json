@@ -4,6 +4,7 @@
     "pages/AddDevice",
     "pages/More",
     "pages/Help",
-    "pages/Edit"
+    "pages/Edit",
+    "pages/FormEdit"
   ]
 }
