@@ -59,7 +59,7 @@ struct Edit {
         try {
             const success = await this.deviceList.updateDevice(this.updatingDevice.toDevice());
             if (success) {
-                CommonUtils.alert($r("app.string.update_machine_success"), this.promptAction);
+                CommonUtils.alert($r("app.string.update_machine_success", this.updatingDevice.Alias), this.promptAction);
                 this.pathStack?.pop("Button pressed");
             }
         } catch (err) {
