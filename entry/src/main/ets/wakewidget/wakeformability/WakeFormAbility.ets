@@ -23,9 +23,7 @@ export default class WakeFormAbility extends FormExtensionAbility {
 
         Logger.debug(this.LOG_TAG, `onAddForm() formID: ${formID}`);
 
-        const formData = new FormData(formID, false);
-
-        return CommonUtils.createFormBindingData(formData);
+        return CommonUtils.createFormBindingData(formID);
     }
 
     // Tips
