@@ -13,4 +13,5 @@ _Only tested on Mate 60 Pro._
 <picture>
   <img src="./screenshots/screenshot1.jpg" alt="screenshot1.jpg" width="400">
   <img src="./screenshots/screenshot2.jpg" alt="screenshot2.jpg" width="400">
+  <img src="./screenshots/screenshot3.jpg" alt="screenshot2.jpg" width="400">
 </picture>
