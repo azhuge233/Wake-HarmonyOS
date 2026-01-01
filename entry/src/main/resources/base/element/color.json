@@ -1,60 +1,64 @@
 {
-	"color": [
-		{
-			"name": "start_window_background",
-			"value": "#FFFFFF"
-		},
-		{
-			"name": "white",
-			"value": "#FFFFFF"
-		},
-		{
-			"name": "darker_grey",
-			"value": "#999999"
-		},
-		{
-			"name": "input_placeholder_grey",
-			"value": "#6C6C6C"
-		},
-		{
-			"name": "banner_grey",
-			"value": "#CCCCCC"
-		},
-		{
-			"name": "lighter_black",
-			"value": "#111111"
-		},
-		{
-			"name": "black",
-			"value": "#000000"
-		},
-		{
-			"name": "red",
-			"value": "#FF0000"
-		},
-		{
-			"name": "green",
-			"value": "#00C000"
-		},
-		{
-			"name": "main_background_color",
-			"value": "#F1F3F5"
-		},
-		{
-			"name": "button_background_color",
-			"value": "#007DFF"
-		},
-		{
-			"name": "text_font_color",
-			"value": "#182431"
-		},
-		{
-			"name": "placeholder_color",
-			"value": "#BDC1C4"
-		},
-		{
-			"name": "background_transparent",
-			"value": "#00000080"
-		}
-	]
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "darker_grey",
+      "value": "#999999"
+    },
+    {
+      "name": "input_placeholder_grey",
+      "value": "#6C6C6C"
+    },
+    {
+      "name": "banner_grey",
+      "value": "#CCCCCC"
+    },
+    {
+      "name": "lighter_black",
+      "value": "#111111"
+    },
+    {
+      "name": "black",
+      "value": "#000000"
+    },
+    {
+      "name": "red",
+      "value": "#FF0000"
+    },
+    {
+      "name": "green",
+      "value": "#00C000"
+    },
+    {
+      "name": "main_background_color",
+      "value": "#F1F3F5"
+    },
+    {
+      "name": "button_background_color",
+      "value": "#007DFF"
+    },
+    {
+      "name": "text_font_color",
+      "value": "#182431"
+    },
+    {
+      "name": "placeholder_color",
+      "value": "#BDC1C4"
+    },
+    {
+      "name": "background_transparent",
+      "value": "#00000080"
+    },
+    {
+      "name": "form_background_color",
+      "value": "#1a68f6"
+    }
+  ]
 }
