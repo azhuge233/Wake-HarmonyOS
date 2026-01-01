@@ -28,29 +28,34 @@ struct Index {
 
     pageStack: NavPathStack = new NavPathStack();
 
+    private net = new NET();
+
     async onPageShow(): Promise<void> {
-        this.refreshIPBanner();
+        await this.refreshIPBanner();
         await this.loadDevices();
 
-        if(AppStorage.has('want')) {
-            let want: Want | undefined = AppStorage.get('want');
-            if (want) {
-                this.goToSpecifyPage(want);
-                AppStorage.delete('want');
+        // 处理长按快捷方式跳转
+        if(AppStorage.has(CommonConstants.AppStorage_KEY_ShortcutPath)) {
+            Logger.debug(this.LOG_TAG, `检测到长按快捷方式页面`);
+
+            const path: string | undefined = AppStorage.get(CommonConstants.AppStorage_KEY_ShortcutPath);
+            if (path) {
+                await this.goToSpecifyPage(path);
+                AppStorage.delete(CommonConstants.AppStorage_KEY_ShortcutPath);
             }
         }
     }
 
-    onPageHide(): void {
+    async onPageHide(): Promise<void> {
         this.safeCloseSwipeActions();
-        this.refreshIPBanner();
+        await this.refreshIPBanner();
     }
 
     // 刷新广播地址
-    private refreshIPBanner() {
-        NET.refreshCurrentNetwork();
+    private async refreshIPBanner() {
+        await this.net.refresh();
         this.ipBannerText =
-            `${this.context.resourceManager.getStringByNameSync("current_broadcast_ip")}${NET.BROADCAST_IP}`;
+            `${CommonUtils.getStringFromResource(this.context, $r("app.string.current_broadcast_ip"))}${this.net.BROADCAST_IP}`;
     }
 
     // 加载设备列表
@@ -71,25 +76,22 @@ struct Index {
     }
 
     // 快捷方式跳转判断
-    private async goToSpecifyPage(want?: Want): Promise<void> {
+    private async goToSpecifyPage(path: string): Promise<void> {
         // 如果应用内已经进入其他页面，返回到主页面
         if(this.pageStack.size() > 0) this.pageStack.clear();
 
-        let shortCutKey = want?.parameters?.shortCutKey;
-
         try {
-            if (shortCutKey && shortCutKey === 'AddDevice') {
-                this.pageStack.pushPath({
-                    name: "AddDevice",
-                    param: this.deviceList,
-                    onPop: async (popInfo) => {
-                        this.refreshIPBanner();
-                        CommonUtils.returnFromSubPage(popInfo);
-                    }
-                });
-            }
+            Logger.debug(this.LOG_TAG, `跳转至页面 ${path}`);
+            this.pageStack.pushPath({
+                name: path,
+                param: this.deviceList,
+                onPop: async (popInfo) => {
+                    await this.refreshIPBanner();
+                    CommonUtils.returnFromSubPage(popInfo);
+                }
+            });
         } catch (err) {
-            Logger.error(this.LOG_TAG, `快捷方式跳转失败, ${err}`);
+            Logger.error(this.LOG_TAG, `${path} 页面跳转失败, ${err}`);
         }
     }
 
@@ -134,7 +136,7 @@ struct Index {
                     name: "Edit",
                     param: [this.deviceList, device],
                     onPop: async (popInfo: PopInfo) => {
-                        this.refreshIPBanner();
+                        await this.refreshIPBanner();
                         CommonUtils.returnFromSubPage(popInfo);
                     }
                 });
@@ -205,27 +207,11 @@ struct Index {
                                 deviceMAC: $r("app.string.machine_mac_label", device.MAC),
                                 deviceAlias: $r("app.string.machine_alias_label", device.Alias),
                                 deviceMACAddr: device.MAC,
-                                sendPacket: (macAddr: string) => {
-                                    if (NET.HAS_BROADCAST_IP) {
-                                        const packet = NET.buildMagicPacket(macAddr);
+                                sendPacket: async (macAddr: string) => {
+                                    const result = await this.net.send(macAddr);
 
-                                        NET.UDP.send(packet, (err: BusinessError) => {
-                                            if (err) {
-                                                Logger.error(this.LOG_TAG,
-                                                    `Send magic packet Error. Code: ${err.code}, message: ${err.message}`);
-                                                CommonUtils.alert($r("app.string.send_magic_packet_failed", err.code),
-                                                    this.promptAction);
-                                                return;
-                                            }
-
-                                            Logger.debug(this.LOG_TAG, 'Send magic packet OK!');
-                                            CommonUtils.alert($r("app.string.send_magic_packet_success"),
-                                                this.promptAction);
-                                        });
-                                    } else {
-                                        Logger.debug(this.LOG_TAG, "No broadcast IP, abort.");
-                                        CommonUtils.alert($r("app.string.no_broadcast_ip"), this.promptAction);
-                                    }
+                                    if(typeof(result) === 'boolean') CommonUtils.alert($r("app.string.send_magic_packet_success"), this.promptAction);
+                                    else CommonUtils.alert($r("app.string.send_magic_packet_failed", result), this.promptAction);
                                 }
                             })
                         }
@@ -270,7 +256,7 @@ struct Index {
                         name: "AddDevice",
                         param: this.deviceList,
                         onPop: async (popInfo: PopInfo) => {
-                            this.refreshIPBanner();
+                            await this.refreshIPBanner();
                             CommonUtils.returnFromSubPage(popInfo);
                         }
                     });
@@ -284,8 +270,8 @@ struct Index {
         Navigation(this.pageStack) {
             IPBanner({
                 ipBannerText: this.ipBannerText,
-                onRefresh: () => {
-                    this.refreshIPBanner();
+                onRefresh: async () => {
+                    await this.refreshIPBanner();
                 }
             })
 
@@ -302,8 +288,8 @@ struct Index {
             {
                 value: $r("app.string.navigation_menu_refresh"),
                 icon: $r("app.media.network_refresh"),
-                action: () => {
-                    this.refreshIPBanner();
+                action: async () => {
+                    await this.refreshIPBanner();
                     CommonUtils.alert($r("app.string.network_refreshed"), this.promptAction);
                 }
             },
@@ -316,7 +302,7 @@ struct Index {
                         name: "More",
                         param: this.deviceList,
                         onPop: async (popInfo: PopInfo) => {
-                            this.refreshIPBanner();
+                            await this.refreshIPBanner();
                             CommonUtils.returnFromSubPage(popInfo);
                         }
                     })
