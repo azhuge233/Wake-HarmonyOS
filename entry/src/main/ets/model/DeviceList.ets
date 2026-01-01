@@ -14,7 +14,6 @@ export default class DeviceList {
     }
 
     async loadDevices(): Promise<void> {
-        await this.db.waitForReady();
         try {
             let result = await this.db.getDevices();
             if(result === undefined) throw new Error("指令列表 undefined");
@@ -25,8 +24,6 @@ export default class DeviceList {
     }
 
     async addDevice(device: Device): Promise<boolean> {
-        await this.db.waitForReady();
-
         try {
             let newOrderIndex = 0;
             if (this.devices.length > 0) {
@@ -46,8 +43,6 @@ export default class DeviceList {
     }
 
     async updateDevice(device: Device): Promise<boolean> {
-        await this.db.waitForReady();
-
         try {
             const result = await this.db.updateDeviceByID(device);
             Logger.debug(this.LOG_TAG, `设备更新成功, ${result}`);
@@ -59,8 +54,6 @@ export default class DeviceList {
     }
 
     async deleteDevice(device: Device): Promise<boolean> {
-        await this.db.waitForReady();
-
         try {
             const result = await this.db.deleteDeviceByID(device);
             Logger.debug(this.LOG_TAG, `设备删除成功, ${result}`);
@@ -72,8 +65,6 @@ export default class DeviceList {
     }
 
     async updateDevicesOrder(reorderedDevices: Array<Array<number>>): Promise<boolean> {
-        await this.db.waitForReady();
-
         try {
             await this.db.batchUpdateOrderIndices(reorderedDevices);
             Logger.debug(this.LOG_TAG, `顺序更新成功，共更新 ${reorderedDevices.length} 个设备`);
@@ -85,8 +76,6 @@ export default class DeviceList {
     }
 
     async clearDevices(): Promise<boolean> {
-        await this.db.waitForReady();
-
         try {
             await this.db.clearTable();
             Logger.debug(this.LOG_TAG, `设备列表清除成功`);
