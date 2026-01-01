@@ -1,5 +1,4 @@
-import { BusinessError } from '@kit.BasicServicesKit';
-import { common, Want } from '@kit.AbilityKit';
+import { common } from '@kit.AbilityKit';
 
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
