@@ -1,8 +1,10 @@
 import { relationalStore } from '@kit.ArkData';
-import Logger from '../utils/Logger';
-import { Context } from '@kit.AbilityKit';
-import Device from '../../model/Device';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { Context } from '@kit.AbilityKit';
+
+import Logger from '../utils/Logger';
+import Device from '../../model/Device';
+
 
 export class DB {
     private static instance: DB | null = null;
@@ -42,7 +44,7 @@ export class DB {
         return DB.instance;
     }
 
-    public initDB(context: Context) {
+    public init(context: Context) {
         if (this.initPromise) return;
 
         this.initPromise = new Promise((resolve) => {
@@ -62,11 +64,6 @@ export class DB {
         });
     }
 
-    public async waitForReady(): Promise<void> {
-        if (!this.initPromise) throw new Error("数据库未初始化，先执行initialize()");
-        await this.initPromise;
-    }
-
     async getDevices() {
         await this.waitForReady();
 
@@ -74,15 +71,15 @@ export class DB {
 
         const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
 
-        const queryResult = await this.rdbStore.query(predicates, [
-          this.KEY_ID, this.KEY_MAC, this.KEY_ALIAS, this.KEY_ORDERINDEX
-        ]);
-
-        if(queryResult === undefined) throw new Error("查询为空");
-
-        Logger.debug(this.LOG_TAG, `查询结果，行数: ${queryResult.rowCount}, 列数: ${queryResult.columnCount}`)
-
         try {
+            const queryResult = await this.rdbStore.query(predicates, [
+                this.KEY_ID, this.KEY_MAC, this.KEY_ALIAS, this.KEY_ORDERINDEX
+            ]);
+
+            if(queryResult === undefined) throw new Error("查询为空");
+
+            Logger.debug(this.LOG_TAG, `查询结果，行数: ${queryResult.rowCount}, 列数: ${queryResult.columnCount}`)
+
             const devices: Array<Device> = [];
 
             while (queryResult.goToNextRow()) {
@@ -101,8 +98,6 @@ export class DB {
             return devices;
         } catch (err) {
             throw new Error(`获取设备列表失败, ${err}`);
-        } finally {
-            queryResult.close();
         }
     }
 
@@ -234,5 +229,47 @@ export class DB {
             Logger.error(this.LOG_TAG, `清除表失败, 代码: ${err.code}, 错误信息: ${err.message}`);
             throw new Error("清除表失败");
         }
+    }
+
+    async getDeviceByID(deviceID: number): Promise<Device | null> {
+        await this.waitForReady();
+
+        if (!this.rdbStore) throw new Error("数据库实例不存在");
+
+        const predicates = new relationalStore.RdbPredicates(this.TABLE_NAME);
+        predicates.equalTo(this.KEY_ID, deviceID);
+
+        try {
+            const queryResult = await this.rdbStore.query(predicates, [
+                this.KEY_ID,
+                this.KEY_ALIAS,
+                this.KEY_MAC,
+                this.KEY_ORDERINDEX
+            ]);
+
+            if(queryResult.goToNextRow()) {
+                const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
+                const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
+                const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
+                const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
+
+                const device = new Device(id, mac, alias, orderIndex);
+
+                Logger.debug(this.LOG_TAG, `查询到 ${JSON.stringify(device)}`);
+
+                return device;
+            }
+
+            Logger.debug(this.LOG_TAG, `没有查询到 ID = ${deviceID} 的结果`)
+            return null;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `getDeviceByID() 执行失败, ${err}`);
+            return null;
+        }
+    }
+
+    private async waitForReady(): Promise<void> {
+        if (!this.initPromise) throw new Error("数据库未初始化，先执行 init()");
+        await this.initPromise;
     }
 }
