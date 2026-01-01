@@ -1,18 +1,11 @@
 import wifiManager from '@ohos.wifiManager';
 import { socket } from '@kit.NetworkKit';
-import { BusinessError } from '@kit.BasicServicesKit';
 import { buffer } from '@kit.ArkTS';
 
 import Logger from "./Logger";
 
-class NET {
+export default class NET {
     private LOG_TAG = '[NET]';
-
-    private CURRENT_IP_NUM: number = -1;
-    private CURRENT_NET_MASK_NUM: number = -1;
-    private BROADCAST_IP_NUM: number = -1;
-
-    UDP: socket.UDPSocket = socket.constructUDPSocketInstance();
 
     CURRENT_IP: string = '';
     CURRENT_NET_MASK: string = '';
@@ -20,65 +13,108 @@ class NET {
 
     HAS_BROADCAST_IP: boolean = false;
 
-    init(): void {
-        this.refreshCurrentNetwork();
-    }
+    private NoNetworkString = '󰚑';
 
-    refreshCurrentNetwork(): void {
-        if(wifiManager.isWifiActive()) {
-            let ipInfo = wifiManager.getIpInfo();
+    private UDP: socket.UDPSocket = socket.constructUDPSocketInstance();
 
-            this.CURRENT_IP_NUM = ipInfo.ipAddress;
-            this.CURRENT_NET_MASK_NUM = ipInfo.netmask;
+    async refresh(): Promise<void> {
+        try {
+            if (wifiManager.isWifiActive()) {
+                const ipInfo = wifiManager.getIpInfo();
 
-            this.CURRENT_IP = this.getIpAddrFromNum(this.CURRENT_IP_NUM);
-            this.CURRENT_NET_MASK = this.getIpAddrFromNum(this.CURRENT_NET_MASK_NUM);
+                const deviceIPNumber = ipInfo.ipAddress;
+                const deviceNetmaskNumber = ipInfo.netmask;
 
-            Logger.debug(this.LOG_TAG, `Get device network - IP: ${this.CURRENT_IP}, MASK: ${this.CURRENT_NET_MASK}`);
+                this.CURRENT_IP = this.getIpStringFromNum(deviceIPNumber);
+                this.CURRENT_NET_MASK = this.getIpStringFromNum(deviceNetmaskNumber);
+                this.BROADCAST_IP = this.calcBroadcastIP(deviceIPNumber, deviceNetmaskNumber);
+                this.HAS_BROADCAST_IP = true;
 
-            this.calcBroadcastIP();
+                Logger.debug(this.LOG_TAG, `设备网络信息`);
+                Logger.debug(this.LOG_TAG, `设备 IP 地址: ${this.CURRENT_IP}, 掩码: ${this.CURRENT_NET_MASK}`);
+                Logger.debug(this.LOG_TAG, `广播地址: ${this.BROADCAST_IP}`);
 
-            Logger.debug(this.LOG_TAG, `Broadcast IP: ${this.BROADCAST_IP}`)
+                const state = await this.UDP.getState();
+                Logger.debug(this.LOG_TAG, `UDP 状态: ${JSON.stringify(state)}`);
 
-            this.HAS_BROADCAST_IP = true;
-
-            this.UDP.getState().then((state: socket.SocketStateBase) => {
-                Logger.debug(this.LOG_TAG, `UDP state: ${JSON.stringify(state)}}`);
-                if(!state.isBound) {
-                    Logger.debug(this.LOG_TAG, 'UDP not bound previously, start binding.')
+                if (!state.isBound) {
+                    Logger.warn(this.LOG_TAG, 'UDP 端口未绑定，开始绑定');
                     this.udpInit();
                 }
 
-                this.UDP.getLocalAddress().then((netAddr: socket.NetAddress) => {
-                    Logger.debug(this.LOG_TAG, `Current UDP net address: ${JSON.stringify(netAddr)}}`);
-                    let udp_bind_addr: string = netAddr.address;
+                const netAddr = await this.UDP.getLocalAddress();
 
-                    if(udp_bind_addr != this.CURRENT_IP) {
-                        this.udpInit();
-                        Logger.debug(this.LOG_TAG, 'Network change detected, UDP rebound!');
-                    }
-                }).catch((err: BusinessError) => {
-                    Logger.error(this.LOG_TAG, `Get UDP local adress Error. Code: ${err.code}, message: ${err.message}`);
-                })
-            }).catch((err: BusinessError) => {
-                Logger.error(this.LOG_TAG, `Get UDP state error. Code: ${err.code}, message: ${err.message}`);
-            })
-        } else {
-            this.CURRENT_IP_NUM = -1;
-            this.CURRENT_NET_MASK_NUM = -1;
-            this.BROADCAST_IP_NUM = -1;
-            this.CURRENT_IP = '󰚑';
-            this.CURRENT_NET_MASK = '󰚑';
-            this.BROADCAST_IP = '󰚑';
-            this.HAS_BROADCAST_IP = false;
+                if (netAddr.address != this.CURRENT_IP) {
+                    Logger.warn(this.LOG_TAG, '检测到网络更改，重新绑定 UDP');
+                    this.udpInit();
+                }
+            } else {
+                this.CURRENT_IP = this.NoNetworkString;
+                this.CURRENT_NET_MASK = this.NoNetworkString;
+                this.BROADCAST_IP = this.NoNetworkString;
+                this.HAS_BROADCAST_IP = false;
 
-            this.UDP = socket.constructUDPSocketInstance();
+                this.UDP = socket.constructUDPSocketInstance();
 
-            Logger.debug(this.LOG_TAG, "Wifi is disabled");
+                Logger.debug(this.LOG_TAG, "设备网络已关闭");
+            }
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `refreshCurrentNetwork() 错误, ${err}`);
         }
     }
 
-    buildMagicPacket(mac: string): socket.UDPSendOptions {
+    async send(mac: string): Promise<boolean | string | Resource> {
+        try {
+            if(this.HAS_BROADCAST_IP) {
+                const packet = this.buildMagicPacket(mac);
+
+                await this.UDP.send(packet);
+
+                return true;
+            } else {
+                Logger.debug(this.LOG_TAG, "无广播地址，终止发送");
+                return $r("app.string.no_broadcast_ip");
+            }
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `魔法包发送失败, ${err}`);
+            return `${err}`;
+        }
+    }
+
+    private async udpInit() {
+        const bindAddr: socket.NetAddress = {
+            address: this.CURRENT_IP,
+            family: 1
+        };
+
+        try {
+            await this.UDP.bind(bindAddr);
+            Logger.debug(this.LOG_TAG, 'UDP 端口绑定成功!');
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `UDP 端口绑定失败, ${err}`);
+        }
+
+        const udpExtraOptions: socket.UDPExtraOptions = {
+            sendBufferSize: 102,
+            reuseAddress: true,
+            broadcast: true
+        };
+
+        try {
+            await this.UDP.setExtraOptions(udpExtraOptions);
+            Logger.debug(this.LOG_TAG, `UDP 设置额外参数成功`);
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `UDP 设置额外参数失败, ${err}`);
+        }
+    }
+
+    private calcBroadcastIP(ip: number, netmask: number): string {
+        // Calculate the broadcast address by OR-ing IP with the inverted subnet mask
+        const broadcastIPNumber = ip | ~netmask;
+        return this.getIpStringFromNum(broadcastIPNumber);
+    }
+
+    private buildMagicPacket(mac: string): socket.UDPSendOptions {
         let sendAddr: socket.NetAddress = {
             address: this.BROADCAST_IP,
             family: 1,
@@ -88,11 +124,11 @@ class NET {
         let macAddrFinal: string =  mac.replaceAll(mac.includes(':') ? ':' : '-', '');
         let dataStr = 'ff'.repeat(6) + macAddrFinal.repeat(16);
 
-        Logger.debug(this.LOG_TAG, `Final MAC Address string: ${macAddrFinal}`);
+        Logger.debug(this.LOG_TAG, `最终 MAC 字符串: ${macAddrFinal}`);
 
         let buff = buffer.from(dataStr, 'hex').buffer;
 
-        Logger.debug(this.LOG_TAG, `Data array content: ${new Uint8Array(buffer.from(dataStr, 'hex').buffer).toString()}`);
+        Logger.debug(this.LOG_TAG, `数据: ${new Uint8Array(buffer.from(dataStr, 'hex').buffer).toString()}`);
 
         const sendOptions: socket.UDPSendOptions = {
             data: buff,
@@ -102,40 +138,7 @@ class NET {
         return sendOptions;
     }
 
-    private udpInit() {
-        let bindAddr: socket.NetAddress = {
-            address: this.CURRENT_IP,
-            family: 1
-        }
-
-        this.UDP.bind(bindAddr).then(() => {
-            Logger.debug(this.LOG_TAG, 'UDP Bind OK!');
-        }).catch((err: BusinessError) => {
-            Logger.error(this.LOG_TAG, `Bind Error. Code: ${err.code}, message: ${err.message}`);
-        })
-
-        let udpExtraOptions: socket.UDPExtraOptions = {
-            sendBufferSize: 102,
-            reuseAddress: true,
-            broadcast: true
-        }
-
-        this.UDP.setExtraOptions(udpExtraOptions).then(() => {
-            Logger.debug(this.LOG_TAG, "Set extra options OK");
-        }).catch((err: BusinessError) => {
-            Logger.error(this.LOG_TAG, `Set extra options Error. Code: ${err.code}, message: ${err.message}`);
-        })
-    }
-
-    private calcBroadcastIP(): void {
-        // Calculate the broadcast address by OR-ing IP with the inverted subnet mask
-        this.BROADCAST_IP_NUM = this.CURRENT_IP_NUM | ~this.CURRENT_NET_MASK_NUM;
-        this.BROADCAST_IP = this.getIpAddrFromNum(this.BROADCAST_IP_NUM);
-    }
-
-    private getIpAddrFromNum(ipNum: number): string {
+    private getIpStringFromNum(ipNum: number): string {
         return (ipNum >>> 24) + '.' + (ipNum >> 16 & 0xFF) + '.' + (ipNum >> 8 & 0xFF) + '.' + (ipNum & 0xFF);
     }
 }
-
-export default new NET() as NET;
