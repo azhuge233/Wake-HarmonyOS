@@ -69,7 +69,7 @@ export default class WakeFormAbility extends FormExtensionAbility {
         const action = messageObj.formAction as string;
 
         // 根据 action 执行：更新卡片信息
-        if(action === CommonConstants.FormMessage_Update) await this.handleUpdateAction(formId, messageObj.data as number);
+        if(action === CommonConstants.FormMessage_Restore) await this.handleRestoreAction(formId, messageObj.data as string);
         else Logger.warn(this.LOG_TAG, `onFormEvent() 未知指令: ${action}`);
     }
 
@@ -117,27 +117,16 @@ export default class WakeFormAbility extends FormExtensionAbility {
         return formData;
     }
 
-    private async handleUpdateAction(formID: string, deviceID: number) {
-        const device = await this.db.getDeviceByID(deviceID);
+    /* 以下为 message 事件相关方法*/
 
-        if(device) {
-            Logger.debug(this.LOG_TAG, `handleUpdateAction() 查询到指令 deviceID = ${deviceID} 的 DB 条目`);
+    private async handleRestoreAction(formID: string, from: string) {
+        Logger.debug(this.LOG_TAG, `handleRestoreAction() 调用方 ${from}`);
 
-            const formData = new FormData(formID, true);
+        const formData = await this.pm.getFormDataByID(formID);
 
-            formData.deviceID = device.ID;
-            formData.alias = device.Alias;
-            formData.mac = device.MAC;
-
-            const success = await this.pm.bind(formID, formData);
-
-            if(success) Logger.debug(this.LOG_TAG, `handleUpdateAction() 已更新 formID = ${formID} 的卡片`);
-            else Logger.warn(this.LOG_TAG, `handleUpdateAction() formID = ${formID} 的卡片更新失败`);
-
-            Logger.debug(this.LOG_TAG, `handleUpdateAction() 已更新 formID = ${formID} 的卡片`);
-        } else {
-            Logger.warn(this.LOG_TAG, `handleUpdateAction() 指令 deviceID = ${deviceID} 的条目为空`);
-
+        if(formData) Logger.debug(this.LOG_TAG, `handleRestoreAction() 查询到 formID = ${formID} 卡片的绑定数据: ${JSON.stringify(formData)}`);
+        else {
+            Logger.warn(this.LOG_TAG, `handleRestoreAction() 未查询到 formID = ${formID} 卡片的绑定数据`);
             await this.unbindForm(formID);
         }
 
