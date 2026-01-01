@@ -120,7 +120,7 @@ export class PM {
         }
     }
 
-    async updateByShortcut(device: Device): Promise<string[]> {
+    async updateByDevice(device: Device): Promise<string[]> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return [];
@@ -149,7 +149,7 @@ export class PM {
         }
     }
 
-    async removeBindingsByShortcutId(deviceID: number): Promise<string[]> {
+    async removeBindingsByDeviceId(deviceID: number): Promise<string[]> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return [];
