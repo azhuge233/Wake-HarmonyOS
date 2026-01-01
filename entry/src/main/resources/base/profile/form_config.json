@@ -1,0 +1,27 @@
+{
+  "forms": [
+    {
+      "name": "WakeWidget",
+      "displayName": "$string:WakeWidget_display_name",
+      "description": "$string:WakeWidget_desc",
+      "src": "./ets/wakewidget/pages/WakeWidgetCard.ets",
+      "uiSyntax": "arkts",
+      "window": {
+        "designWidth": 720,
+        "autoDesignWidth": true
+      },
+      "colorMode": "auto",
+      "fontScaleFollowSystem": false,
+      "resizable": false,
+      "isDynamic": true,
+      "isDefault": true,
+      "updateEnabled": true,
+      "scheduledUpdateTime": "10:30",
+      "updateDuration": 1,
+      "defaultDimension": "1*2",
+      "supportDimensions": [
+        "1*2"
+      ]
+    }
+  ]
+}
