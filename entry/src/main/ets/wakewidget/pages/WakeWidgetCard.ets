@@ -25,6 +25,20 @@ struct WakeWidgetCard {
 
     private readonly FormEditPageRoute: string = 'pages/FormEdit';
 
+    private sendMessageAction(action: string, data: number | string | null) {
+        postCardAction(this, {
+            action: this.ActionTypeMessage,
+            params: {
+                formAction: action,
+                data: data
+            }
+        });
+    }
+
+    aboutToAppear(): void {
+        this.sendMessageAction(CommonConstants.FormMessage_Restore, 'aboutToAppear()');
+    }
+
     @Builder
     Logo() {
         Column() {
@@ -112,6 +126,9 @@ struct WakeWidgetCard {
         }
         .height(StyleConstants.FULL_PERCENT)
         .width(StyleConstants.FULL_PERCENT)
+        .onAppear(() => {
+            this.sendMessageAction(CommonConstants.FormMessage_Restore, 'Init() Component');
+        })
         .onClick(() => {
             postCardAction(this, {
                 action: this.ActionTypeRouter,
@@ -148,13 +165,7 @@ struct WakeWidgetCard {
         .onClick(() => {
             if(!this.isRunning) {
                 if(this.runResult !== '') { // 如果正在显示执行结果，恢复卡片显示
-                    postCardAction(this, {
-                        action: this.ActionTypeMessage,
-                        params: {
-                            formAction: CommonConstants.FormMessage_Update,
-                            data: this.deviceID
-                        }
-                    });
+                    this.sendMessageAction(CommonConstants.FormMessage_Restore, 'MainContent() Component');
                 } else if (this.isInitialized) { // 正常显示状态，执行指令
                     postCardAction(this, {
                         action: this.ActionTypeCall,
