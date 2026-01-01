@@ -21,9 +21,8 @@ export default class EntryAbility extends UIAbility {
             Logger.error(this.LOG_TAG, `设置主题颜色失败，${err}`);
         }
 
-        // 持久化存储初始化
-        DB.getInstance().init(this.context);
-        PM.getInstance().init(this.context);
+        // 使用应用上下文初始化持久化存储
+        this.init();
 
         if(want?.parameters?.params) this.handleFormWant(want);
         else if (want?.parameters?.isFromShortcut) this.handleShortcutWant(want);
@@ -73,6 +72,12 @@ export default class EntryAbility extends UIAbility {
     onBackground(): void {
         // Ability has back to background
         Logger.debug(this.LOG_TAG, `onBackground()`);
+    }
+
+    private init() {
+        const appContext = this.context.getApplicationContext();
+        DB.getInstance().init(appContext);
+        PM.getInstance().init(appContext);
     }
 
     private loadContent(): void {

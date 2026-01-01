@@ -61,7 +61,7 @@ export default class WakeWidgetEntryAbility extends UIAbility {
     }
 
     private async init() {
-        this.db.init(this.context);
+        this.db.init(this.context.getApplicationContext());
         await this.net.refresh();
     }
 

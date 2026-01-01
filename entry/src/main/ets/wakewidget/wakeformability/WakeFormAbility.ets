@@ -100,8 +100,9 @@ export default class WakeFormAbility extends FormExtensionAbility {
     }
 
     private init() {
-        this.db.init(this.context);
-        this.pm.init(this.context);
+        const appContext = this.context.getApplicationContext();
+        this.db.init(appContext);
+        this.pm.init(appContext);
     }
 
     private async unbindForm(formID: string) {
