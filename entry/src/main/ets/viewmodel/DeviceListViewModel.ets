@@ -1,12 +1,20 @@
 import Device from "../model/Device";
 import DeviceList from "../model/DeviceList";
+import Logger from '../common/utils/Logger';
 import { DeviceJsonObject } from "../model/JsonObject";
 import { DeviceViewModel } from "./DeviceViewModel";
+import { PM } from "../common/utils/PM";
+import CommonUtils from "../common/utils/CommonUtils";
+import { formProvider } from "@kit.FormKit";
 
 @ObservedV2
 export default class DeviceListViewModel {
+    private LOG_TAG = '[DeviceListViewModel]';
+
     @Trace devices: Array<DeviceViewModel> = [];
     private dataModel: DeviceList = new DeviceList([]);
+
+    private pm = PM.getInstance();
 
     async loadDevices() {
         await this.dataModel.loadDevices();
@@ -28,32 +36,46 @@ export default class DeviceListViewModel {
     }
 
     async updateDevice(device: Device): Promise<boolean> {
-        const success = await this.dataModel.updateDevice(device);
-        if(success) {
+        const result = await this.dataModel.updateDevice(device);
+
+        // 更新成功，返回绑定了该设备的所有 formID
+        // 更新失败，返回 false
+        if(typeof(result) !== "boolean") {
             await this.loadDevices();
+
+            await this.updateForms(result);
+
             return true;
         }
         return false;
     }
 
     async deleteDevice(device: Device): Promise<boolean> {
-        const success = await this.dataModel.deleteDevice(device);
-        if(success) {
-            // 删除后刷新 commandEntries 和 dataModel 内的 commandEntries
+        const result = await this.dataModel.deleteDevice(device);
+        // 删除成功，返回绑定了该设备的所有 formID
+        // 删除失败，返回 false
+        if(typeof(result) !== "boolean") {
+            // 删除后刷新 device 和 dataModel 内的 device
             await this.loadDevices();
             // 刷新后再更新列表内剩余条目的位置下标
             // 要注意执行顺序，如果在刷新前执行，位置下标不变
-            // 因为 commandEntries 和 dataModel 内的 commandEntries 未更新
+            // 因为 device 和 dataModel 内的 device 未更新
             await this.updateDevicesOrder();
+
+            await this.updateForms(result);
+
             return true;
         }
         return false;
     }
 
     async clearDevices(): Promise<boolean> {
-        const success = await this.dataModel.clearDevices();
-        if(success) {
+        const result = await this.dataModel.clearDevices();
+        if(typeof(result) !== "boolean") {
             await this.loadDevices();
+
+            await this.updateForms(result);
+
             return true;
         }
         return false;
@@ -110,5 +132,27 @@ export default class DeviceListViewModel {
             return true;
         }
         return false;
+    }
+
+    private async updateForms(formIDs: string[]): Promise<boolean> {
+        if(formIDs.length === 0) return true;
+
+        try {
+            formIDs.forEach(async formID => {
+                const formData = await this.pm.getFormDataByID(formID);
+
+                // 如果 formData 不为空，生成新 FormBindingData 更新卡片 UI
+                // 如果 formData 为空，说明该卡片已解绑，生成空 FormBindingData
+                const formInfo = CommonUtils.createFormBindingData(formData ?? formID);
+                await formProvider.updateForm(formID, formInfo);
+
+                Logger.debug(this.LOG_TAG, `已更新卡片, formID = ${formID}`);
+            });
+
+            return true;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `updateForms() 错误, ${err}`);
+            return false;
+        }
     }
 }
