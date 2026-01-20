@@ -6,6 +6,7 @@ import Logger from '../../common/utils/Logger';
 import NET from '../../common/utils/NET';
 import { DB } from '../../common/utils/DB';
 import FormData from '../model/FormData';
+import CommonConstants from '../../common/constants/CommonConstants';
 
 export default class WakeWidgetEntryAbility extends UIAbility {
     private LOG_TAG = "[WakeWidgetEntryAbility]";
@@ -37,6 +38,8 @@ export default class WakeWidgetEntryAbility extends UIAbility {
                 this.mac = params['mac'] as string;
 
                 Logger.debug(this.LOG_TAG, `onCreate() 从 call 事件获得参数: ${this.formID}, ${this.deviceID}, ${this.alias}, ${this.mac}`);
+
+                CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_HARD);
 
                 // 从数据库更新待执行的指令
                 // 防止执行时卡片UI没有及时更新
