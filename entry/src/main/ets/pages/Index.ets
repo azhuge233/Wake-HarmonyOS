@@ -210,7 +210,8 @@ struct Index {
                                     const result = await this.net.send(macAddr);
 
                                     if(typeof(result) === 'boolean') CommonUtils.alert($r("app.string.send_magic_packet_success"), this.promptAction);
-                                    else CommonUtils.alert($r("app.string.send_magic_packet_failed", result), this.promptAction);
+                                    else if(typeof(result) === 'string') CommonUtils.alert($r("app.string.send_magic_packet_failed", result), this.promptAction);
+                                    else CommonUtils.alert($r("app.string.send_magic_packet_failed", CommonUtils.getStringFromResource(this.context, result)), this.promptAction);
                                 }
                             })
                         }

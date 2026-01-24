@@ -76,8 +76,9 @@ export default class NET {
                 return $r("app.string.no_broadcast_ip");
             }
         } catch (err) {
-            Logger.error(this.LOG_TAG, `魔法包发送失败, ${err}`);
-            return `${err}`;
+            let businessErr = err as BusinessError;
+            Logger.error(this.LOG_TAG, `魔法包发送失败, 错误代码: ${businessErr.code}, 错误信息: ${businessErr.message}`);
+            return businessErr.message;
         }
     }
 

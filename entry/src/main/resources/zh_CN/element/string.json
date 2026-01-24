@@ -130,7 +130,7 @@
 		},
 		{
 			"name": "send_magic_packet_failed",
-			"value": "数据包发送失败，错误码：%s"
+			"value": "数据包发送失败：%s"
 		},
 		{
 			"name": "no_broadcast_ip",

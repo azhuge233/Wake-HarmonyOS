@@ -130,7 +130,7 @@
 		},
 		{
 			"name": "send_magic_packet_failed",
-			"value": "Send magic packet failed!, error code: %s"
+			"value": "Send magic packet failed: %s"
 		},
 		{
 			"name": "no_broadcast_ip",
