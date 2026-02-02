@@ -11,6 +11,7 @@ import Logger from './Logger';
 import StyleConstants from '../constants/StyleConstants';
 import { DeviceJsonObject } from '../../model/JsonObject';
 import SingleDeviceFormData from '../../singledevicewidget/model/SingleDeviceFormData'
+import MultipleDevicesFormData from '../../multipledeviceswidget/model/MultipleDevicesFormData';
 
 class CommonUtils {
     private LOG_TAG = "[CommonUtils]";
@@ -214,6 +215,11 @@ class CommonUtils {
         else return formBindingData.createFormBindingData(data);
     }
 
+    public createMultipleDevicesFormBindingData(data: string | MultipleDevicesFormData): formBindingData.FormBindingData {
+        if(typeof(data) === "string") return this.createEmptyMultipleDevicesFormBindingData(data);
+        else return formBindingData.createFormBindingData(data);
+    }
+
     // 获取资源字符串，方便异常处理
     public getStringFromResource(context: common.UIAbilityContext, stringResource: Resource): string {
         try {
@@ -237,6 +243,12 @@ class CommonUtils {
     // 创建对应 formID 的空 FormData
     private createEmptySingleDeviceFormBindingData(formID: string): formBindingData.FormBindingData {
         const formData: SingleDeviceFormData = new SingleDeviceFormData(formID, false);
+
+        return formBindingData.createFormBindingData(formData);
+    }
+
+    private createEmptyMultipleDevicesFormBindingData(formID: string): formBindingData.FormBindingData {
+        const formData: MultipleDevicesFormData = new MultipleDevicesFormData(formID, false);
 
         return formBindingData.createFormBindingData(formData);
     }
