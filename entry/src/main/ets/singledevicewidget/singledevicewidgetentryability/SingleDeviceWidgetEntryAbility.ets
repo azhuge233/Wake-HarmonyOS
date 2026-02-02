@@ -5,7 +5,7 @@ import CommonUtils from '../../common/utils/CommonUtils';
 import Logger from '../../common/utils/Logger';
 import NET from '../../common/utils/NET';
 import { DB } from '../../common/utils/DB';
-import FormData from '../model/SingleDeviceFormData';
+import SingleDeviceFormData from '../model/SingleDeviceFormData';
 import CommonConstants from '../../common/constants/CommonConstants';
 
 export default class SingleDeviceWidgetEntryAbility extends UIAbility {
@@ -68,8 +68,8 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
         await this.net.refresh();
     }
 
-    private getNewFormData(): FormData {
-        const formData = new FormData(this.formID, true);
+    private getNewFormData(): SingleDeviceFormData {
+        const formData = new SingleDeviceFormData(this.formID, true);
 
         formData.deviceID = this.deviceID;
         formData.alias = this.alias;
