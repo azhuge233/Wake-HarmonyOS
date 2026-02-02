@@ -100,7 +100,7 @@ struct FormEdit {
             await this.pm.bind(this.formID, formData);
 
             // 创建表单绑定数据
-            const formInfo = CommonUtils.createFormBindingData(formData);
+            const formInfo = CommonUtils.createSingleDeviceFormBindingData(formData);
             // 更新卡片
             await formProvider.updateForm(this.formID as string, formInfo);
 

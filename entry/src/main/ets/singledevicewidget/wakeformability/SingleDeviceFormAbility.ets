@@ -23,7 +23,7 @@ export default class SingleDeviceFormAbility extends FormExtensionAbility {
 
         Logger.debug(this.LOG_TAG, `onAddForm() formID: ${formID}`);
 
-        return CommonUtils.createFormBindingData(formID);
+        return CommonUtils.createSingleDeviceFormBindingData(formID);
     }
 
     // Tips
@@ -40,14 +40,14 @@ export default class SingleDeviceFormAbility extends FormExtensionAbility {
             if(formData) {
                 Logger.debug(this.LOG_TAG, `onUpdateForm() 查询到 formID = ${formId} 的卡片 formData`);
 
-                const formInfo = CommonUtils.createFormBindingData(formData);
+                const formInfo = CommonUtils.createSingleDeviceFormBindingData(formData);
                 await formProvider.updateForm(formId, formInfo);
 
                 Logger.debug(this.LOG_TAG, `onUpdateForm() formID = ${formId} 的卡片已更新`);
             } else {
                 Logger.warn(this.LOG_TAG, `onUpdateForm() formID = ${formId} 的卡片 formData 为空`);
 
-                const formInfo = CommonUtils.createFormBindingData(formId);
+                const formInfo = CommonUtils.createSingleDeviceFormBindingData(formId);
                 await formProvider.updateForm(formId, formInfo);
 
                 Logger.warn(this.LOG_TAG, `onUpdateForm() 已重置 formID = ${formId} 的卡片`);

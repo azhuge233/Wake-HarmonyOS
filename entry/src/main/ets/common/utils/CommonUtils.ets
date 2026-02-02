@@ -209,8 +209,8 @@ class CommonUtils {
     }
 
     // 根据 data 类型创建 FormBindingData
-    public createFormBindingData(data: string | SingleDeviceFormData): formBindingData.FormBindingData {
-        if(typeof(data) === "string") return this.createEmptyFormBindingData(data);
+    public createSingleDeviceFormBindingData(data: string | SingleDeviceFormData): formBindingData.FormBindingData {
+        if(typeof(data) === "string") return this.createEmptySingleDeviceFormBindingData(data);
         else return formBindingData.createFormBindingData(data);
     }
 
@@ -235,7 +235,7 @@ class CommonUtils {
     }
 
     // 创建对应 formID 的空 FormData
-    private createEmptyFormBindingData(formID: string): formBindingData.FormBindingData {
+    private createEmptySingleDeviceFormBindingData(formID: string): formBindingData.FormBindingData {
         const formData: SingleDeviceFormData = new SingleDeviceFormData(formID, false);
 
         return formBindingData.createFormBindingData(formData);

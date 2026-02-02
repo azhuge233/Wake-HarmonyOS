@@ -143,7 +143,7 @@ export default class DeviceListViewModel {
 
                 // 如果 formData 不为空，生成新 FormBindingData 更新卡片 UI
                 // 如果 formData 为空，说明该卡片已解绑，生成空 FormBindingData
-                const formInfo = CommonUtils.createFormBindingData(formData ?? formID);
+                const formInfo = CommonUtils.createSingleDeviceFormBindingData(formData ?? formID);
                 await formProvider.updateForm(formID, formInfo);
 
                 Logger.debug(this.LOG_TAG, `已更新卡片, formID = ${formID}`);
