@@ -41,6 +41,14 @@
       "value": "Wake"
     },
     {
+      "name": "MultipleDevicesWidget_desc",
+      "value": "Multiple devices widget"
+    },
+    {
+      "name": "MultipleDevicesWidget_display_name",
+      "value": "Wake"
+    },
+    {
       "name": "app_shortcut_label_add_device",
       "value": "Add New Device"
     },

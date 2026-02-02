@@ -41,6 +41,14 @@
 			"value": "网络唤醒"
 		},
 		{
+			"name": "MultipleDevicesWidget_desc",
+			"value": "多设备卡片"
+		},
+		{
+			"name": "MultipleDevicesWidget_display_name",
+			"value": "网络唤醒"
+		},
+		{
 			"name": "app_shortcut_label_add_device",
 			"value": "添加新设备"
 		},
