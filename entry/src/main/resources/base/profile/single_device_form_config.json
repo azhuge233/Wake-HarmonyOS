@@ -1,10 +1,10 @@
 {
   "forms": [
     {
-      "name": "WakeWidget",
-      "displayName": "$string:WakeWidget_display_name",
-      "description": "$string:WakeWidget_desc",
-      "src": "./ets/wakewidget/pages/WakeWidgetCard.ets",
+      "name": "SingleDeviceWidget",
+      "displayName": "$string:SingleDeviceWidget_display_name",
+      "description": "$string:SingleDeviceWidget_desc",
+      "src": "./ets/singledevicewidget/pages/SingleDeviceCard.ets",
       "uiSyntax": "arkts",
       "window": {
         "designWidth": 720,

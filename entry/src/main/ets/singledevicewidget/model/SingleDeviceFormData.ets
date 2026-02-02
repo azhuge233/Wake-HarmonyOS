@@ -1,4 +1,4 @@
-export default class FormData {
+export default class SingleDeviceFormData {
     formID: string = '';
     isInitialized: boolean = false;
     isRunning: boolean = false;

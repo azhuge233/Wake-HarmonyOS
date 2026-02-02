@@ -10,7 +10,7 @@ import { formBindingData } from '@kit.FormKit';
 import Logger from './Logger';
 import StyleConstants from '../constants/StyleConstants';
 import { DeviceJsonObject } from '../../model/JsonObject';
-import FormData from '../../wakewidget/model/FormData'
+import SingleDeviceFormData from '../../singledevicewidget/model/SingleDeviceFormData'
 
 class CommonUtils {
     private LOG_TAG = "[CommonUtils]";
@@ -209,7 +209,7 @@ class CommonUtils {
     }
 
     // 根据 data 类型创建 FormBindingData
-    public createFormBindingData(data: string | FormData): formBindingData.FormBindingData {
+    public createFormBindingData(data: string | SingleDeviceFormData): formBindingData.FormBindingData {
         if(typeof(data) === "string") return this.createEmptyFormBindingData(data);
         else return formBindingData.createFormBindingData(data);
     }
@@ -236,7 +236,7 @@ class CommonUtils {
 
     // 创建对应 formID 的空 FormData
     private createEmptyFormBindingData(formID: string): formBindingData.FormBindingData {
-        const formData: FormData = new FormData(formID, false);
+        const formData: SingleDeviceFormData = new SingleDeviceFormData(formID, false);
 
         return formBindingData.createFormBindingData(formData);
     }

@@ -17,27 +17,27 @@
 			"value": "Wake"
 		},
 		{
-			"name": "WakeFormAbility_desc",
-			"value": "Wake widget"
+			"name": "SingleDeviceFormAbility_desc",
+			"value": "Single device widget"
 		},
 		{
-			"name": "WakeWidgetEntryAbility_desc",
-			"value": "Wake widget"
-		},
-		{
-			"name": "WakeWidgetEntryAbility_label",
-			"value": "Wake widget"
-		},
-		{
-			"name": "WakeFormAbility_label",
+			"name": "SingleDeviceFormAbility_label",
 			"value": "Wake"
 		},
 		{
-			"name": "WakeWidget_desc",
-			"value": "Wake widget"
+			"name": "SingleDeviceWidgetEntryAbility_desc",
+			"value": "Single device widget"
 		},
 		{
-			"name": "WakeWidget_display_name",
+			"name": "SingleDeviceWidgetEntryAbility_label",
+			"value": "Single device widget"
+		},
+		{
+			"name": "SingleDeviceWidget_desc",
+			"value": "Single device widget"
+		},
+		{
+			"name": "SingleDeviceWidget_display_name",
 			"value": "Wake"
 		},
 		{

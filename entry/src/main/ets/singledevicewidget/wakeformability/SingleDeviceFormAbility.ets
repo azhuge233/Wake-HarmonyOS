@@ -3,13 +3,13 @@ import { Want } from '@kit.AbilityKit';
 
 import { PM } from '../../common/utils/PM';
 import { DB } from '../../common/utils/DB';
-import FormData from '../model/FormData';
+import SingleDeviceFormData from '../model/SingleDeviceFormData';
 import CommonConstants from '../../common/constants/CommonConstants';
 import CommonUtils from '../../common/utils/CommonUtils';
 import Logger from '../../common/utils/Logger';
 
-export default class WakeFormAbility extends FormExtensionAbility {
-    private LOG_TAG = '[EntryFormAbility]';
+export default class SingleDeviceFormAbility extends FormExtensionAbility {
+    private LOG_TAG = '[SingleDeviceFormAbility]';
 
     private db: DB = DB.getInstance();
     private pm: PM = PM.getInstance();
@@ -109,7 +109,7 @@ export default class WakeFormAbility extends FormExtensionAbility {
         else Logger.warn(this.LOG_TAG, `unbindForm() 删除卡片绑定失败: ${formID}`)
     }
 
-    private async getFormDataByID(formID: string): Promise<FormData | null> {
+    private async getFormDataByID(formID: string): Promise<SingleDeviceFormData | null> {
         const formData = await this.pm.getFormDataByID(formID);
 
         Logger.debug(this.LOG_TAG, `getFormDataByID() ${formID} 查询结果: ${JSON.stringify(formData)}`);

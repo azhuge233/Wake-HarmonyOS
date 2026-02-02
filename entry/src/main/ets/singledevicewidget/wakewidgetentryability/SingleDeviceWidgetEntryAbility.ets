@@ -5,11 +5,11 @@ import CommonUtils from '../../common/utils/CommonUtils';
 import Logger from '../../common/utils/Logger';
 import NET from '../../common/utils/NET';
 import { DB } from '../../common/utils/DB';
-import FormData from '../model/FormData';
+import FormData from '../model/SingleDeviceFormData';
 import CommonConstants from '../../common/constants/CommonConstants';
 
-export default class WakeWidgetEntryAbility extends UIAbility {
-    private LOG_TAG = "[WakeWidgetEntryAbility]";
+export default class SingleDeviceWidgetEntryAbility extends UIAbility {
+    private LOG_TAG = "[SingleDeviceWidgetEntryAbility]";
 
     private db = DB.getInstance();
     private net = new NET();

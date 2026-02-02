@@ -2,7 +2,7 @@ import preferences from '@ohos.data.preferences';
 import { deviceInfo } from '@kit.BasicServicesKit';
 
 import Logger from './Logger';
-import FormData from '../../wakewidget/model/FormData';
+import SingleDeviceFormData from '../../singledevicewidget/model/SingleDeviceFormData';
 import Device from '../../model/Device';
 
 export class PM {
@@ -50,7 +50,7 @@ export class PM {
         });
     }
 
-    async bind(formId: string, formData: FormData): Promise<boolean> {
+    async bind(formId: string, formData: SingleDeviceFormData): Promise<boolean> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return false;
@@ -86,7 +86,7 @@ export class PM {
         }
     }
 
-    async getFormDataByID(formId: string): Promise<FormData | null> {
+    async getFormDataByID(formId: string): Promise<SingleDeviceFormData | null> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return null;
@@ -95,7 +95,7 @@ export class PM {
             const formDataStr = await this.dataPreferences.get(formId, '') as string;
 
             if(formDataStr !== '') {
-                const formData: FormData = JSON.parse(formDataStr);
+                const formData: SingleDeviceFormData = JSON.parse(formDataStr);
                 return formData;
             } else return null;
         } catch (err) {
@@ -104,7 +104,7 @@ export class PM {
         }
     }
 
-    async getAllCardBindings(): Promise<Array<FormData>> {
+    async getAllCardBindings(): Promise<Array<SingleDeviceFormData>> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return [];
@@ -113,7 +113,7 @@ export class PM {
             const formDataMap = (await this.dataPreferences.getAll() ?? {}) as Record<string, string>;
             const keys = Object.keys(formDataMap);
 
-            return keys.map(key => JSON.parse(formDataMap[key]) as FormData);
+            return keys.map(key => JSON.parse(formDataMap[key]) as SingleDeviceFormData);
         } catch (err) {
             Logger.error(this.LOG_TAG, `获取所有绑定失败, ${err}`);
             return [];

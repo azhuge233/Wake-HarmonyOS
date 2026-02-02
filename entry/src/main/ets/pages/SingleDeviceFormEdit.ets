@@ -5,7 +5,7 @@ import StyleConstants from '../common/constants/StyleConstants';
 import Logger from '../common/utils/Logger';
 import { PM } from '../common/utils/PM';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
-import FormData from '../wakewidget/model/FormData';
+import SingleDeviceFormData from '../singledevicewidget/model/SingleDeviceFormData';
 import CommonConstants from '../common/constants/CommonConstants';
 import CommonUtils from '../common/utils/CommonUtils';
 import Device from '../model/Device';
@@ -90,7 +90,7 @@ struct FormEdit {
         try {
             this.isUpdating = true;
 
-            const formData: FormData = new FormData(this.formID, true);
+            const formData: SingleDeviceFormData = new SingleDeviceFormData(this.formID, true);
 
             formData.deviceID = selectedItem.ID;
             formData.alias = selectedItem.Alias;

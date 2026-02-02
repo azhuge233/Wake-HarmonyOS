@@ -17,27 +17,27 @@
 			"value": "网络唤醒"
 		},
 		{
-			"name": "WakeFormAbility_desc",
-			"value": "网络唤醒卡片"
+			"name": "SingleDeviceFormAbility_desc",
+			"value": "单设备卡片"
 		},
 		{
-			"name": "WakeWidgetEntryAbility_desc",
-			"value": "网络唤醒卡片"
-		},
-		{
-			"name": "WakeWidgetEntryAbility_label",
+			"name": "SingleDeviceFormAbility_label",
 			"value": "网络唤醒"
 		},
 		{
-			"name": "WakeFormAbility_label",
+			"name": "SingleDeviceWidgetEntryAbility_desc",
 			"value": "网络唤醒"
 		},
 		{
-			"name": "WakeWidget_desc",
-			"value": "网络唤醒卡片"
+			"name": "SingleDeviceWidgetEntryAbility_label",
+			"value": "网络唤醒"
 		},
 		{
-			"name": "WakeWidget_display_name",
+			"name": "SingleDeviceWidget_desc",
+			"value": "单设备卡片"
+		},
+		{
+			"name": "SingleDeviceWidget_display_name",
 			"value": "网络唤醒"
 		},
 		{

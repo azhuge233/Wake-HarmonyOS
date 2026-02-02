@@ -40,11 +40,11 @@
         ]
       },
       {
-        "name": 'WakeWidgetEntryAbility',
-        "srcEntry": "./ets/wakewidget/wakewidgetentryability/WakeWidgetEntryAbility.ets",
-        "description": '$string:WakeWidgetEntryAbility_desc',
+        "name": 'SingleDeviceWidgetEntryAbility',
+        "srcEntry": "./ets/singledevicewidget/wakewidgetentryability/SingleDeviceWidgetEntryAbility.ets",
+        "description": '$string:SingleDeviceWidgetEntryAbility_desc',
         "icon": "$media:app_icon_layered",
-        "label": "$string:WakeWidgetEntryAbility_label",
+        "label": "$string:SingleDeviceWidgetEntryAbility_label",
         "startWindowIcon": "$media:icon",
         "startWindowBackground": "$color:start_window_background",
         "launchType": "multiton"
@@ -61,18 +61,18 @@
             "name": "ohos.extension.backup",
             "resource": "$profile:backup_config"
           }
-        ],
+        ]
       },
       {
-        "name": "WakeFormAbility",
-        "srcEntry": "./ets/wakewidget/wakeformability/WakeFormAbility.ets",
-        "label": "$string:WakeFormAbility_label",
-        "description": "$string:WakeFormAbility_desc",
+        "name": "SingleDeviceFormAbility",
+        "srcEntry": "./ets/singledevicewidget/wakeformability/SingleDeviceFormAbility.ets",
+        "label": "$string:SingleDeviceFormAbility_label",
+        "description": "$string:SingleDeviceFormAbility_desc",
         "type": "form",
         "metadata": [
           {
             "name": "ohos.extension.form",
-            "resource": "$profile:form_config"
+            "resource": "$profile:single_device_form_config"
           }
         ]
       }

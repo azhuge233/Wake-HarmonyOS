@@ -5,6 +5,6 @@
     "pages/More",
     "pages/Help",
     "pages/Edit",
-    "pages/FormEdit"
+    "pages/SingleDeviceFormEdit"
   ]
 }

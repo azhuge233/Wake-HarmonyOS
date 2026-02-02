@@ -5,7 +5,7 @@ let storage = new LocalStorage();
 
 @Entry(storage)
 @Component
-struct WakeWidgetCard {
+struct SingleDeviceCard {
     @LocalStorageProp('formID') private formID: string = '';
     @LocalStorageProp('isInitialized') private isInitialized: boolean = false;
     @LocalStorageProp('isRunning') private isRunning: boolean = false;
@@ -21,9 +21,9 @@ struct WakeWidgetCard {
     private readonly ActionTypeMessage = 'message';
 
     private readonly EntryAbilityName: string = 'EntryAbility';
-    private readonly WidgetEntryAbilityName: string = 'WakeWidgetEntryAbility';
+    private readonly WidgetEntryAbilityName: string = 'SingleDeviceWidgetEntryAbility';
 
-    private readonly FormEditPageRoute: string = 'pages/FormEdit';
+    private readonly FormEditPageRoute: string = 'pages/SingleDeviceFormEdit';
 
     private sendMessageAction(action: string, data: number | string | null) {
         postCardAction(this, {
