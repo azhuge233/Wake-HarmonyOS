@@ -97,7 +97,7 @@ struct FormEdit {
             formData.mac = selectedItem.MAC;
 
             // 持久化存储卡片绑定信息
-            await this.pm.bind(this.formID, formData);
+            await this.pm.bindSingle(this.formID, formData);
 
             // 创建表单绑定数据
             const formInfo = CommonUtils.createSingleDeviceFormBindingData(formData);

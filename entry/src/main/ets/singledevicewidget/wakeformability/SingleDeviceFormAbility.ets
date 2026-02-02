@@ -110,7 +110,7 @@ export default class SingleDeviceFormAbility extends FormExtensionAbility {
     }
 
     private async getFormDataByID(formID: string): Promise<SingleDeviceFormData | null> {
-        const formData = await this.pm.getFormDataByID(formID);
+        const formData = await this.pm.getFormDataByIDSingle(formID);
 
         Logger.debug(this.LOG_TAG, `getFormDataByID() ${formID} 查询结果: ${JSON.stringify(formData)}`);
 
@@ -122,7 +122,7 @@ export default class SingleDeviceFormAbility extends FormExtensionAbility {
     private async handleRestoreAction(formID: string, from: string) {
         Logger.debug(this.LOG_TAG, `handleRestoreAction() 调用方 ${from}`);
 
-        const formData = await this.pm.getFormDataByID(formID);
+        const formData = await this.pm.getFormDataByIDSingle(formID);
 
         if(formData) Logger.debug(this.LOG_TAG, `handleRestoreAction() 查询到 formID = ${formID} 卡片的绑定数据: ${JSON.stringify(formData)}`);
         else {

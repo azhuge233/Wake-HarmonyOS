@@ -82,7 +82,7 @@ export default class DeviceList {
             Logger.debug(this.LOG_TAG, `设备列表清除成功`);
 
             // 获取全部卡片 formID，供 ViewModel 清空绑定
-            const allBindings = await this.pm.getAllCardBindings();
+            const allBindings = await this.pm.getAllCardBindingsSingle();
             const allFormIDs = allBindings.map(binding => binding.formID);
 
             // 清空卡片绑定
@@ -117,13 +117,13 @@ export default class DeviceList {
      * 卡片 UI 在 ViewModel 刷新
      */
     private async updateAllFormBelongsToDevice(device: Device): Promise<string[]> {
-        const updatedFormIDs = await this.pm.updateByDevice(device);
+        const updatedFormIDs = await this.pm.updateByDeviceSingle(device);
         Logger.debug(this.LOG_TAG, `已更新 ${updatedFormIDs.length} 个相关卡片`);
         return updatedFormIDs;
     }
 
     private async removeAllFormBelongsToDeviceID(deviceID: number): Promise<string[]> {
-        const removedFormIDs = await this.pm.removeBindingsByDeviceId(deviceID);
+        const removedFormIDs = await this.pm.removeBindingsByDeviceIdSingle(deviceID);
         Logger.debug(this.LOG_TAG, `已清除 ${removedFormIDs.length} 个相关卡片`);
         return removedFormIDs;
     }

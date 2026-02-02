@@ -50,22 +50,6 @@ export class PM {
         });
     }
 
-    async bind(formId: string, formData: SingleDeviceFormData): Promise<boolean> {
-        await this.waitForReady();
-
-        if (!this.dataPreferences) return false;
-
-        try {
-            const formDataStr = JSON.stringify(formData);
-            await this.dataPreferences.put(formId, formDataStr);
-            if(!this.isGSKVSupported) await this.dataPreferences.flush();
-            return true;
-        } catch (err) {
-            Logger.error(this.LOG_TAG, `绑定卡片失败, ${err}`);
-            return false;
-        }
-    }
-
     async unbind(formId: string): Promise<boolean> {
         await this.waitForReady();
 
@@ -86,7 +70,38 @@ export class PM {
         }
     }
 
-    async getFormDataByID(formId: string): Promise<SingleDeviceFormData | null> {
+    async clearAllBindings(): Promise<boolean> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return false;
+
+        try {
+            await this.dataPreferences.clear();
+            if(!this.isGSKVSupported) await this.dataPreferences.flush();
+            return true;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `清空绑定失败, ${err}`);
+            return false;
+        }
+    }
+
+    async bindSingle(formId: string, formData: SingleDeviceFormData): Promise<boolean> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return false;
+
+        try {
+            const formDataStr = JSON.stringify(formData);
+            await this.dataPreferences.put(formId, formDataStr);
+            if(!this.isGSKVSupported) await this.dataPreferences.flush();
+            return true;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `bindSingle() 绑定卡片失败, ${err}`);
+            return false;
+        }
+    }
+
+    async getFormDataByIDSingle(formId: string): Promise<SingleDeviceFormData | null> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return null;
@@ -99,12 +114,12 @@ export class PM {
                 return formData;
             } else return null;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `获取绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `getFormDataByIDSingle() 获取绑定失败, ${err}`);
             return null;
         }
     }
 
-    async getAllCardBindings(): Promise<Array<SingleDeviceFormData>> {
+    async getAllCardBindingsSingle(): Promise<Array<SingleDeviceFormData>> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return [];
@@ -115,18 +130,18 @@ export class PM {
 
             return keys.map(key => JSON.parse(formDataMap[key]) as SingleDeviceFormData);
         } catch (err) {
-            Logger.error(this.LOG_TAG, `获取所有绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `getAllCardBindingsSingle() 获取所有绑定失败, ${err}`);
             return [];
         }
     }
 
-    async updateByDevice(device: Device): Promise<string[]> {
+    async updateByDeviceSingle(device: Device): Promise<string[]> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return [];
 
         try {
-            const formDataArr = await this.getAllCardBindings();
+            const formDataArr = await this.getAllCardBindingsSingle();
 
             let updatedFormIDs: string[] = [];
 
@@ -138,24 +153,24 @@ export class PM {
                     formData.alias = device.Alias;
                     formData.mac = device.MAC;
 
-                    await this.bind(formData.formID, formData);
+                    await this.bindSingle(formData.formID, formData);
                 }
             });
 
             return updatedFormIDs;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `更新指令绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `updateByDeviceSingle() 更新指令绑定失败, ${err}`);
             return [];
         }
     }
 
-    async removeBindingsByDeviceId(deviceID: number): Promise<string[]> {
+    async removeBindingsByDeviceIdSingle(deviceID: number): Promise<string[]> {
         await this.waitForReady();
 
         if (!this.dataPreferences) return [];
 
         try {
-            const formDataArr = await this.getAllCardBindings();
+            const formDataArr = await this.getAllCardBindingsSingle();
 
             let removedFormIDs: string[] = [];
 
@@ -169,23 +184,8 @@ export class PM {
 
             return removedFormIDs;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `删除指令绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdSingle() 删除指令绑定失败, ${err}`);
             return [];
-        }
-    }
-
-    async clearAllBindings(): Promise<boolean> {
-        await this.waitForReady();
-
-        if (!this.dataPreferences) return false;
-
-        try {
-            await this.dataPreferences.clear();
-            if(!this.isGSKVSupported) await this.dataPreferences.flush();
-            return true;
-        } catch (err) {
-            Logger.error(this.LOG_TAG, `清空绑定失败, ${err}`);
-            return false;
         }
     }
 

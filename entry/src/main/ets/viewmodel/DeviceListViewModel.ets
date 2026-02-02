@@ -139,7 +139,7 @@ export default class DeviceListViewModel {
 
         try {
             formIDs.forEach(async formID => {
-                const formData = await this.pm.getFormDataByID(formID);
+                const formData = await this.pm.getFormDataByIDSingle(formID);
 
                 // 如果 formData 不为空，生成新 FormBindingData 更新卡片 UI
                 // 如果 formData 为空，说明该卡片已解绑，生成空 FormBindingData
