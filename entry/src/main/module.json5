@@ -41,7 +41,7 @@
       },
       {
         "name": 'SingleDeviceWidgetEntryAbility',
-        "srcEntry": "./ets/singledevicewidget/wakewidgetentryability/SingleDeviceWidgetEntryAbility.ets",
+        "srcEntry": "./ets/singledevicewidget/singledevicewidgetentryability/SingleDeviceWidgetEntryAbility.ets",
         "description": '$string:SingleDeviceWidgetEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:SingleDeviceWidgetEntryAbility_label",
@@ -65,7 +65,7 @@
       },
       {
         "name": "SingleDeviceFormAbility",
-        "srcEntry": "./ets/singledevicewidget/wakeformability/SingleDeviceFormAbility.ets",
+        "srcEntry": "./ets/singledevicewidget/singledeviceformability/SingleDeviceFormAbility.ets",
         "label": "$string:SingleDeviceFormAbility_label",
         "description": "$string:SingleDeviceFormAbility_desc",
         "type": "form",
