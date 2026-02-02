@@ -4,6 +4,7 @@ import { deviceInfo } from '@kit.BasicServicesKit';
 import Logger from './Logger';
 import SingleDeviceFormData from '../../singledevicewidget/model/SingleDeviceFormData';
 import Device from '../../model/Device';
+import MultipleDevicesFormData from '../../multipledeviceswidget/model/MultipleDevicesFormData';
 
 export class PM {
     private LOG_TAG = '[PM]';
@@ -126,7 +127,8 @@ export class PM {
 
         try {
             const formDataMap = (await this.dataPreferences.getAll() ?? {}) as Record<string, string>;
-            const keys = Object.keys(formDataMap);
+            let keys = Object.keys(formDataMap);
+            keys = keys.filter(key => !formDataMap[key].includes("deviceList"));
 
             return keys.map(key => JSON.parse(formDataMap[key]) as SingleDeviceFormData);
         } catch (err) {
@@ -185,6 +187,130 @@ export class PM {
             return removedFormIDs;
         } catch (err) {
             Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdSingle() 删除指令绑定失败, ${err}`);
+            return [];
+        }
+    }
+
+    async bindMultiple(formId: string, formData: MultipleDevicesFormData): Promise<boolean> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return false;
+
+        try {
+            const formDataStr = JSON.stringify(formData);
+            await this.dataPreferences.put(formId, formDataStr);
+            if(!this.isGSKVSupported) await this.dataPreferences.flush();
+            return true;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `bindMultiple() 绑定卡片失败, ${err}`);
+            return false;
+        }
+    }
+
+    async getFormDataByIDMultiple(formId: string): Promise<MultipleDevicesFormData | null> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return null;
+
+        try {
+            const formDataStr = await this.dataPreferences.get(formId, '') as string;
+
+            if(formDataStr !== '') {
+                const formData: MultipleDevicesFormData = JSON.parse(formDataStr);
+                return formData;
+            } else return null;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `getFormDataByIDMultiple() 获取绑定失败, ${err}`);
+            return null;
+        }
+    }
+
+    async getAllCardBindingsMultiple(): Promise<Array<MultipleDevicesFormData>> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return [];
+
+        try {
+            const formDataMap = (await this.dataPreferences.getAll() ?? {}) as Record<string, string>;
+            let keys = Object.keys(formDataMap);
+            keys = keys.filter(key => formDataMap[key].includes("deviceList"));
+
+            return keys.map(key => JSON.parse(formDataMap[key]) as MultipleDevicesFormData);
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `getAllCardBindingsMultiple() 获取所有绑定失败, ${err}`);
+            return [];
+        }
+    }
+
+    async updateByDeviceMultiple(device: Device): Promise<string[]> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return [];
+
+        try {
+            const formDataArr = await this.getAllCardBindingsMultiple();
+
+            let updatedFormIDs: string[] = [];
+
+            // 更新所有绑定该指令的卡片，统计受影响的 formID
+            for(const formData of formDataArr) {
+                let needsUpdate: boolean = false;
+
+                for(let shortcut of formData.deviceList) {
+                    if(shortcut.id == device.ID) {
+                        needsUpdate = true;
+
+                        shortcut.alias = device.Alias;
+                        shortcut.mac = device.MAC;
+
+                        break;
+                    }
+                }
+
+                if(needsUpdate) {
+                    updatedFormIDs.push(formData.formID);
+                    await this.bindMultiple(formData.formID, formData);
+                }
+            }
+
+            return updatedFormIDs;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `updateByDeviceMultiple() 更新指令绑定失败, ${err}`);
+            return [];
+        }
+    }
+
+    async removeBindingsByDeviceIdMultiple(deviceID: number): Promise<string[]> {
+        await this.waitForReady();
+
+        if (!this.dataPreferences) return [];
+
+        try {
+            const formDataArr = await this.getAllCardBindingsMultiple();
+
+            let affectedFormIDs: string[] = [];
+
+            // 删除所有绑定该指令的卡片，统计受影响的 formID
+            for(let formData of formDataArr) {
+                // 过滤掉要删除的指令
+                const originalLength = formData.deviceList.length;
+                formData.deviceList = formData.deviceList.filter(
+                  shortcut => shortcut.id !== deviceID
+                );
+
+                // 如果指令列表有变化
+                if(formData.deviceList.length !== originalLength) {
+                    affectedFormIDs.push(formData.formID);
+
+                    // 如果指令列表为空，删除整个卡片
+                    if(formData.deviceList.length === 0) await this.unbind(formData.formID);
+                    else await this.bindMultiple(formData.formID, formData); // 否则更新卡片
+                }
+            }
+
+            return affectedFormIDs;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdMultiple() 删除指令绑定失败, ${err}`);
             return [];
         }
     }
