@@ -12,8 +12,8 @@ import Device from '../model/Device';
 
 @Entry
 @ComponentV2
-struct FormEdit {
-    private LOG_TAG = "[pages/FormEdit]";
+struct SingleDeviceFormEdit {
+    private LOG_TAG = "[pages/SingleDeviceFormEdit]";
 
     @Local listViewModel: DeviceListViewModel = new DeviceListViewModel();
 
@@ -79,7 +79,7 @@ struct FormEdit {
 
         // 查找选中的条目
         const selectedItem = this.listViewModel.devices.find(
-            (item: Device) => item.ID === this.selectedID
+            (item: DeviceViewModel) => item.ID === this.selectedID
         );
 
         if (!selectedItem) {
