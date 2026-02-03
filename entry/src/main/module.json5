@@ -48,6 +48,16 @@
         "startWindowIcon": "$media:icon",
         "startWindowBackground": "$color:start_window_background",
         "launchType": "multiton"
+      },
+      {
+        "name": 'MultipleDevicesWidgetEntryAbility',
+        "srcEntry": "./ets/multipledeviceswidget/multipledeviceswidgetentryability/MultipleDevicesWidgetEntryAbility.ets",
+        "description": '$string:MultipleDevicesWidgetEntryAbility_desc',
+        "icon": "$media:app_icon_layered",
+        "label": "$string:MultipleDevicesWidgetEntryAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "launchType": "multiton"
       }
     ],
     "extensionAbilities": [
@@ -68,6 +78,19 @@
         "srcEntry": "./ets/singledevicewidget/singledeviceformability/SingleDeviceFormAbility.ets",
         "label": "$string:SingleDeviceFormAbility_label",
         "description": "$string:SingleDeviceFormAbility_desc",
+        "type": "form",
+        "metadata": [
+          {
+            "name": "ohos.extension.form",
+            "resource": "$profile:single_device_form_config"
+          }
+        ]
+      },
+      {
+        "name": "MultipleDevicesFormAbility",
+        "srcEntry": "./ets/multipledeviceswidget/multipledevicesformability/MultipleDevicesFormAbility.ets",
+        "label": "$string:MultipleDevicesFormAbility_label",
+        "description": "$string:MultipleDevicesFormAbility_desc",
         "type": "form",
         "metadata": [
           {
