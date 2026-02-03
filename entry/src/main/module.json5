@@ -95,7 +95,7 @@
         "metadata": [
           {
             "name": "ohos.extension.form",
-            "resource": "$profile:single_device_form_config"
+            "resource": "$profile:multiple_devices_form_config"
           }
         ]
       }
