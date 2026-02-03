@@ -57,7 +57,7 @@
 			"value": "#00000080"
 		},
 		{
-			"name": "form_background_color",
+			"name": "single_device_form_background_color",
 			"value": "#1a68f6"
 		}
 	]

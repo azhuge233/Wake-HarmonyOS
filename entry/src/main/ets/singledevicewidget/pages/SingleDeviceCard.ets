@@ -191,6 +191,6 @@ struct SingleDeviceCard {
         }
         .height(StyleConstants.FULL_PERCENT)
         .width(StyleConstants.FULL_PERCENT)
-        .backgroundColor($r('app.color.form_background_color'))
+        .backgroundColor($r('app.color.single_device_form_background_color'))
     }
 }
