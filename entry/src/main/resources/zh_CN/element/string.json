@@ -34,11 +34,11 @@
 		},
 		{
 			"name": "SingleDeviceWidgetEntryAbility_desc",
-			"value": "网络唤醒"
+			"value": "单设备卡片"
 		},
 		{
 			"name": "SingleDeviceWidgetEntryAbility_label",
-			"value": "网络唤醒"
+			"value": "单设备卡片"
 		},
 		{
 			"name": "SingleDeviceWidget_desc",
