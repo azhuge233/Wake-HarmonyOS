@@ -306,7 +306,7 @@
 		},
 		{
 			"name": "form_run_success",
-			"value": "唤醒成功"
+			"value": "唤醒成功 \uD83D\uDCA1"
 		},
 		{
 			"name": "form_init_label",
