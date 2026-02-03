@@ -41,6 +41,14 @@
 			"value": "单设备卡片"
 		},
 		{
+			"name": "MultipleDevicesWidgetEntryAbility_desc",
+			"value": "多设备卡片"
+		},
+		{
+			"name": "MultipleDevicesWidgetEntryAbility_label",
+			"value": "多设备卡片"
+		},
+		{
 			"name": "SingleDeviceWidget_desc",
 			"value": "单设备卡片"
 		},

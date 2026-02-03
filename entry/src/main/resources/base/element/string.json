@@ -41,6 +41,14 @@
       "value": "Single device widget"
     },
     {
+      "name": "MultipleDevicesWidgetEntryAbility_desc",
+      "value": "Multiple devices widget"
+    },
+    {
+      "name": "MultipleDevicesWidgetEntryAbility_label",
+      "value": "Multiple devices widget"
+    },
+    {
       "name": "SingleDeviceWidget_desc",
       "value": "Single device widget"
     },
