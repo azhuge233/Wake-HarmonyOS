@@ -42,8 +42,9 @@ struct SingleDeviceCard {
     LoadingContent() {
         Column() {
             LoadingProgress()
-                .height(StyleConstants.HALF_PERCENT)
-                .width(StyleConstants.HALF_PERCENT)
+                .height(StyleConstants.FORTY_PERCENT)
+                .width(StyleConstants.FORTY_PERCENT)
+                .color(Color.White)
         }
         .width(StyleConstants.FULL_PERCENT)
         .alignItems(HorizontalAlign.Center)
@@ -61,11 +62,6 @@ struct SingleDeviceCard {
                         .layoutWeight(1)
                         .fontColor(Color.White)
                         .textAlign(TextAlign.Center)
-                        .margin({
-                            top: StyleConstants.MARGIN_TEN,
-                            bottom: StyleConstants.MARGIN_FIVE,
-                            right: StyleConstants.MARGIN_TEN
-                        })
 
                     Text($r("app.string.form_run_complete_label"))
                         .height(StyleConstants.TEN_PERCENT)
@@ -77,10 +73,6 @@ struct SingleDeviceCard {
                         .fontColor(Color.White)
                         .maxLines(1)
                         .textOverflow({ overflow: TextOverflow.Clip })
-                        .margin({
-                            bottom: StyleConstants.MARGIN_FIVE,
-                            right: StyleConstants.MARGIN_TEN
-                        })
                 }
                 .height(StyleConstants.FULL_PERCENT)
                 .width(StyleConstants.FULL_PERCENT)
