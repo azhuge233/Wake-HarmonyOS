@@ -9,6 +9,7 @@ import SingleDeviceFormData from '../singledevicewidget/model/SingleDeviceFormDa
 import CommonConstants from '../common/constants/CommonConstants';
 import CommonUtils from '../common/utils/CommonUtils';
 import Device from '../model/Device';
+import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 
 @Entry
 @ComponentV2
