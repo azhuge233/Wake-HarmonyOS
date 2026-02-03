@@ -78,7 +78,7 @@ class StyleConstants {
     public readonly BORDER_RADIUS_TWELVE = 12;
     public readonly BORDER_RADIUS_ELEVEN = 11;
 
-    public FORM_ITEM_HEIGHT = 45;
+    public readonly FORM_ITEM_HEIGHT = 45;
 }
 
 export default new StyleConstants();
