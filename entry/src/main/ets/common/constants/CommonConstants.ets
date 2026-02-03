@@ -11,6 +11,9 @@ class CommonConstants {
     public readonly FormMessage_Restore = 'restore';
 
     public readonly FormCall_Run = 'run';
+
+    public readonly FormResult_MapKey_Single = 'single';
+    public readonly FormResult_MapKey_Multiple = 'multiple';
 }
 
 export default new CommonConstants();

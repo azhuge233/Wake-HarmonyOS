@@ -2,6 +2,7 @@ import Device from "./Device";
 import Logger from '../common/utils/Logger';
 import { DB } from "../common/utils/DB"
 import { PM } from "../common/utils/PM";
+import CommonConstants from "../common/constants/CommonConstants";
 
 export default class DeviceList {
     devices: Array<Device> =[];
@@ -46,7 +47,7 @@ export default class DeviceList {
 
     // 更新成功返回更新 entry 对应的所有 formID
     // 只有更新失败返回布尔值
-    async updateDevice(device: Device): Promise<boolean | string[]> {
+    async updateDevice(device: Device): Promise<boolean | Map<string, string[]>> {
         try {
             const result = await this.db.updateDeviceByID(device);
             Logger.debug(this.LOG_TAG, `设备更新成功, ${result}`);
@@ -62,7 +63,7 @@ export default class DeviceList {
 
     // 删除成功返回删除 entry 对应的所有 formID
     // 只有删除失败返回布尔值
-    async deleteDevice(device: Device): Promise<boolean | string[]> {
+    async deleteDevice(device: Device): Promise<boolean | Map<string, string[]>> {
         try {
             const result = await this.db.deleteDeviceByID(device);
             Logger.debug(this.LOG_TAG, `设备删除成功, ${result}`);
@@ -76,20 +77,24 @@ export default class DeviceList {
         }
     }
 
-    async clearDevices(): Promise<boolean | string[]> {
+    async clearDevices(): Promise<boolean | Map<string, string[]>> {
         try {
             await this.db.clearTable();
             Logger.debug(this.LOG_TAG, `设备列表清除成功`);
 
             // 获取全部卡片 formID，供 ViewModel 清空绑定
-            const allBindings = await this.pm.getAllCardBindingsSingle();
-            const allFormIDs = allBindings.map(binding => binding.formID);
+            const allSingleBindings = await this.pm.getAllCardBindingsSingle();
+            const allMultipleBindings = await this.pm.getAllCardBindingsMultiple();
+
+            let allFormIDMap: Map<string, string[]> = new Map<string, string[]>();
+            allFormIDMap.set(CommonConstants.FormResult_MapKey_Single, allSingleBindings.map(binding => binding.formID));
+            allFormIDMap.set(CommonConstants.FormResult_MapKey_Multiple, allMultipleBindings.map(binding => binding.formID));
 
             // 清空卡片绑定
             const success = await this.pm.clearAllBindings();
             if(success) {
                 Logger.debug(this.LOG_TAG, `指令绑定已清空`);
-                return allFormIDs; // 成功清除则返回所有 formID
+                return allFormIDMap; // 成功清除则返回所有 formID
             } else {
                 Logger.warn(this.LOG_TAG, `指令绑定清空失败`);
                 return false;
@@ -116,15 +121,23 @@ export default class DeviceList {
      * 仅更改持久化存储，不刷新卡片 UI
      * 卡片 UI 在 ViewModel 刷新
      */
-    private async updateAllFormBelongsToDevice(device: Device): Promise<string[]> {
-        const updatedFormIDs = await this.pm.updateByDeviceSingle(device);
-        Logger.debug(this.LOG_TAG, `已更新 ${updatedFormIDs.length} 个相关卡片`);
-        return updatedFormIDs;
+    private async updateAllFormBelongsToDevice(device: Device): Promise<Map<string, string[]>> {
+        let affectedMap: Map<string, string[]> = new Map<string, string[]>();
+
+        affectedMap.set(CommonConstants.FormResult_MapKey_Single, await this.pm.updateByDeviceSingle(device));
+        affectedMap.set(CommonConstants.FormResult_MapKey_Multiple, await this.pm.updateByDeviceMultiple(device));
+
+        Logger.debug(this.LOG_TAG, `已更新相关卡片: 单设备卡片 ${affectedMap.get(CommonConstants.FormResult_MapKey_Single)?.length} 个，多设备卡片 ${affectedMap.get(CommonConstants.FormResult_MapKey_Multiple)?.length} 个`);
+        return affectedMap;
     }
 
-    private async removeAllFormBelongsToDeviceID(deviceID: number): Promise<string[]> {
-        const removedFormIDs = await this.pm.removeBindingsByDeviceIdSingle(deviceID);
-        Logger.debug(this.LOG_TAG, `已清除 ${removedFormIDs.length} 个相关卡片`);
-        return removedFormIDs;
+    private async removeAllFormBelongsToDeviceID(deviceID: number): Promise<Map<string, string[]>> {
+        let affectedMap: Map<string, string[]> = new Map<string, string[]>();
+
+        affectedMap.set(CommonConstants.FormResult_MapKey_Single, await this.pm.removeBindingsByDeviceIdSingle(deviceID));
+        affectedMap.set(CommonConstants.FormResult_MapKey_Multiple, await this.pm.removeBindingsByDeviceIdMultiple(deviceID));
+
+        Logger.debug(this.LOG_TAG, `已清除相关卡片: 单设备卡片 ${affectedMap.get(CommonConstants.FormResult_MapKey_Single)?.length} 个，多设备卡片 ${affectedMap.get(CommonConstants.FormResult_MapKey_Multiple)?.length} 个`);
+        return affectedMap;
     }
 }

@@ -6,6 +6,7 @@ import { DeviceViewModel } from "./DeviceViewModel";
 import { PM } from "../common/utils/PM";
 import CommonUtils from "../common/utils/CommonUtils";
 import { formProvider } from "@kit.FormKit";
+import CommonConstants from "../common/constants/CommonConstants";
 
 @ObservedV2
 export default class DeviceListViewModel {
@@ -134,11 +135,14 @@ export default class DeviceListViewModel {
         return false;
     }
 
-    private async updateForms(formIDs: string[]): Promise<boolean> {
-        if(formIDs.length === 0) return true;
+    private async updateForms(formIDMap: Map<string, string[]>): Promise<boolean> {
+        const singleFormIDs = formIDMap.get(CommonConstants.FormResult_MapKey_Single) ?? [];
+        const multipleFormIDs = formIDMap.get(CommonConstants.FormResult_MapKey_Multiple) ?? [];
+
+        if(singleFormIDs.length === 0 && multipleFormIDs.length === 0) return true;
 
         try {
-            formIDs.forEach(async formID => {
+            for(const formID of singleFormIDs) {
                 const formData = await this.pm.getFormDataByIDSingle(formID);
 
                 // 如果 formData 不为空，生成新 FormBindingData 更新卡片 UI
@@ -146,8 +150,17 @@ export default class DeviceListViewModel {
                 const formInfo = CommonUtils.createSingleDeviceFormBindingData(formData ?? formID);
                 await formProvider.updateForm(formID, formInfo);
 
-                Logger.debug(this.LOG_TAG, `已更新卡片, formID = ${formID}`);
-            });
+                Logger.debug(this.LOG_TAG, `已更新单设备卡片, formID = ${formID}`);
+            }
+
+            for(const formID of multipleFormIDs) {
+                const formData = await this.pm.getFormDataByIDMultiple(formID);
+
+                const formInfo = CommonUtils.createMultipleDevicesFormBindingData(formData ?? formID);
+                await formProvider.updateForm(formID, formInfo);
+
+                Logger.debug(this.LOG_TAG, `已更新多设备卡片, formID = ${formID}`);
+            }
 
             return true;
         } catch (err) {
