@@ -59,6 +59,14 @@
 		{
 			"name": "single_device_form_background_color",
 			"value": "#1a68f6"
+		},
+		{
+			"name": "multiple_devices_form_background_color",
+			"value": "#1a68f6"
+		},
+		{
+			"name": "multiple_devices_form_item_color",
+			"value": "#397cf6"
 		}
 	]
 }
