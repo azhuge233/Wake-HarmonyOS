@@ -34,7 +34,8 @@ class StyleConstants {
     public readonly MARGIN_EIGHT = 8;
     public readonly MARGIN_SEVEN = 7;
     public readonly MARGIN_FIVE = 5;
-
+    public readonly MARGIN_THREE = 3;
+    public readonly MARGIN_TWO = 2;
 
     public readonly PADDING_SIXTEEN = 16;
     public readonly PADDING_TEN = 10;
@@ -72,6 +73,12 @@ class StyleConstants {
     public readonly PROGRESS_STROKE_WIDTH = 18;
 
     public readonly LOADING_WIDTH = 128;
+
+    public readonly BORDER_RADIUS_THIRTEEN = 13;
+    public readonly BORDER_RADIUS_TWELVE = 12;
+    public readonly BORDER_RADIUS_ELEVEN = 11;
+
+    public FORM_ITEM_HEIGHT = 45;
 }
 
 export default new StyleConstants();
