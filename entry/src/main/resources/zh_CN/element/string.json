@@ -25,6 +25,14 @@
 			"value": "网络唤醒"
 		},
 		{
+			"name": "MultipleDevicesFormAbility_desc",
+			"value": "多设备卡片"
+		},
+		{
+			"name": "MultipleDevicesFormAbility_label",
+			"value": "网络唤醒"
+		},
+		{
 			"name": "SingleDeviceWidgetEntryAbility_desc",
 			"value": "网络唤醒"
 		},

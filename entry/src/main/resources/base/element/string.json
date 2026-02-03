@@ -25,6 +25,14 @@
       "value": "Wake"
     },
     {
+      "name": "MultipleDevicesFormAbility_desc",
+      "value": "Multiple devices widget"
+    },
+    {
+      "name": "MultipleDevicesFormAbility_label",
+      "value": "Wake"
+    },
+    {
       "name": "SingleDeviceWidgetEntryAbility_desc",
       "value": "Single device widget"
     },
