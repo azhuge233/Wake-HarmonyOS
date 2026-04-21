@@ -1,5 +1,6 @@
 import { common } from '@kit.AbilityKit';
 import { formProvider } from '@kit.FormKit';
+import { hdsMaterial, HdsNavigation, ScrollEffectType, HdsNavigationTitleMode } from '@kit.UIDesignKit';
 
 import StyleConstants from '../common/constants/StyleConstants';
 import Logger from '../common/utils/Logger';
@@ -232,12 +233,30 @@ struct SingleDeviceFormEdit {
     }
 
     build() {
-        Navigation() {
+        HdsNavigation() {
             if(this.isLoading) this.LoadingContent();
             else this.MainContent();
         }
-        .title($r('app.string.form_edit_title'))
-        .titleMode(NavigationTitleMode.Mini)
+        .titleBar({
+            content: {
+                title: {
+                    mainTitle: $r('app.string.form_edit_title')
+                }
+            },
+            style: {
+                scrollEffectOpts: { // 设置滚动特效
+                    enableScrollEffect: true,
+                    scrollEffectType: ScrollEffectType.GRADIENT_BLUR,
+                },
+                systemMaterialEffect: { // 设置沉浸光感
+                    materialType: hdsMaterial.MaterialType.ADAPTIVE,
+                    materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                },
+            },
+            enableComponentSafeArea: true // 启用标题栏占位
+        })
+        .titleMode(HdsNavigationTitleMode.MINI)
+        .bindToScrollable([this.scrollerForList])
         .hideBackButton(false)
         .height(StyleConstants.FULL_PERCENT)
         .width(StyleConstants.FULL_PERCENT)
