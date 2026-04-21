@@ -250,7 +250,7 @@
     },
     {
       "name": "help_info_span2",
-      "value": "The app automatically refreshes the broadcast address when the Wi-Fi network changes.\nIf the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main page (a circular arrow with a Wi‑Fi icon inside, located in the upper‑right corner).\n\n"
+      "value": "The app automatically refreshes the broadcast address when the Wi-Fi network changes.\nIf the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main page.\n\n"
     },
     {
       "name": "help_info_span3",
