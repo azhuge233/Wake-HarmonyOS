@@ -1,4 +1,5 @@
 import { common } from '@kit.AbilityKit';
+import { hdsMaterial, HdsNavigation, HdsNavigationMenuContentOptions, ScrollEffectType } from '@kit.UIDesignKit';
 
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
@@ -24,6 +25,39 @@ struct Index {
     private promptAction = this.uiContext.getPromptAction();
 
     private scrollerForList: ListScroller = new ListScroller();
+
+    // HdsNavigation 新版菜单
+    private menus: HdsNavigationMenuContentOptions = {
+        value: [
+            {
+                content: {
+                    label: $r("app.string.navigation_menu_refresh"),
+                    icon: $r("sys.symbol.arrow_clockwise"),
+                    action: async () => {
+                        await this.refreshIPBanner();
+                        CommonUtils.alert($r("app.string.network_refreshed"), this.promptAction);
+                    }
+                }
+            },
+            {
+                content: {
+                    label: $r("app.string.navigation_menu_more"),
+                    icon: $r("sys.symbol.dot_grid_2x2"),
+                    action: () => {
+                        this.safeCloseSwipeActions();
+                        this.pageStack.pushPath({
+                            name: "More",
+                            param: this.deviceList,
+                            onPop: async (popInfo: PopInfo) => {
+                                await this.refreshIPBanner();
+                                CommonUtils.returnFromSubPage(popInfo);
+                            }
+                        });
+                    }
+                }
+            }
+        ]
+    };
 
     pageStack: NavPathStack = new NavPathStack();
 
@@ -267,7 +301,7 @@ struct Index {
     }
 
     build() {
-        Navigation(this.pageStack) {
+        HdsNavigation(this.pageStack) {
             IPBanner({
                 ipBannerText: this.ipBannerText,
                 onRefresh: async () => {
@@ -281,34 +315,25 @@ struct Index {
                 if(this.isLoading) this.LoadingContent();
             }
         }
-        .mode(NavigationMode.Auto)
-        .titleMode(NavigationTitleMode.Full)
-        .title($r("app.string.title_label"))
-        .menus([
-            {
-                value: $r("app.string.navigation_menu_refresh"),
-                icon: $r("app.media.network_refresh"),
-                action: async () => {
-                    await this.refreshIPBanner();
-                    CommonUtils.alert($r("app.string.network_refreshed"), this.promptAction);
-                }
+        .titleBar({
+            content: {
+                title: {
+                    mainTitle: $r("app.string.title_label"),
+                },
+                menu: this.menus,
             },
-            {
-                value: $r("app.string.navigation_menu_more"),
-                icon: $r("app.media.dot_grid_2x2"),
-                action: () => {
-                    this.safeCloseSwipeActions();
-                    this.pageStack.pushPath({
-                        name: "More",
-                        param: this.deviceList,
-                        onPop: async (popInfo: PopInfo) => {
-                            await this.refreshIPBanner();
-                            CommonUtils.returnFromSubPage(popInfo);
-                        }
-                    })
-                }
-            }
-        ])
+            style: {
+                scrollEffectOpts: { // 设置滚动特效
+                    enableScrollEffect: true,
+                    scrollEffectType: ScrollEffectType.GRADIENT_BLUR,
+                },
+                systemMaterialEffect: { // 设置沉浸光感
+                    materialType: hdsMaterial.MaterialType.ADAPTIVE,
+                    materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                },
+            },
+            enableComponentSafeArea: true // 启用标题栏占位
+        })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })
