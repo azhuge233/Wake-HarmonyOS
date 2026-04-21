@@ -1,5 +1,5 @@
 import { common } from '@kit.AbilityKit';
-import { hdsMaterial, HdsNavigation, HdsNavigationMenuContentOptions, ScrollEffectType } from '@kit.UIDesignKit';
+import { hdsMaterial, HdsNavigation, HdsNavigationMenuContentOptions, ScrollEffectType, HdsTabs, HdsTabsController } from '@kit.UIDesignKit';
 
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
@@ -25,6 +25,7 @@ struct Index {
     private promptAction = this.uiContext.getPromptAction();
 
     private scrollerForList: ListScroller = new ListScroller();
+    private tabController: HdsTabsController = new HdsTabsController();
 
     // HdsNavigation 新版菜单
     private menus: HdsNavigationMenuContentOptions = {
@@ -181,6 +182,26 @@ struct Index {
     }
 
     @Builder
+    TabBuilder(symbol: Resource, text: Resource | string, onClick: () => void) {
+        Column() {
+            SymbolGlyph(symbol)
+                .fontSize(StyleConstants.TEXT_FONT_SIZE_TWENTY_TWO)
+                .fontColor([$r("sys.color.font_primary")])
+
+            Text(text)
+                .fontSize(StyleConstants.TEXT_FONT_SIZE_TWELVE)
+                .fontColor($r("sys.color.font_primary"))
+        }
+        .width(StyleConstants.FULL_PERCENT)
+        .justifyContent(FlexAlign.Center)
+        .margin({
+            left: StyleConstants.MARGIN_TWO_PERCENT,
+            right: StyleConstants.MARGIN_TWO_PERCENT
+        })
+        .onClick(onClick)
+    }
+
+    @Builder
     LoadingContent() {
         Stack() {
             Column()
@@ -218,86 +239,68 @@ struct Index {
 
     @Builder
     MainContent() {
-        Column() {
-            if (!this.isLoading && this.deviceList.devices.length === 0) {
-                Column() {
-                    Text($r("app.string.no_device_message"))
-                        .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHTEEN)
-                        .fontColor(Color.Gray)
-                    Text($r("app.string.create_new_device_message"))
-                        .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
-                        .fontColor(Color.Gray)
-                        .margin({ top: StyleConstants.MARGIN_TEN })
-                }
-                .height(StyleConstants.EIGHTY_FIVE_PERCENT)
-                .justifyContent(FlexAlign.Center)
-                .width(StyleConstants.FULL_PERCENT)
-            } else {
-                List({ scroller: this.scrollerForList }) {
-                    ForEach(this.deviceList.devices, (device: DeviceViewModel) => {
-                        ListItem() {
-                            DeviceTile({
-                                deviceMAC: $r("app.string.machine_mac_label", device.MAC),
-                                deviceAlias: $r("app.string.machine_alias_label", device.Alias),
-                                deviceMACAddr: device.MAC,
-                                sendPacket: async (macAddr: string) => {
-                                    const result = await this.net.send(macAddr);
-
-                                    if(typeof(result) === 'boolean') CommonUtils.alert($r("app.string.send_magic_packet_success"), this.promptAction);
-                                    else if(typeof(result) === 'string') CommonUtils.alert($r("app.string.send_magic_packet_failed", result), this.promptAction);
-                                    else CommonUtils.alert($r("app.string.send_magic_packet_failed", CommonUtils.getStringFromResource(this.context, result)), this.promptAction);
-                                }
-                            })
-                        }
-                        .swipeAction({
-                            end: {
-                                builder: () => {
-                                    this.EditButton(device);
-                                    this.DeleteButton(device);
-                                }
-                            }
-                        })
-                        .margin({
-                            top: StyleConstants.MARGIN_TWO_PERCENT,
-                            left: StyleConstants.MARGIN_ONE_PERCENT,
-                            right: StyleConstants.MARGIN_THREE_PERCENT,
-                            bottom: StyleConstants.MARGIN_TWO_PERCENT
-                        })
-                    })
-                        .onMove((from: number, to: number) => {
-                            const success = this.deviceList.reorderDevices(from, to);
-                            return success;
-                        }, {
-                            onLongPress: () => {
-                                CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_SOFT);
-                            }
-                        })
-                }
-                .listDirection(Axis.Vertical)
-                .alignSelf(ItemAlign.Start)
-                .height(StyleConstants.EIGHTY_FIVE_PERCENT)
-                .width(StyleConstants.FULL_PERCENT)
+        if (!this.isLoading && this.deviceList.devices.length === 0) {
+            Column() {
+                Text($r("app.string.no_device_message"))
+                    .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHTEEN)
+                    .fontColor(Color.Gray)
+                Text($r("app.string.create_new_device_message"))
+                    .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
+                    .fontColor(Color.Gray)
+                    .margin({ top: StyleConstants.MARGIN_TEN })
             }
+            .height(StyleConstants.EIGHTY_FIVE_PERCENT)
+            .justifyContent(FlexAlign.Center)
+            .width(StyleConstants.FULL_PERCENT)
+        }else {
+            List({ scroller: this.scrollerForList }) {
+                ForEach(this.deviceList.devices, (device: DeviceViewModel) => {
+                    ListItem() {
+                        DeviceTile({
+                            deviceMAC: $r("app.string.machine_mac_label", device.MAC),
+                            deviceAlias: $r("app.string.machine_alias_label", device.Alias),
+                            deviceMACAddr: device.MAC,
+                            sendPacket: async (macAddr: string) => {
+                                const result = await this.net.send(macAddr);
 
-            Button($r("app.string.button_Add_label"))
-                .width(StyleConstants.SIXTY_PERCENT)
-                .margin({
-                    top: StyleConstants.MARGIN_FIVE_PERCENT
-                })
-                .onClick(() => {
-                    this.safeCloseSwipeActions();
-                    this.pageStack.pushPath({
-                        name: "AddDevice",
-                        param: this.deviceList,
-                        onPop: async (popInfo: PopInfo) => {
-                            await this.refreshIPBanner();
-                            CommonUtils.returnFromSubPage(popInfo);
+                                if (typeof (result) ===
+                                    'boolean') CommonUtils.alert($r("app.string.send_magic_packet_success"),
+                                    this.promptAction); else if (typeof (result) ===
+                                    'string') CommonUtils.alert($r("app.string.send_magic_packet_failed", result),
+                                    this.promptAction); else CommonUtils.alert($r("app.string.send_magic_packet_failed",
+                                    CommonUtils.getStringFromResource(this.context, result)), this.promptAction);
+                            }
+                        })
+                    }
+                    .swipeAction({
+                        end: {
+                            builder: () => {
+                                this.EditButton(device);
+                                this.DeleteButton(device);
+                            }
                         }
-                    });
+                    })
+                    .margin({
+                        top: StyleConstants.MARGIN_TWO_PERCENT,
+                        left: StyleConstants.MARGIN_ONE_PERCENT,
+                        right: StyleConstants.MARGIN_THREE_PERCENT,
+                        bottom: StyleConstants.MARGIN_TWO_PERCENT
+                    })
                 })
+                    .onMove((from: number, to: number) => {
+                        const success = this.deviceList.reorderDevices(from, to);
+                        return success;
+                    }, {
+                        onLongPress: () => {
+                            CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_SOFT);
+                        }
+                    })
+            }
+            .listDirection(Axis.Vertical)
+            .alignSelf(ItemAlign.Start)
+            .height(StyleConstants.FULL_PERCENT)
+            .width(StyleConstants.FULL_PERCENT)
         }
-        .alignItems(HorizontalAlign.Center)
-        .justifyContent(FlexAlign.SpaceBetween)
     }
 
     build() {
@@ -309,11 +312,40 @@ struct Index {
                 }
             })
 
-            Stack({ alignContent: Alignment.Top }) {
-                this.MainContent();
+            HdsTabs({ controller: this.tabController }) {
+                TabContent() {
+                    Stack({ alignContent: Alignment.Top }) {
+                        this.MainContent();
 
-                if(this.isLoading) this.LoadingContent();
+                        if(this.isLoading) this.LoadingContent();
+                    }
+                }
+                .tabBar(this.TabBuilder(
+                    $r("sys.symbol.plus"),
+                    $r("app.string.button_Add_label"),
+                    () => {
+                        this.safeCloseSwipeActions();
+                        this.pageStack.pushPath({
+                            name: "AddDevice",
+                            param: this.deviceList,
+                            onPop: async (popInfo: PopInfo) => {
+                                await this.refreshIPBanner();
+                                CommonUtils.returnFromSubPage(popInfo);
+                            }
+                        });
+                    }
+                ))
             }
+            .barPosition(BarPosition.End)
+            .scrollable(false)
+            .barOverlap(true)
+            .barFloatingStyle({
+                barBottomMargin: StyleConstants.BAR_BOTTOM_MARGIN,
+                systemMaterialEffect:  {
+                    materialType: hdsMaterial.MaterialType.ADAPTIVE,
+                    materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                }
+            })
         }
         .titleBar({
             content: {
@@ -335,7 +367,6 @@ struct Index {
             enableComponentSafeArea: true // 启用标题栏占位
         })
         .bindToScrollable([this.scrollerForList])
-        .ignoreLayoutSafeArea([LayoutSafeAreaType.SYSTEM], [LayoutSafeAreaEdge.TOP, LayoutSafeAreaEdge.BOTTOM])
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })
