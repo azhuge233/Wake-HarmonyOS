@@ -1,4 +1,5 @@
 import { KeyboardAvoidMode } from '@kit.ArkUI';
+import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
 
 import Logger from '../common/utils/Logger';
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
@@ -7,7 +8,6 @@ import CommonConstants from '../common/constants/CommonConstants';
 import CommonUtils from '../common/utils/CommonUtils';
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
-
 
 @Builder
 export function AddDeviceBuilder() {
@@ -76,7 +76,7 @@ struct AddDevice {
     }
 
     build() {
-        NavDestination() {
+        HdsNavDestination() {
             Column() {
                 TextItem({
                     inputType: INPUT_TYPE.MAC,
@@ -116,7 +116,20 @@ struct AddDevice {
             .height(StyleConstants.FULL_PERCENT)
             .justifyContent(FlexAlign.Center)
         }
-        .title($r("app.string.add_machine_title"))
+        .titleBar({
+            content: {
+                title: {
+                    mainTitle: $r("app.string.add_machine_title")
+                }
+            },
+            style: {
+                systemMaterialEffect: { // 设置沉浸光感
+                    materialType: hdsMaterial.MaterialType.ADAPTIVE,
+                    materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                },
+            },
+            enableComponentSafeArea: true // 启用标题栏占位
+        })
         .alignSelf(ItemAlign.Center)
         .align(Alignment.Center)
         .onReady((context: NavDestinationContext) => {
