@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.cer",
+          "certpath": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_UqXOcAMYrmNcxdOAf0z354QyMC5aAeZ6BqjTLq2F9cg=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B8B84647551E9B6A8621A17C542E03294B3944145D46006525EFEA091817A18690797E2821E24A2",
-          "profile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p7b",
+          "keyPassword": "00000019D52D2D1DC66055579121CCB3C9A1C37BB017A6679465A7148AD88DD5EDB8DDB68012708728",
+          "profile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_UqXOcAMYrmNcxdOAf0z354QyMC5aAeZ6BqjTLq2F9cg=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_Zid9gUmEwTdO67TheaDCZ5TeXiDt_5bYLA9aGRtdIgc=.p12",
-          "storePassword": "0000001B65A515CC529C832EA6D69A31D1FD5953A3361647892E0EAD7D1C3EFE470A7ECCEC3F42A20CB755"
+          "storeFile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_UqXOcAMYrmNcxdOAf0z354QyMC5aAeZ6BqjTLq2F9cg=.p12",
+          "storePassword": "00000019CB1AF28A6CFD9055AA4A575500C89A58654717D6979FB02874ECEF063A12C2407718001398"
         }
       }
     ],
