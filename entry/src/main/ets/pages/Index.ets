@@ -280,7 +280,7 @@ struct Index {
             }
 
             Button($r("app.string.button_Add_label"))
-                .width(StyleConstants.EIGHTY_PERCENT)
+                .width(StyleConstants.SIXTY_PERCENT)
                 .margin({
                     top: StyleConstants.MARGIN_FIVE_PERCENT
                 })
@@ -334,6 +334,8 @@ struct Index {
             },
             enableComponentSafeArea: true // 启用标题栏占位
         })
+        .bindToScrollable([this.scrollerForList])
+        .ignoreLayoutSafeArea([LayoutSafeAreaType.SYSTEM], [LayoutSafeAreaEdge.TOP, LayoutSafeAreaEdge.BOTTOM])
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })
