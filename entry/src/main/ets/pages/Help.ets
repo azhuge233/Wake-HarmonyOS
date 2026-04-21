@@ -1,3 +1,5 @@
+import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
+
 import Logger from '../common/utils/Logger';
 import StyleConstants from '../common/constants/StyleConstants';
 
@@ -14,7 +16,7 @@ struct Help {
     private LOG_TAG = '[pages/Help]';
 
     build() {
-        NavDestination() {
+        HdsNavDestination() {
             Column() {
                 Scroll() {
                     Text() {
@@ -31,13 +33,25 @@ struct Help {
                 .scrollBar(BarState.Off)
             }
         }
-        .title($r("app.string.help_title"))
+        .titleBar({
+            content: {
+                title: {
+                    mainTitle: $r("app.string.help_title")
+                }
+            },
+            style: {
+                systemMaterialEffect: { // 设置沉浸光感
+                    materialType: hdsMaterial.MaterialType.ADAPTIVE,
+                    materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                },
+            },
+            enableComponentSafeArea: true // 启用标题栏占位
+        })
         .onReady((context: NavDestinationContext) => {
             this.pathStack = context.pathStack;
         })
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, "Loaded!");
         })
-
     }
 }
