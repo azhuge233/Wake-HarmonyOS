@@ -48,6 +48,7 @@ class StyleConstants {
     public readonly TEXT_INPUT_MAC_MAX_LENGTH = 17;
     public readonly TEXT_INPUT_ALIAS_MAX_LENGTH = 30;
 
+    public readonly TEXT_FONT_SIZE_TWENTY_TWO = 22;
     public readonly TEXT_FONT_SIZE_EIGHTEEN = 18;
     public readonly TEXT_FONT_SIZE_SEVENTEEN = 17;
     public readonly TEXT_FONT_SIZE_FOURTEEN = 14;
@@ -79,6 +80,8 @@ class StyleConstants {
     public readonly BORDER_RADIUS_ELEVEN = 11;
 
     public readonly FORM_ITEM_HEIGHT = 45;
+
+    public readonly BAR_BOTTOM_MARGIN = 28;
 }
 
 export default new StyleConstants();
