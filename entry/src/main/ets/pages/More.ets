@@ -1,5 +1,6 @@
 import { JSON } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
+import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
 
 import Logger from '../common/utils/Logger';
 import MoreMenuItem from '../view/MoreMenuItem';
@@ -192,7 +193,7 @@ struct More {
     }
 
     build() {
-        NavDestination() {
+        HdsNavDestination() {
             Stack({ alignContent: Alignment.Top }) {
                 this.MainContent();
 
@@ -201,7 +202,20 @@ struct More {
                 }
             }
         }
-        .title($r("app.string.more_title"))
+        .titleBar({
+            content: {
+                title: {
+                    mainTitle: $r("app.string.more_title")
+                }
+            },
+            style: {
+                systemMaterialEffect: { // 设置沉浸光感
+                    materialType: hdsMaterial.MaterialType.ADAPTIVE,
+                    materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                },
+            },
+            enableComponentSafeArea: true // 启用标题栏占位
+        })
         .onReady((context: NavDestinationContext) => {
             this.pathStack = context.pathStack;
             this.deviceListViewModel = context.pathInfo.param as DeviceListViewModel;
