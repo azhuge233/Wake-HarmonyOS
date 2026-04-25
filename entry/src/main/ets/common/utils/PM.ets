@@ -154,6 +154,8 @@ export class PM {
 
                     formData.alias = device.Alias;
                     formData.mac = device.MAC;
+                    formData.address = device.Address;
+                    formData.port = device.Port;
 
                     await this.bindSingle(formData.formID, formData);
                 }
@@ -262,6 +264,8 @@ export class PM {
 
                         shortcut.alias = device.Alias;
                         shortcut.mac = device.MAC;
+                        shortcut.address = device.Address;
+                        shortcut.port = device.Port;
 
                         break;
                     }

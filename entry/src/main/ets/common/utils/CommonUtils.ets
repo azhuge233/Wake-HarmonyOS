@@ -22,23 +22,12 @@ class CommonUtils {
         await new Promise<void>(resolve => setTimeout(resolve, time));
     }
 
-    // 按照 API 版本显示 Toast 提醒
-    public alert(message: string | Resource, newerPromptAction: PromptAction) {
-        if(deviceInfo.sdkApiVersion <= 17) {
-            try {
-                promptAction.showToast({
-                    message: message
-                });
-            } catch (err) {
-                Logger.error(this.LOG_TAG, `<alert API <= 17> 错误, ${err}`);
-            }
-        } else {
-            newerPromptAction.openToast({
-                message: message
-            }).catch((err: BusinessError) => {
-                Logger.error(this.LOG_TAG, `<alert API > 17> 错误, ${err}`);
-            });
-        }
+    public alert(message: string | Resource, promptAction: PromptAction) {
+        promptAction.openToast({
+            message: message
+        }).catch((err: BusinessError) => {
+            Logger.error(this.LOG_TAG, `<alert API > 17> 错误, ${err}`);
+        });
     }
 
     // 从 NavDestination 由 pop() 返回时
@@ -49,8 +38,8 @@ class CommonUtils {
     }
 
     // 检查 MAC、Alias 是否为空
-    public isStringNullOrEmpty(str: string): boolean {
-        return str == null || str == '' || str.length == 0;
+    public isStringNullOrEmpty(str?: string): boolean {
+        return str === undefined || str === null || str === '' || str.length === 0;
     }
 
     // 检查 MAC 合法性，分隔符仅支持 ':' 和 '-'

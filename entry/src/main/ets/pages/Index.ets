@@ -1,11 +1,11 @@
 import { common } from '@kit.AbilityKit';
 import { hdsMaterial, HdsNavigation, HdsNavigationMenuContentOptions, ScrollEffectType, HdsTabs, HdsTabsController } from '@kit.UIDesignKit';
+import { connection } from "@kit.NetworkKit";
 
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
 import Logger from '../common/utils/Logger';
 import NET from '../common/utils/NET';
-import IPBanner from '../view/IPBanner';
 import StyleConstants from '../common/constants/StyleConstants';
 import CommonUtils from '../common/utils/CommonUtils';
 import CommonConstants from '../common/constants/CommonConstants';
@@ -26,6 +26,8 @@ struct Index {
 
     private scrollerForList: ListScroller = new ListScroller();
     private tabController: HdsTabsController = new HdsTabsController();
+
+    private netConnection: connection.NetConnection | null = null;
 
     // HdsNavigation 新版菜单
     private menus: HdsNavigationMenuContentOptions = {
@@ -64,6 +66,14 @@ struct Index {
 
     private net = new NET();
 
+    aboutToAppear(): void {
+        this.startNetListening();
+    }
+
+    aboutToDisappear(): void {
+        this.stopNetListening();
+    }
+
     async onPageShow(): Promise<void> {
         await this.refreshIPBanner();
         await this.loadDevices();
@@ -85,11 +95,65 @@ struct Index {
         await this.refreshIPBanner();
     }
 
+    // 启用网络监听
+    // aboutToAppear 内调用
+    private startNetListening() {
+        // 创建网络监听器
+        try {
+            this.netConnection = connection.createNetConnection({
+                netCapabilities: {
+                    bearerTypes: [connection.NetBearType.BEARER_WIFI] // 指定监听WiFi
+                }
+            });
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `创建网络监听失败: ${err}`);
+            return;
+        }
+
+        // 注册网络可用的监听
+        this.netConnection.on('netAvailable', (data: connection.NetHandle) => {
+            Logger.info(this.LOG_TAG, `网络连接成功: ${JSON.stringify(data)}`);
+            this.refreshIPBanner();
+        });
+
+        // 注册网络能力变化的监听（这是检测IP/子网变化的关键）
+        this.netConnection.on('netCapabilitiesChange', (data: connection.NetCapabilityInfo) => {
+            Logger.info(this.LOG_TAG, `网络能力发生变化，可能包括IP或子网: ${JSON.stringify(data)}`);
+            this.refreshIPBanner();
+        });
+
+        // 注册网络丢失的监听
+        this.netConnection.on('netLost', (data: connection.NetHandle) => {
+            Logger.info(this.LOG_TAG, `网络连接断开: ${JSON.stringify(data)}`);
+            this.refreshIPBanner();
+        });
+
+        // 开始监听
+        this.netConnection.register((err: BusinessError) => {
+            if (err) {
+                Logger.error(this.LOG_TAG, `注册网络监听失败, ${err}`);
+            }
+        });
+    }
+
+    // 关闭网络监听
+    // aboutToDisappear 内调用
+    private stopNetListening() {
+        if (this.netConnection) {
+            this.netConnection.unregister((err: BusinessError) => {
+                if (err) {
+                    Logger.error(this.LOG_TAG, `取消注册网络监听失败，${err}`);
+                }
+            });
+            this.netConnection = null;
+        }
+    }
+
     // 刷新广播地址
     private async refreshIPBanner() {
         await this.net.refresh();
         this.ipBannerText =
-            `${CommonUtils.getStringFromResource(this.context, $r("app.string.current_broadcast_ip"))}${this.net.BROADCAST_IP}`;
+            `${CommonUtils.getStringFromResource(this.context, $r("app.string.current_broadcast_ip"))}${this.net.ipv4Broadcast}`;
     }
 
     // 加载设备列表
@@ -147,7 +211,8 @@ struct Index {
             })
         }
         .margin({
-            left: StyleConstants.MARGIN_THREE_PERCENT
+            left: StyleConstants.MARGIN_THREE_PERCENT,
+            right: StyleConstants.MARGIN_THREE_PERCENT
         })
     }
 
@@ -224,7 +289,7 @@ struct Index {
                 Text($r("app.string.import_waiting_message"))
                     .margin({ top: StyleConstants.MARGIN_TWENTY })
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                    .fontColor($r("app.color.text_font_color"))
+                    .fontColor($r("sys.color.font_primary"))
             }
             .width(StyleConstants.FULL_PERCENT)
             .height(StyleConstants.FULL_PERCENT)
@@ -257,18 +322,16 @@ struct Index {
                 ForEach(this.deviceList.devices, (device: DeviceViewModel) => {
                     ListItem() {
                         DeviceTile({
-                            deviceMAC: $r("app.string.machine_mac_label", device.MAC),
-                            deviceAlias: $r("app.string.machine_alias_label", device.Alias),
-                            deviceMACAddr: device.MAC,
-                            sendPacket: async (macAddr: string) => {
-                                const result = await this.net.send(macAddr);
+                            deviceMAC: device.MAC,
+                            deviceAlias: device.Alias,
+                            deviceAddress: device.Address,
+                            devicePort: device.Port,
+                            sendPacket: async (mac: string, targetAddr: string, targetPort: number) => {
+                                const result = await this.net.send(mac, targetAddr, targetPort);
 
-                                if (typeof (result) ===
-                                    'boolean') CommonUtils.alert($r("app.string.send_magic_packet_success"),
-                                    this.promptAction); else if (typeof (result) ===
-                                    'string') CommonUtils.alert($r("app.string.send_magic_packet_failed", result),
-                                    this.promptAction); else CommonUtils.alert($r("app.string.send_magic_packet_failed",
-                                    CommonUtils.getStringFromResource(this.context, result)), this.promptAction);
+                                if (typeof (result) === 'boolean') CommonUtils.alert($r("app.string.send_magic_packet_success"), this.promptAction);
+                                else if (typeof (result) === 'string') CommonUtils.alert($r("app.string.send_magic_packet_failed", result), this.promptAction);
+                                else CommonUtils.alert($r("app.string.send_magic_packet_failed", CommonUtils.getStringFromResource(this.context, result)), this.promptAction);
                             }
                         })
                     }
@@ -283,18 +346,18 @@ struct Index {
                     .margin({
                         top: StyleConstants.MARGIN_TWO_PERCENT,
                         left: StyleConstants.MARGIN_ONE_PERCENT,
-                        right: StyleConstants.MARGIN_THREE_PERCENT,
+                        right: StyleConstants.MARGIN_ONE_PERCENT,
                         bottom: StyleConstants.MARGIN_TWO_PERCENT
                     })
                 })
-                    .onMove((from: number, to: number) => {
-                        const success = this.deviceList.reorderDevices(from, to);
-                        return success;
-                    }, {
-                        onLongPress: () => {
-                            CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_SOFT);
-                        }
-                    })
+                .onMove((from: number, to: number) => {
+                    const success = this.deviceList.reorderDevices(from, to);
+                    return success;
+                }, {
+                    onLongPress: () => {
+                        CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_SOFT);
+                    }
+                })
             }
             .listDirection(Axis.Vertical)
             .alignSelf(ItemAlign.Start)
@@ -305,13 +368,6 @@ struct Index {
 
     build() {
         HdsNavigation(this.pageStack) {
-            IPBanner({
-                ipBannerText: this.ipBannerText,
-                onRefresh: async () => {
-                    await this.refreshIPBanner();
-                }
-            })
-
             HdsTabs({ controller: this.tabController }) {
                 TabContent() {
                     Stack({ alignContent: Alignment.Top }) {
@@ -351,6 +407,7 @@ struct Index {
             content: {
                 title: {
                     mainTitle: $r("app.string.title_label"),
+                    subTitle: this.ipBannerText
                 },
                 menu: this.menus,
             },

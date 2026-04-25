@@ -115,6 +115,8 @@ struct SingleDeviceCard {
                                         formID: this.formID,
                                         deviceID: device.id,
                                         mac: device.mac,
+                                        address: device.address,
+                                        port: device.port,
                                         deviceList: this.deviceList
                                     }
                                 });

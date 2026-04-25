@@ -81,20 +81,12 @@
 			"value": "Add New Device"
 		},
 		{
+			"name": "divider_label",
+			"value": "Advanced Options"
+		},
+		{
 			"name": "button_delete_label",
 			"value": "Delete"
-		},
-		{
-			"name": "machine_mac_label",
-			"value": "MAC: %s"
-		},
-		{
-			"name": "machine_alias_label",
-			"value": "%s"
-		},
-		{
-			"name": "machine_id_label",
-			"value": "%s"
 		},
 		{
 			"name": "add_machine_title",
@@ -119,6 +111,22 @@
 		{
 			"name": "add_alias_input_placeholder",
 			"value": "Device 1"
+		},
+		{
+			"name": "add_address_input_label",
+			"value": "Address"
+		},
+		{
+			"name": "add_address_input_placeholder",
+			"value": "Optional"
+		},
+		{
+			"name": "add_port_input_label",
+			"value": "Port"
+		},
+		{
+			"name": "add_port_input_placeholder",
+			"value": "Optional"
 		},
 		{
 			"name": "button_back_main_page_label",
@@ -171,6 +179,10 @@
 		{
 			"name": "input_cannot_be_null_or_empty",
 			"value": "Input cannot be empty!"
+		},
+		{
+			"name": "port_invalid",
+			"value": "Invalid port, should be 1-65535"
 		},
 		{
 			"name": "validate_mac_too_short",

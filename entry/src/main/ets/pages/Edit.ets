@@ -21,6 +21,8 @@ struct Edit {
 
     @Local updatingDevice: DeviceViewModel = new DeviceViewModel();
 
+    @Local showAdvanced: boolean = false;
+
     private uiContext = this.getUIContext();
     private promptAction = this.uiContext.getPromptAction();
     private focusController = this.uiContext.getFocusController();
@@ -37,6 +39,8 @@ struct Edit {
     async updateDevice() {
         const mac = this.updatingDevice.MAC.trim();
         const alias = this.updatingDevice.Alias.trim();
+        // const address = this.updatingDevice.Address.trim();
+        const port = this.updatingDevice.Port;
 
         if (CommonUtils.isStringNullOrEmpty(mac)) {
             CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
@@ -48,6 +52,14 @@ struct Edit {
             CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
             this.focusController.requestFocus(CommonConstants.ALIAS_INPUT_ID);
             return;
+        }
+
+        if (!CommonUtils.isStringNullOrEmpty(port.toString())) {
+            if(port < 1 || port > 65535) {
+                CommonUtils.alert($r("app.string.port_invalid"), this.promptAction);
+                this.focusController.requestFocus(CommonConstants.PORT_INPUT_ID);
+                return;
+            }
         }
 
         const validateResult = CommonUtils.macValidate(mac);
@@ -79,12 +91,9 @@ struct Edit {
                     textResource: $r("app.string.add_mac_input_label"),
                     placeholderResource: $r("app.string.add_mac_input_placeholder"),
                     text: this.updatingDevice.MAC,
-                    onInputChange: (value: string) => { this.updatingDevice.MAC = value }
+                    onInputChange: (value: string | number) => { this.updatingDevice.MAC = String(value) }
                 })
                     .width(StyleConstants.EIGHTY_PERCENT)
-                    .margin({
-                        left: StyleConstants.MARGIN_FIVE_PERCENT
-                    })
 
                 TextItem({
                     inputType: INPUT_TYPE.ALIAS,
@@ -93,20 +102,90 @@ struct Edit {
                     textResource: $r("app.string.add_alias_input_label"),
                     placeholderResource: $r("app.string.add_alias_input_placeholder"),
                     text: this.updatingDevice.Alias,
-                    onInputChange: (value: string) => { this.updatingDevice.Alias = value }
+                    onInputChange: (value: string | number) => { this.updatingDevice.Alias = String(value) }
                 })
                     .width(StyleConstants.EIGHTY_PERCENT)
+
+                Column() {
+                    Stack() {
+                        Divider()
+                            .strokeWidth(StyleConstants.DIVIDER_STOKE_WIDTH)
+                            .width(StyleConstants.EIGHTY_PERCENT)
+                            .color($r("sys.color.background_emphasize"))
+
+                        Row() {
+                            Text($r("app.string.divider_label"))
+                                .fontColor($r("sys.color.font_emphasize"))
+                                .fontSize(StyleConstants.DIVIDER_FONT_SIZE)
+                                .margin({
+                                    right: StyleConstants.MARGIN_ONE_PERCENT
+                                })
+
+                            SymbolGlyph($r("sys.symbol.chevron_up"))
+                                .width(StyleConstants.DIVIDER_SYMBOL_SIZE)
+                                .height(StyleConstants.DIVIDER_SYMBOL_SIZE)
+                                .fontColor([$r("sys.color.font_emphasize")])
+                                .margin({
+                                    left: StyleConstants.MARGIN_ONE_PERCENT
+                                })
+                                .rotate({
+                                    angle: this.showAdvanced ? 180 : 0
+                                })
+                        }
+                        .width(StyleConstants.TWENTY_PERCENT)
+                        .justifyContent(FlexAlign.Center)
+                        .alignItems(VerticalAlign.Center)
+                        .backgroundColor($r("sys.color.background_primary"))
+                        .margin({
+                            left: StyleConstants.ONE_PERCENT
+                        })
+                        .onClick(() => {
+                            this.showAdvanced = !this.showAdvanced;
+                        })
+                    }
+                    .alignContent(Alignment.Start)
                     .margin({
-                        left: StyleConstants.MARGIN_FIVE_PERCENT
+                        top: StyleConstants.MARGIN_TWO_PERCENT
                     })
 
+                    if(this.showAdvanced) {
+                        TextItem({
+                            inputType: INPUT_TYPE.ADDRESS,
+                            inputId: CommonConstants.ADDRESS_INPUT_ID,
+                            isDefaultFocus: false,
+                            textResource: $r("app.string.add_address_input_label"),
+                            placeholderResource: $r("app.string.add_address_input_placeholder"),
+                            text: this.updatingDevice.Address,
+                            onInputChange: (value: string | number) => { this.updatingDevice.Address = String(value) }
+                        })
+                            .width(StyleConstants.EIGHTY_PERCENT)
+
+                        TextItem({
+                            inputType: INPUT_TYPE.PORT,
+                            inputId: CommonConstants.PORT_INPUT_ID,
+                            isDefaultFocus: false,
+                            textResource: $r("app.string.add_port_input_label"),
+                            placeholderResource: $r("app.string.add_port_input_placeholder"),
+                            text: this.updatingDevice.Port,
+                            onInputChange: (value: string | number) => { this.updatingDevice.Port = Number(value) }
+                        })
+                            .width(StyleConstants.EIGHTY_PERCENT)
+                    }
+                }
+                .alignItems(HorizontalAlign.Center)
+
                 Button($r("app.string.button_edit_confirm"))
+                    .enabled(!CommonUtils.isStringNullOrEmpty(this.updatingDevice.MAC.trim()) && !CommonUtils.isStringNullOrEmpty(this.updatingDevice.Alias.trim()))
                     .width(StyleConstants.SEVENTY_PERCENT)
+                    .margin({
+                        top: StyleConstants.MARGIN_TEN_PERCENT
+                    })
                     .onClick(async () => {
                         await this.updateDevice();
                     })
             }
             .height(StyleConstants.FULL_PERCENT)
+            .alignItems(HorizontalAlign.Center)
             .justifyContent(FlexAlign.Center)
         }
         .titleBar({

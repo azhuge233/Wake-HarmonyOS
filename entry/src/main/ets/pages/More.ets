@@ -71,6 +71,8 @@ struct More {
                 for (let deviceJsonObject of deviceListJsonObject) {
                     this.newDeviceViewModel.MAC = deviceJsonObject.MAC;
                     this.newDeviceViewModel.Alias = deviceJsonObject.Alias;
+                    this.newDeviceViewModel.Address = deviceJsonObject.Address ?? '';
+                    this.newDeviceViewModel.Port = deviceJsonObject.Port ?? 9;
                     this.newDeviceViewModel.OrderIndex = deviceJsonObject.OrderIndex == -1 ? deviceOrder : deviceJsonObject.OrderIndex;
 
                     await this.deviceListViewModel.addDevice(this.newDeviceViewModel.toDevice());
@@ -95,11 +97,11 @@ struct More {
             buttons: [
                 {
                     text: $r("app.string.button_confirm_label"),
-                    color: $r("app.color.black")
+                    color: $r("sys.color.font_primary")
                 },
                 {
                     text: $r("app.string.button_cancel_label"),
-                    color: $r("app.color.black")
+                    color: $r("sys.color.font_primary")
                 }
             ]
         }).then(async (result) => {
@@ -131,7 +133,7 @@ struct More {
                 Text($r("app.string.import_waiting_message"))
                     .margin({ top: StyleConstants.MARGIN_TWENTY })
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                    .fontColor($r("app.color.text_font_color"))
+                    .fontColor($r("sys.color.font_primary"))
             }
             .width(StyleConstants.FULL_PERCENT)
             .height(StyleConstants.FULL_PERCENT)

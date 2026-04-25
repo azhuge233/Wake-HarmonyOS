@@ -18,6 +18,8 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
     private deviceID: number = -1;
     private alias: string = '';
     private mac: string = '';
+    private address: string = '';
+    private port: number = 9;
 
     // 如果UIAbility启动，在收到call事件后会触发onCreate生命周期回调
     async onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): Promise<void> {
@@ -36,14 +38,16 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
                 this.deviceID = params['deviceID'] as number;
                 this.alias = params['alias'] as string;
                 this.mac = params['mac'] as string;
+                this.address = params['address'] as string;
+                this.port = params['port'] as number;
 
-                Logger.debug(this.LOG_TAG, `onCreate() 从 call 事件获得参数: ${this.formID}, ${this.deviceID}, ${this.alias}, ${this.mac}`);
+                Logger.debug(this.LOG_TAG, `onCreate() 从 call 事件获得参数: ${this.formID}, ${this.deviceID}, ${this.alias}, ${this.mac}, ${this.address} ${this.port}`);
 
                 CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_HARD);
 
-                // 从数据库更新待执行的指令
+                // 从数据库更新待执行的设备信息
                 // 防止执行时卡片UI没有及时更新
-                // 对比卡片指令与数据库指令，不一致时使用数据库指令
+                // 对比卡片信息与数据库信息，不一致时使用数据库信息
                 await this.updateCommandFromDB();
 
                 // 向卡片发送正在运行参数
@@ -74,6 +78,8 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
         formData.deviceID = this.deviceID;
         formData.alias = this.alias;
         formData.mac = this.mac;
+        formData.address = this.address;
+        formData.port = this.port;
 
         return formData;
     }
@@ -94,9 +100,22 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
         const device = await this.db.getDeviceByID(this.deviceID);
         if(device) {
             const dbMAC = device.MAC;
+            const dbAddress = device.Address;
+            const dbPort = device.Port;
+
             if(dbMAC !== this.mac) {
-                Logger.warn(this.LOG_TAG, `DB 指令: ${dbMAC}, 卡片指令: ${this.mac}, 不一致，使用 DB 指令`);
+                Logger.warn(this.LOG_TAG, `DB MAC: ${dbMAC}, 卡片 MAC: ${this.mac}, 不一致，使用 DB MAC`);
                 this.mac = dbMAC;
+            }
+
+            if(dbAddress !== this.address) {
+                Logger.warn(this.LOG_TAG, `DB Address: ${dbAddress}, 卡片 Address: ${this.address}, 不一致，使用 DB Address`);
+                this.address = dbAddress;
+            }
+
+            if(dbPort !== this.port) {
+                Logger.warn(this.LOG_TAG, `DB Port: ${dbPort}, 卡片 Port: ${this.port}, 不一致，使用 DB Port`);
+                this.port = dbPort;
             }
         }
     }
@@ -105,7 +124,7 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
         Logger.debug(this.LOG_TAG, `sendPacket() 执行指令: ${this.mac}`);
 
         try {
-            const result = await this.net.send(this.mac);
+            const result = await this.net.send(this.mac, this.address, this.port);
 
             if(typeof(result) === 'boolean') return CommonUtils.getStringFromResource(this.context, $r("app.string.form_run_success"));
             else if(typeof(result) === 'string') return result;

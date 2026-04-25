@@ -6,11 +6,14 @@ class StyleConstants {
     public readonly EIGHTY_PERCENT = '80%';
     public readonly SEVENTY_FIVE_PERCENT = '75%';
     public readonly SEVENTY_PERCENT = '70%';
+    public readonly SIXTY_FIVE_PERCENT = '65%';
     public readonly SIXTY_PERCENT = '60%';
     public readonly HALF_PERCENT = '50%';
     public readonly FORTY_PERCENT = '40%';
     public readonly THIRTY_PERCENT = '30%';
+    public readonly TWENTY_FIVE_PERCENT = '25%';
     public readonly TWENTY_PERCENT = '20%';
+    public readonly FIFTEEN_PERCENT = '15%';
     public readonly TEN_PERCENT = '10%';
     public readonly FIVE_PERCENT = '5%';
     public readonly THREE_PERCENT = '3%';
@@ -44,9 +47,10 @@ class StyleConstants {
     public readonly PADDING_TWO = 2;
 
     public readonly TEXT_INPUT_MAX_LINE = 1;
-    public readonly TEXT_INPUT_DEFAULT_MAX_LENGTH = 30;
+    public readonly TEXT_INPUT_DEFAULT_MAX_LENGTH = 99;
     public readonly TEXT_INPUT_MAC_MAX_LENGTH = 17;
     public readonly TEXT_INPUT_ALIAS_MAX_LENGTH = 30;
+    public readonly TEXT_INPUT_PORT_MAX_LENGTH = 5;
 
     public readonly TEXT_FONT_SIZE_TWENTY_TWO = 22;
     public readonly TEXT_FONT_SIZE_EIGHTEEN = 18;
@@ -82,6 +86,12 @@ class StyleConstants {
     public readonly FORM_ITEM_HEIGHT = 45;
 
     public readonly BAR_BOTTOM_MARGIN = 28;
+
+    public readonly DEVICE_TILE_HEIGHT = 60;
+
+    public readonly DIVIDER_STOKE_WIDTH = 2;
+    public readonly DIVIDER_FONT_SIZE = 12;
+    public readonly DIVIDER_SYMBOL_SIZE = 15;
 }
 
 export default new StyleConstants();

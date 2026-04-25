@@ -27,12 +27,16 @@ export class DB {
     private KEY_ID = 'ID';
     private KEY_MAC = 'MAC';
     private KEY_ALIAS = 'ALIAS';
+    private KEY_ADDRESS = 'ADDRESS';
+    private KEY_PORT = 'PORT';
     private KEY_ORDERINDEX = 'ORDERINDEX';
 
     private SQL_CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${this.TABLE_NAME} (
         ${this.KEY_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${this.KEY_MAC} TEXT NOT NULL,
         ${this.KEY_ALIAS} TEXT NOT NULL,
+        ${this.KEY_ADDRESS} TEXT NOT NULL,
+        ${this.KEY_PORT} INTEGER DEFAULT 9,
         ${this.KEY_ORDERINDEX} INTEGER DEFAULT 0
     )`;
     private SQL_DELETE_TABLE = `DELETE FROM ${this.TABLE_NAME}`;
@@ -73,7 +77,12 @@ export class DB {
 
         try {
             const queryResult = await this.rdbStore.query(predicates, [
-                this.KEY_ID, this.KEY_MAC, this.KEY_ALIAS, this.KEY_ORDERINDEX
+                this.KEY_ID,
+                this.KEY_MAC,
+                this.KEY_ALIAS,
+                this.KEY_ADDRESS,
+                this.KEY_PORT,
+                this.KEY_ORDERINDEX
             ]);
 
             if(queryResult === undefined) throw new Error("查询为空");
@@ -86,9 +95,11 @@ export class DB {
                 const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
                 const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
                 const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
+                const addr = queryResult.getString(queryResult.getColumnIndex(this.KEY_ADDRESS));
+                const port = queryResult.getLong(queryResult.getColumnIndex(this.KEY_PORT));
                 const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
 
-                devices.push(new Device(id, mac, alias, orderIndex));
+                devices.push(new Device(id, mac, alias, addr, port, orderIndex));
             }
 
             devices.sort((a, b) => a.OrderIndex - b.OrderIndex);
@@ -110,6 +121,8 @@ export class DB {
             const valueBucket: relationalStore.ValuesBucket = {
                 "MAC": device.MAC,
                 "ALIAS": device.Alias,
+                "ADDRESS": device.Address,
+                "PORT": device.Port,
                 "ORDERINDEX": device.OrderIndex
             };
 
@@ -117,6 +130,8 @@ export class DB {
                 `添加新设备 -
                     MAC: ${device.MAC},
                     Alias: ${device.Alias},
+                    Address: ${device.Address},
+                    Port: ${device.Port},
                     OrderIndex: ${device.OrderIndex}`
             );
 
@@ -136,6 +151,8 @@ export class DB {
             ID: ${device.ID},
             MAC: ${device.MAC},
             Alias: ${device.Alias},
+            Address: ${device.Address},
+            Port: ${device.Port},
             OrderIndex: ${device.OrderIndex}`
         );
 
@@ -146,6 +163,8 @@ export class DB {
             const valueBucket: relationalStore.ValuesBucket = {
                 "MAC": device.MAC,
                 "ALIAS": device.Alias,
+                "ADDRESS": device.Address,
+                "PORT": device.Port,
                 "ORDERINDEX": device.OrderIndex,
             };
 
@@ -244,6 +263,8 @@ export class DB {
                 this.KEY_ID,
                 this.KEY_ALIAS,
                 this.KEY_MAC,
+                this.KEY_ADDRESS,
+                this.KEY_PORT,
                 this.KEY_ORDERINDEX
             ]);
 
@@ -251,9 +272,11 @@ export class DB {
                 const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
                 const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
                 const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
+                const ip = queryResult.getString(queryResult.getColumnIndex(this.KEY_ADDRESS));
+                const port = queryResult.getLong(queryResult.getColumnIndex(this.KEY_PORT));
                 const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
 
-                const device = new Device(id, mac, alias, orderIndex);
+                const device = new Device(id, mac, alias, ip, port, orderIndex);
 
                 Logger.debug(this.LOG_TAG, `查询到 ${JSON.stringify(device)}`);
 

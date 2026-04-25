@@ -87,7 +87,7 @@ struct MultipleDevicesFormEdit {
 
             const formData: MultipleDevicesFormData = new MultipleDevicesFormData(this.formID, true);
 
-            formData.deviceList =selectedItems.map(item => new WidgetDevice(item.ID, item.Alias, item.MAC))
+            formData.deviceList = selectedItems.map(item => new WidgetDevice(item.ID, item.Alias, item.MAC, item.Address, item.Port))
 
             // 持久化存储卡片绑定信息
             await this.pm.bindMultiple(this.formID, formData);

@@ -6,6 +6,8 @@ export default class SingleDeviceFormData {
     deviceID: number | null = null;
     alias: string | null = null;
     mac: string | null = null;
+    address: string | null = null;
+    port: number | null = null;
 
     runResult: string = '';
 

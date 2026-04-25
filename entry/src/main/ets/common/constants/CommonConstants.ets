@@ -1,6 +1,8 @@
 class CommonConstants {
     public readonly MAC_INPUT_ID = "mac_input";
     public readonly ALIAS_INPUT_ID = "alias_input";
+    public readonly ADDRESS_INPUT_ID = "address_input";
+    public readonly PORT_INPUT_ID = "port_input";
 
     public readonly Vibrate_Effect_ID_SOFT = 'haptic.effect.soft';
     public readonly Vibrate_Effect_ID_HARD = 'haptic.effect.hard';

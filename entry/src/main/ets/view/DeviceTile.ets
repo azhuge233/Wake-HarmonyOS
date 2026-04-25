@@ -6,36 +6,48 @@ import CommonConstants from "../common/constants/CommonConstants";
 export default struct DeviceTile {
     private LOG_TAG = "[view/DeviceTile]";
 
-    @Param deviceMAC: Resource = $r("app.string.empty");
-    @Param deviceAlias: Resource = $r("app.string.empty");
-    @Param textButtonWake: Resource = $r("app.string.button_wake_label");
-    @Param deviceMACAddr: string = '';
-    @Param sendPacket: (macAddr: string) => void = () => {};
+    @Param deviceMAC: string = '';
+    @Param deviceAlias: string = '';
+    @Param deviceAddress: string = '';
+    @Param devicePort: number = 9;
+    @Param sendPacket: (mac: string, targetAddr: string, targetPort: number) => void = () => {};
 
     build() {
         Row() {
             Column() {
                 Text(this.deviceAlias)
-                    .align(Alignment.Top)
-                    .textAlign(TextAlign.Start)
-                Text(this.deviceMAC)
-                    .fontColor($r("app.color.darker_grey"))
+                    .fontColor($r("sys.color.font_primary"))
+
+                Text(`MAC: ${this.deviceMAC}`)
+                    .fontColor($r("sys.color.font_tertiary"))
+
+                if(!CommonUtils.isStringNullOrEmpty(this.deviceAddress)) {
+                    Text(`${this.deviceAddress}:${this.devicePort}`)
+                        .fontColor($r("sys.color.font_tertiary"))
+                        .textOverflow({
+                            overflow: TextOverflow.MARQUEE
+                        })
+                        .padding({
+                            left: StyleConstants.PADDING_TEN,
+                            right: StyleConstants.PADDING_TEN
+                        })
+                }
             }
-            .width(StyleConstants.SEVENTY_FIVE_PERCENT)
+            .width(StyleConstants.SIXTY_FIVE_PERCENT)
+            .alignItems(HorizontalAlign.Center)
 
             Column() {
-                Button(this.textButtonWake)
+                Button($r("app.string.button_wake_label"))
                     .onClick(() => {
                         CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_HARD);
-                        this.sendPacket(this.deviceMACAddr);
+                        this.sendPacket(this.deviceMAC, this.deviceAddress, this.devicePort);
                     })
             }
             .width(StyleConstants.TWENTY_PERCENT)
-            .margin({
-                right: StyleConstants.MARGIN_FIVE_PERCENT
-            })
+            .alignItems(HorizontalAlign.Center)
         }
         .width(StyleConstants.FULL_PERCENT)
+        .height(StyleConstants.DEVICE_TILE_HEIGHT)
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.Center)
     }

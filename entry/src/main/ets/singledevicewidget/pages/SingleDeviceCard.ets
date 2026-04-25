@@ -13,6 +13,8 @@ struct SingleDeviceCard {
     @LocalStorageProp('deviceID') private deviceID: string | null = null;
     @LocalStorageProp('alias') private alias: string | null = null;
     @LocalStorageProp('mac') private mac: string | null = null;
+    @LocalStorageProp('address') private address: string | null = null;
+    @LocalStorageProp('port') private port: string | null = null;
 
     @LocalStorageProp('runResult') private runResult: string = '';
 
@@ -175,7 +177,9 @@ struct SingleDeviceCard {
                             formID: this.formID,
                             deviceID: this.deviceID,
                             alias: this.alias,
-                            mac: this.mac
+                            mac: this.mac,
+                            address: this.address,
+                            port: this.port
                         }
                     });
                 }

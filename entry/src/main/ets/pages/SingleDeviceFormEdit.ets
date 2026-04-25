@@ -97,6 +97,8 @@ struct SingleDeviceFormEdit {
             formData.deviceID = selectedItem.ID;
             formData.alias = selectedItem.Alias;
             formData.mac = selectedItem.MAC;
+            formData.address = selectedItem.Address;
+            formData.port = selectedItem.Port;
 
             // 持久化存储卡片绑定信息
             await this.pm.bindSingle(this.formID, formData);

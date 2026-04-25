@@ -81,20 +81,12 @@
 			"value": "添加新设备"
 		},
 		{
+			"name": "divider_label",
+			"value": "高级选项"
+		},
+		{
 			"name": "button_delete_label",
 			"value": "删除"
-		},
-		{
-			"name": "machine_mac_label",
-			"value": "MAC: %s"
-		},
-		{
-			"name": "machine_alias_label",
-			"value": "%s"
-		},
-		{
-			"name": "machine_id_label",
-			"value": "%s"
 		},
 		{
 			"name": "add_machine_title",
@@ -119,6 +111,22 @@
 		{
 			"name": "add_alias_input_placeholder",
 			"value": "设备 1"
+		},
+		{
+			"name": "add_address_input_label",
+			"value": "地址"
+		},
+		{
+			"name": "add_address_input_placeholder",
+			"value": "可选"
+		},
+		{
+			"name": "add_port_input_label",
+			"value": "端口"
+		},
+		{
+			"name": "add_port_input_placeholder",
+			"value": "可选"
 		},
 		{
 			"name": "button_back_main_page_label",
@@ -171,6 +179,10 @@
 		{
 			"name": "input_cannot_be_null_or_empty",
 			"value": "输入不能为空！"
+		},
+		{
+			"name": "port_invalid",
+			"value": "端口不合法，应为 1-65535"
 		},
 		{
 			"name": "validate_mac_too_short",

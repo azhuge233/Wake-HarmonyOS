@@ -9,10 +9,6 @@
 			"value": "#FFFFFF"
 		},
 		{
-			"name": "darker_grey",
-			"value": "#777777"
-		},
-		{
 			"name": "input_placeholder_grey",
 			"value": "#555555"
 		},
@@ -43,10 +39,6 @@
 		{
 			"name": "button_background_color",
 			"value": "#007DFF"
-		},
-		{
-			"name": "text_font_color",
-			"value": "#FFFFFF"
 		},
 		{
 			"name": "placeholder_color",
