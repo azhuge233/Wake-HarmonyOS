@@ -91,23 +91,27 @@ struct More {
     }
 
     async importConfirm() {
-        this.promptAction.showDialog({
-            title: $r("app.string.import_title"),
-            message: $r("app.string.import_message"),
-            buttons: [
-                {
-                    text: $r("app.string.button_confirm_label"),
-                    color: $r("sys.color.font_primary")
-                },
-                {
-                    text: $r("app.string.button_cancel_label"),
-                    color: $r("sys.color.font_primary")
-                }
-            ]
-        }).then(async (result) => {
-            if(result.index == 0) await this.import();
+        try {
+            const result = await this.promptAction.showDialog({
+                title: $r("app.string.import_title"),
+                message: $r("app.string.import_message"),
+                buttons: [
+                    {
+                        text: $r("app.string.button_confirm_label"),
+                        color: $r("sys.color.font_primary")
+                    },
+                    {
+                        text: $r("app.string.button_cancel_label"),
+                        color: $r("sys.color.font_primary")
+                    }
+                ]
+            });
+
+            if (result.index == 0) await this.import();
             else Logger.debug(this.LOG_TAG, "导入已取消");
-        });
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `导入弹窗失败, ${err}`);
+        }
     }
 
     @Builder

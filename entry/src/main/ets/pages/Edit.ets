@@ -42,24 +42,28 @@ struct Edit {
         // const address = this.updatingDevice.Address.trim();
         const port = this.updatingDevice.Port;
 
-        if (CommonUtils.isStringNullOrEmpty(mac)) {
-            CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
-            this.focusController.requestFocus(CommonConstants.MAC_INPUT_ID);
-            return;
-        }
-
-        if (CommonUtils.isStringNullOrEmpty(alias)) {
-            CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
-            this.focusController.requestFocus(CommonConstants.ALIAS_INPUT_ID);
-            return;
-        }
-
-        if (!CommonUtils.isStringNullOrEmpty(port.toString())) {
-            if(port < 1 || port > 65535) {
-                CommonUtils.alert($r("app.string.port_invalid"), this.promptAction);
-                this.focusController.requestFocus(CommonConstants.PORT_INPUT_ID);
+        try {
+            if (CommonUtils.isStringNullOrEmpty(mac)) {
+                CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
+                this.focusController.requestFocus(CommonConstants.MAC_INPUT_ID);
                 return;
             }
+
+            if (CommonUtils.isStringNullOrEmpty(alias)) {
+                CommonUtils.alert($r("app.string.input_cannot_be_null_or_empty"), this.promptAction);
+                this.focusController.requestFocus(CommonConstants.ALIAS_INPUT_ID);
+                return;
+            }
+
+            if (!CommonUtils.isStringNullOrEmpty(port.toString())) {
+                if (port < 1 || port > 65535) {
+                    CommonUtils.alert($r("app.string.port_invalid"), this.promptAction);
+                    this.focusController.requestFocus(CommonConstants.PORT_INPUT_ID);
+                    return;
+                }
+            }
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `移动输入焦点失败, ${err}`);
         }
 
         const validateResult = CommonUtils.macValidate(mac);
