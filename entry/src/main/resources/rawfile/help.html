@@ -190,11 +190,9 @@
         <select id="langSelect" class="lang-select">
             <option value="zh">中文</option>
             <option value="en">English</option>
-            <!-- 未来可添加更多语言选项 -->
         </select>
     </div>
 
-    <!-- 中文内容 -->
     <div id="zhContent" class="lang-content active">
         <h1>📘 帮助中心</h1>
         <p>欢迎使用本应用！以下是常见问题与操作指引</p>
@@ -221,36 +219,37 @@
                 <li>如果域名无法解析，数据包最终会被发送到广播地址。</li>
             </ul>
         </ul>
+        <br/>
         <strong>项目地址：<a href="https://github.com/azhuge233/Wake-HarmonyOS" target="_blank">azhuge233/Wake-HarmonyOS</a></strong>
     </div>
 
-    <!-- 英文内容 -->
     <div id="enContent" class="lang-content">
         <h1>📘 Help Center</h1>
         <p>Welcome to the app! Here are some frequently asked questions and how-to guides:</p>
         <h3>User Guide</h3>
         <p>
-            This app only supports typical Magic Packet network wake-up.<br/>
+            This app only supports standard Magic Packet network wake-up.<br/>
             The app automatically refreshes the broadcast address when the Wi-Fi network changes. If the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main screen.<br/>
             The broadcast address is <strong>calculated locally</strong> based on the current device's Wi-Fi IPv4 address and subnet mask.
         </p>
         <h4>Target Address Resolution Logic</h4>
         <ul>
-            <li>When no sending address is manually specified, the app will send the packet to the local IPv4 broadcast address by default.</li>
-            <li>If the sending address is set to an IPv4 or IPv6 address, the app will send the packet to that specific address.</li>
-            <li>If the sending address is set to a domain name, the app will first resolve it using the system DNS, then send the packet to the resolved address.</li>
+            <li>When no target address is manually specified, the app will send the packet to the local IPv4 broadcast address by default.</li>
+            <li>If the target address is set to an IPv4 or IPv6 address, the app will send the packet to that specific address.</li>
+            <li>If the target address is set to a domain name, the app will first resolve it using the system DNS, then send the packet to the resolved address.</li>
         </ul>
         <h4>About Address and Port Settings</h4>
         <ul>
-            <li>If only a port is set without an address, the app will ignore the port setting.</li>
+            <li>If a port is set but without an address, the app will ignore the port setting.</li>
             <li>When manually setting an IPv4 address, please ensure that the network environment has the correct static ARP binding configured.</li>
-            <li>When manually setting an IPv6 address, please ensure that the device has an IPv6 address and that the network environment supports IPv6 wake-up.</li>
-            <li>When manually setting a domain name, please ensure that the correct DNS resolution is configured and the network environment is properly set up.</li>
+            <li>When manually setting an IPv6 address, please ensure that the device has an IPv6 address and the network environment supports IPv6 wake-up.</li>
+            <li>When manually setting a domain name, please ensure that the correct DNS record is configured and the network environment is properly set up.</li>
             <ul>
-                <li>The app does not validate whether the domain name is valid; please ensure you have entered a correct domain name.</li>
+                <li>The app does not validate the domain name; please ensure you have entered a correct one.</li>
                 <li>If the domain name cannot be resolved, the packet will eventually be sent to the broadcast address.</li>
             </ul>
         </ul>
+        <br/>
         <strong>Project link: <a href="https://github.com/azhuge233/Wake-HarmonyOS" target="_blank">azhuge233/Wake-HarmonyOS</a></strong>
     </div>
 </div>
@@ -280,11 +279,11 @@
         });
 
         // 可选：根据浏览器语言预设（默认中文注释掉）
-        // const browserLang = navigator.language || 'zh';
-        // if (browserLang.toLowerCase().startsWith('en')) {
-        //     langSelect.value = 'en';
-        //     setLanguage('en');
-        // }
+        const browserLang = navigator.language || 'zh';
+        if (browserLang.toLowerCase().startsWith('en')) {
+            langSelect.value = 'en';
+            setLanguage('en');
+        }
     })();
 </script>
 </body>
