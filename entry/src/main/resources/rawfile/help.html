@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>帮助中心 · Help Center</title>
+    <style>
+        /* 基础变量（浅色模式） */
+        :root {
+            --bg-page: #f5f7fb;
+            --bg-card: #ffffff;
+            --text-primary: #1e2a3a;
+            --text-secondary: #334155;
+            --border-light: #e2e8f0;
+            --select-bg: #f1f5f9;
+            --select-hover: #e6edf4;
+            --select-border: #cbd5e1;
+            --link-color: #0f6ebe;
+            --arrow-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        /* 深色模式自动跟随系统 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-page: #121212;
+                --bg-card: #1e1e2f;
+                --text-primary: #e2e8f0;
+                --text-secondary: #cbd5e1;
+                --border-light: #334155;
+                --select-bg: #2a2a3f;
+                --select-hover: #3a3a55;
+                --select-border: #475569;
+                --link-color: #6ab0f5;
+                --arrow-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+            position: relative;
+            border: 1px solid var(--border-light);
+        }
+
+        h1 {
+            color: var(--link-color);
+            margin-top: 0;
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        h3, h4 {
+            color: var(--text-primary);
+            margin-top: 1.3em;
+            font-weight: 600;
+        }
+
+        /* 语言选择器 - 现代胶囊样式 */
+        .lang-switch {
+            position: absolute;
+            top: 28px;
+            right: 32px;
+            z-index: 10;
+        }
+
+        .lang-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: var(--select-bg);
+            border: 1px solid var(--select-border);
+            border-radius: 40px;
+            padding: 8px 32px 8px 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: inherit;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            background-image: var(--arrow-icon);
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .lang-select:hover {
+            background-color: var(--select-hover);
+            border-color: var(--link-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .lang-select:focus {
+            border-color: var(--link-color);
+            box-shadow: 0 0 0 2px rgba(15,110,190,0.2);
+        }
+
+        /* 下拉选项样式 (仅支持部分浏览器，但无伤大雅) */
+        .lang-select option {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ul {
+            margin: 0.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin: 0.4em 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            margin: 24px 0;
+            border: none;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 550px) {
+            body {
+                padding: 12px;
+            }
+            .container {
+                padding: 20px 20px;
+            }
+            .lang-switch {
+                position: static;
+                text-align: right;
+                margin-bottom: 20px;
+            }
+            h1 {
+                margin-top: 0;
+                font-size: 1.7rem;
+            }
+            .lang-select {
+                padding: 6px 28px 6px 14px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="lang-switch">
+        <select id="langSelect" class="lang-select">
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+            <!-- 未来可添加更多语言选项 -->
+        </select>
+    </div>
+
+    <!-- 中文内容 -->
+    <div id="zhContent" class="lang-content active">
+        <h1>📘 帮助中心</h1>
+        <p>欢迎使用本应用！以下是常见问题与操作指引</p>
+        <h3>使用说明</h3>
+        <p>
+            本应用仅支持典型的魔法数据包网络唤醒。<br/>
+            应用会在 Wi-Fi 网络发生变化时自动刷新广播地址，当自动计算的广播地址出现异常，可以点击主界面的刷新按钮手动刷新广播地址。<br/>
+            广播地址根据当前设备的 Wi-Fi IPv4 地址和子网掩码于<strong>本地计算</strong>。
+        </p>
+        <h4>目标地址判断逻辑</h4>
+        <ul>
+            <li>当没有手动指定发送地址时，应用会默认将数据包发送至本地 IPv4 广播地址。</li>
+            <li>发送地址设定为 IPv4 或 IPv6 时，应用会将数据包发送至指定地址。</li>
+            <li>发送地址设定为域名时，应用会先尝试使用系统 DNS 解析域名，然后将数据包发送至解析到的地址。</li>
+        </ul>
+        <h4>关于地址和端口设置</h4>
+        <ul>
+            <li>如果只设定了端口而没有设定地址，应用会忽略端口设置。</li>
+            <li>手动设定 IPv4 地址时，请确保所处网络环境配置了正确的静态 ARP 绑定。</li>
+            <li>手动设定 IPv6 地址时，请确保设备拥有 IPv6 地址，并且所处网络环境支持 IPv6 唤醒。</li>
+            <li>手动设定域名时，请确保配置了正确的 DNS 解析，并配置正确的网络环境</li>
+            <ul>
+                <li>应用不会判断域名是否合法，请确保输入了正确的域名。</li>
+                <li>如果域名无法解析，数据包最终会被发送到广播地址。</li>
+            </ul>
+        </ul>
+        <strong>项目地址：<a href="https://github.com/azhuge233/Wake-HarmonyOS" target="_blank">azhuge233/Wake-HarmonyOS</a></strong>
+    </div>
+
+    <!-- 英文内容 -->
+    <div id="enContent" class="lang-content">
+        <h1>📘 Help Center</h1>
+        <p>Welcome to the app! Here are some frequently asked questions and how-to guides:</p>
+        <h3>User Guide</h3>
+        <p>
+            This app only supports typical Magic Packet network wake-up.<br/>
+            The app automatically refreshes the broadcast address when the Wi-Fi network changes. If the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main screen.<br/>
+            The broadcast address is <strong>calculated locally</strong> based on the current device's Wi-Fi IPv4 address and subnet mask.
+        </p>
+        <h4>Target Address Resolution Logic</h4>
+        <ul>
+            <li>When no sending address is manually specified, the app will send the packet to the local IPv4 broadcast address by default.</li>
+            <li>If the sending address is set to an IPv4 or IPv6 address, the app will send the packet to that specific address.</li>
+            <li>If the sending address is set to a domain name, the app will first resolve it using the system DNS, then send the packet to the resolved address.</li>
+        </ul>
+        <h4>About Address and Port Settings</h4>
+        <ul>
+            <li>If only a port is set without an address, the app will ignore the port setting.</li>
+            <li>When manually setting an IPv4 address, please ensure that the network environment has the correct static ARP binding configured.</li>
+            <li>When manually setting an IPv6 address, please ensure that the device has an IPv6 address and that the network environment supports IPv6 wake-up.</li>
+            <li>When manually setting a domain name, please ensure that the correct DNS resolution is configured and the network environment is properly set up.</li>
+            <ul>
+                <li>The app does not validate whether the domain name is valid; please ensure you have entered a correct domain name.</li>
+                <li>If the domain name cannot be resolved, the packet will eventually be sent to the broadcast address.</li>
+            </ul>
+        </ul>
+        <strong>Project link: <a href="https://github.com/azhuge233/Wake-HarmonyOS" target="_blank">azhuge233/Wake-HarmonyOS</a></strong>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const zhDiv = document.getElementById('zhContent');
+        const enDiv = document.getElementById('enContent');
+        const langSelect = document.getElementById('langSelect');
+
+        function setLanguage(lang) {
+            if (lang === 'zh') {
+                zhDiv.classList.add('active');
+                enDiv.classList.remove('active');
+                document.documentElement.lang = 'zh-CN';
+                document.title = '帮助中心';
+            } else if (lang === 'en') {
+                zhDiv.classList.remove('active');
+                enDiv.classList.add('active');
+                document.documentElement.lang = 'en-US';
+                document.title = 'Help Center';
+            }
+        }
+
+        langSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+        // 可选：根据浏览器语言预设（默认中文注释掉）
+        // const browserLang = navigator.language || 'zh';
+        // if (browserLang.toLowerCase().startsWith('en')) {
+        //     langSelect.value = 'en';
+        //     setLanguage('en');
+        // }
+    })();
+</script>
+</body>
+</html>
