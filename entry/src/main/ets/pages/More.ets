@@ -81,7 +81,7 @@ struct More {
                 CommonUtils.alert($r("app.string.import_success"), this.promptAction);
 
                 this.pathStack?.pop("Import back");
-            } else Logger.error(this.LOG_TAG, "未选择备份文件");
+            } else Logger.warn(this.LOG_TAG, "未选择备份文件");
         } catch (err) {
             Logger.error(this.LOG_TAG, `导入失败, 错误码: ${err.code}, 错误信息: ${err.message}`);
             CommonUtils.alert($r("app.string.import_failed"), this.promptAction);
