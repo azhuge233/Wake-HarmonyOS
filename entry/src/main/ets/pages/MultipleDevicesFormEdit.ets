@@ -180,6 +180,15 @@ struct MultipleDevicesFormEdit {
                                         .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
                                         .fontColor(this.selectedIDs.includes(item.ID) ?
                                             $r('sys.color.interactive_active') : $r('sys.color.font_secondary'))
+
+                                    if(!CommonUtils.isStringNullOrEmpty(item.Address)) {
+                                        Text(`${item.Address}:${item.Port}`)
+                                            .maxLines(1)
+                                            .textOverflow({ overflow: TextOverflow.MARQUEE })
+                                            .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
+                                            .fontColor(this.selectedIDs.includes(item.ID) ?
+                                                $r('sys.color.interactive_active') : $r('sys.color.font_secondary'))
+                                    }
                                 }
                                 .width(StyleConstants.EIGHTY_PERCENT)
                                 .alignItems(HorizontalAlign.Center)
