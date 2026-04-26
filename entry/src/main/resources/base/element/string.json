@@ -257,18 +257,6 @@
       "value": "Help"
     },
     {
-      "name": "help_info_span1",
-      "value": "This application only supports standard magic packet Wake-on-LAN.\n\n"
-    },
-    {
-      "name": "help_info_span2",
-      "value": "The app automatically refreshes the broadcast address when the Wi-Fi network changes.\nIf the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main page.\n\n"
-    },
-    {
-      "name": "help_info_span3",
-      "value": "The broadcast address is locally calculated based on the current device's Wi-Fi IP address and subnet mask.\n\n"
-    },
-    {
       "name": "import_waiting_message",
       "value": "Importing, please wait..."
     },
@@ -291,10 +279,6 @@
     {
       "name": "navigation_menu_more",
       "value": "More"
-    },
-    {
-      "name": "help_info_span4",
-      "value": "On the main screen, swipe left on a device in the list to edit or delete it.\n\n"
     },
     {
       "name": "no_device_message",

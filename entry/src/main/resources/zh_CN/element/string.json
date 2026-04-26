@@ -257,18 +257,6 @@
 			"value": "帮助"
 		},
 		{
-			"name": "help_info_span1",
-			"value": "本 App 仅支持典型的魔法数据包网络唤醒。\n\n"
-		},
-		{
-			"name": "help_info_span2",
-			"value": "App 会在 Wi-Fi 网络发生变化时自动刷新广播地址。\n当自动计算的广播地址出现异常，可以点击主界面的刷新按钮手动刷新广播地址。\n\n"
-		},
-		{
-			"name": "help_info_span3",
-			"value": "广播地址根据当前设备的 Wi-Fi IP 地址和子网掩码于本地计算。\n\n"
-		},
-		{
 			"name": "import_waiting_message",
 			"value": "正在导入，请稍候..."
 		},
@@ -291,10 +279,6 @@
 		{
         	"name": "navigation_menu_more",
         	"value": "更多"
-		},
-      	{
-        	"name": "help_info_span4",
-			"value": "对主界面设备列表的单个设备左滑可以编辑/删除设备。\n\n"
 		},
 		{
 			"name": "no_device_message",
