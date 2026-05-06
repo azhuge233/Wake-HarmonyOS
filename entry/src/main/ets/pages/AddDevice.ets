@@ -141,7 +141,7 @@ struct AddDevice {
                                     left: StyleConstants.MARGIN_ONE_PERCENT
                                 })
                                 .rotate({
-                                    angle: this.showAdvanced ? 180 : 0
+                                    angle: this.showAdvanced ? 0 : 180
                                 })
                         }
                         .width(StyleConstants.TWENTY_PERCENT)
