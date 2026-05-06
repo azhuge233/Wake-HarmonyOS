@@ -44,6 +44,23 @@ struct Index {
             },
             {
                 content: {
+                    label: $r("app.string.help_title"),
+                    icon: $r("sys.symbol.info_circle"),
+                    action: () => {
+                        this.safeCloseSwipeActions();
+                        this.pageStack.pushPath({
+                            name: "Help",
+                            param: this.deviceList,
+                            onPop: async (popInfo: PopInfo) => {
+                                await this.refreshIPBanner();
+                                CommonUtils.returnFromSubPage(popInfo);
+                            }
+                        });
+                    }
+                }
+            },
+            {
+                content: {
                     label: $r("app.string.navigation_menu_more"),
                     icon: $r("sys.symbol.dot_grid_2x2"),
                     action: () => {
