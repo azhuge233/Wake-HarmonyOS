@@ -19,7 +19,7 @@
         "description": "$string:EntryAbility_desc",
         "icon": "$media:app_icon_layered",
         "label": "$string:EntryAbility_label",
-        "startWindowIcon": "$media:icon",
+        "startWindowIcon": "$media:startIcon",
         "startWindowBackground": "$color:start_window_background",
         "exported": true,
         "skills": [
@@ -45,7 +45,7 @@
         "description": '$string:SingleDeviceWidgetEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:SingleDeviceWidgetEntryAbility_label",
-        "startWindowIcon": "$media:icon",
+        "startWindowIcon": "$media:startIcon",
         "startWindowBackground": "$color:start_window_background",
         "launchType": "multiton"
       },
@@ -55,7 +55,7 @@
         "description": '$string:MultipleDevicesWidgetEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:MultipleDevicesWidgetEntryAbility_label",
-        "startWindowIcon": "$media:icon",
+        "startWindowIcon": "$media:startIcon",
         "startWindowBackground": "$color:start_window_background",
         "launchType": "multiton"
       }
