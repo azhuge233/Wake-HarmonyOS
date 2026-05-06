@@ -22,11 +22,11 @@ export default struct MoreMenuItem {
                 .height(StyleConstants.FIVE_PERCENT)
                 .width(StyleConstants.EIGHTY_PERCENT)
         }
-        .margin({
-            top: StyleConstants.MARGIN_TWO_PERCENT,
-            left: StyleConstants.MARGIN_ONE_PERCENT,
-            right: StyleConstants.MARGIN_THREE_PERCENT,
-            bottom: StyleConstants.MARGIN_TWO_PERCENT
+        .padding({
+            top: StyleConstants.PADDING_FIVE,
+            left: StyleConstants.PADDING_FIVE,
+            right: StyleConstants.PADDING_FIVE,
+            bottom: StyleConstants.PADDING_FIVE
         })
     }
 }
