@@ -34,6 +34,38 @@ struct More {
     private deviceListViewModel: DeviceListViewModel = new DeviceListViewModel();
     private newDeviceViewModel: DeviceViewModel = new DeviceViewModel();
 
+    private settingsEntries: Array<[Resource, Resource, () => void | Promise<void>]> = [
+      [$r("app.string.color_mode_title"), $r("app.media.brush"), () => {
+          if (!this.isProcessing) {
+              this.pathStack?.pushPath({ name: "ColorModeSettings" });
+          } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+      }]
+    ];
+
+    private functionEntries: Array<[Resource, Resource, () => void | Promise<void>]> = [
+      [$r("app.string.page_more_export"), $r("app.media.arrow_up_circle"), async () => {
+          if (!this.isProcessing) {
+              await this.export();
+          } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+      }],
+      [$r("app.string.page_more_import"), $r("app.media.arrow_down_circle"), async () => {
+          if (!this.isProcessing) {
+              await this.export();
+          } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+      }]
+    ];
+
+    private othersEntries: Array<[Resource, Resource, () => void | Promise<void>]> = [
+      [$r("app.string.page_more_clear"), $r("app.media.clean"), async () => {
+          if (this.isProcessing) {
+              CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+              return;
+          }
+
+          await this.clear();
+      }]
+    ];
+
     aboutToAppear(): void {
         try {
             let bundleInfo = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT);
@@ -195,69 +227,51 @@ struct More {
     }
 
     @Builder
+    EntryGroup(entries: Array<[Resource, Resource, () => void | Promise<void>]>) {
+        ForEach(entries, (item: [Resource, Resource, () => void | Promise<void>]) => {
+            MoreMenuItem({
+                menuText: item[0],
+                menuIcon: item[1]
+            }).onClick(item[2])
+        })
+    }
+
+    @Builder
+    EntryDivider() {
+        Divider()
+            .lineCap(LineCapStyle.Round)
+            .strokeWidth(StyleConstants.DIVIDER_STOKE_WIDTH)
+            .width(StyleConstants.NINETY_PERCENT)
+    }
+
+    @Builder
+    VersionFooter() {
+        Text(`${this.versionName} (${this.versionCode})`)
+            .width(StyleConstants.FULL_PERCENT)
+            .fontColor(Color.Grey)
+            .fontSize(StyleConstants.TEXT_FONT_SIZE_THIRTEEN)
+            .alignSelf(ItemAlign.End)
+            .textAlign(TextAlign.Center)
+    }
+
+    @Builder
     MainContent() {
         Column() {
             Column() {
-                MoreMenuItem({
-                    menuText: $r("app.string.color_mode_title"),
-                    menuIcon: $r("app.media.brush")
-                }).onClick(() => {
-                    if (!this.isProcessing) {
-                        this.pathStack?.pushPath({ name: "ColorModeSettings" });
-                    } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
-                })
+                this.EntryGroup(this.settingsEntries);
 
-                MoreMenuItem({
-                    menuText: $r("app.string.page_more_export"),
-                    menuIcon: $r("app.media.arrow_up_circle")
-                }).onClick(async () => {
-                    if (!this.isProcessing) {
-                        await this.export();
-                    } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
-                })
+                this.EntryDivider();
 
-                MoreMenuItem({
-                    menuText: $r("app.string.page_more_import"),
-                    menuIcon: $r("app.media.arrow_down_circle")
-                }).onClick(async () => {
-                    if (this.isProcessing) {
-                        CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
-                        return;
-                    }
+                this.EntryGroup(this.functionEntries);
 
-                    await this.importConfirm();
-                })
+                this.EntryDivider();
 
-                MoreMenuItem({
-                    menuText: $r("app.string.page_more_help"),
-                    menuIcon: $r("app.media.info_circle")
-                }).onClick(() => {
-                    if (!this.isProcessing) {
-                        this.pathStack?.pushPath({ name: "Help" });
-                    } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
-                })
-
-                MoreMenuItem({
-                    menuText: $r("app.string.page_more_clear"),
-                    menuIcon: $r("app.media.clean")
-                }).onClick(async () => {
-                    if (this.isProcessing) {
-                        CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
-                        return;
-                    }
-
-                    await this.clear();
-                })
+                this.EntryGroup(this.othersEntries);
             }
             .height(StyleConstants.FULL_PERCENT)
             .width(StyleConstants.FULL_PERCENT)
 
-            Text(`${this.versionName} (${this.versionCode})`)
-                .width(StyleConstants.FULL_PERCENT)
-                .fontColor(Color.Grey)
-                .fontSize(StyleConstants.TEXT_FONT_SIZE_THIRTEEN)
-                .alignSelf(ItemAlign.End)
-                .textAlign(TextAlign.Center)
+            this.VersionFooter();
         }
         .height(StyleConstants.FULL_PERCENT)
         .width(StyleConstants.FULL_PERCENT)
