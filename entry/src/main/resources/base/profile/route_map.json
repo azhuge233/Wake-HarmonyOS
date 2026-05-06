@@ -31,6 +31,14 @@
       "data": {
         "description" : "Add device page"
       }
+    },
+    {
+      "name": "ColorModeSettings",
+      "pageSourceFile": "src/main/ets/pages/ColorModeSettings.ets",
+      "buildFunction": "ColorModeSettingsBuilder",
+      "data": {
+        "description" : "Color mode settings page"
+      }
     }
   ]
 }

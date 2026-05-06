@@ -9,6 +9,7 @@ class CommonConstants {
 
     public readonly AppStorage_KEY_ShortcutPath = 'path';
     public readonly AppStorage_KEY_FormID = 'formID';
+    public readonly AppStorage_KEY_AppSettings = "AppSettings";
 
     public readonly FormMessage_Restore = 'restore';
 

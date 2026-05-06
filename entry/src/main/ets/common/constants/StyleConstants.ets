@@ -41,6 +41,7 @@ class StyleConstants {
     public readonly MARGIN_TWO = 2;
 
     public readonly PADDING_SIXTEEN = 16;
+    public readonly PADDING_FIFTEEN = 15;
     public readonly PADDING_TEN = 10;
     public readonly PADDING_EIGHT = 8;
     public readonly PADDING_FIVE = 5;
@@ -82,6 +83,7 @@ class StyleConstants {
     public readonly BORDER_RADIUS_THIRTEEN = 13;
     public readonly BORDER_RADIUS_TWELVE = 12;
     public readonly BORDER_RADIUS_ELEVEN = 11;
+    public readonly BORDER_WIDTH = 0.5
 
     public readonly FORM_ITEM_HEIGHT = 45;
 
@@ -92,6 +94,8 @@ class StyleConstants {
     public readonly DIVIDER_STOKE_WIDTH = 2;
     public readonly DIVIDER_FONT_SIZE = 12;
     public readonly DIVIDER_SYMBOL_SIZE = 15;
+
+    public readonly RADIO_SIZE = 35;
 }
 
 export default new StyleConstants();

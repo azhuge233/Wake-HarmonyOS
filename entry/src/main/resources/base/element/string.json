@@ -307,6 +307,23 @@
     {
       "name": "form_run_complete_label",
       "value": "Press again to restore"
+    },
+    {
+      "name": "page_color_mode_system",
+      "value": "System"
+    },
+    {
+      "name": "page_color_mode_light",
+      "value": "Light"
+    },
+    {
+      "name": "page_color_mode_dark",
+      "value": "Dark"
+    },
+    {
+      "name": "color_mode_title",
+      "value": "Color Mode"
+    },
     }
   ]
 }

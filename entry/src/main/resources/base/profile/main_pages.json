@@ -6,6 +6,7 @@
     "pages/Help",
     "pages/Edit",
     "pages/SingleDeviceFormEdit",
-    "pages/MultipleDevicesFormEdit"
+    "pages/MultipleDevicesFormEdit",
+    "pages/ColorModeSettings"
   ]
 }

@@ -307,6 +307,23 @@
 		{
 			"name": "form_run_complete_label",
 			"value": "再次点击以恢复"
+		},
+		{
+			"name": "page_color_mode_system",
+			"value": "跟随系统"
+		},
+		{
+			"name": "page_color_mode_light",
+			"value": "浅色模式"
+		},
+		{
+			"name": "page_color_mode_dark",
+			"value": "深色模式"
+		},
+		{
+			"name": "color_mode_title",
+			"value": "颜色模式"
+		},
 		}
     ]
 }
