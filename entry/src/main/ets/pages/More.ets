@@ -1,6 +1,7 @@
 import { JSON } from '@kit.ArkTS';
 import { common } from '@kit.AbilityKit';
 import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
+import bundleManager from '@ohos.bundle.bundleManager';
 
 import Logger from '../common/utils/Logger';
 import MoreMenuItem from '../view/MoreMenuItem';
@@ -21,6 +22,9 @@ struct More {
 
     @Local isProcessing: boolean = false;
 
+    @Local versionName: string = '';
+    @Local versionCode: string = '';
+
     private uiContext = this.getUIContext();
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
     private promptAction = this.uiContext.getPromptAction();
@@ -29,6 +33,16 @@ struct More {
 
     private deviceListViewModel: DeviceListViewModel = new DeviceListViewModel();
     private newDeviceViewModel: DeviceViewModel = new DeviceViewModel();
+
+    aboutToAppear(): void {
+        try {
+            let bundleInfo = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT);
+            this.versionName = bundleInfo.versionName;
+            this.versionCode = bundleInfo.versionCode.toString();
+        } catch (error) {
+            Logger.error(this.LOG_TAG, `同步获取失败: ${error.message}`);
+        }
+    }
 
     async export(): Promise<void> {
         try {
@@ -187,7 +201,7 @@ struct More {
             .height(StyleConstants.FULL_PERCENT)
             .width(StyleConstants.FULL_PERCENT)
 
-            Text($r("app.string.app_version"))
+            Text(`${this.versionName} (${this.versionCode})`)
                 .width(StyleConstants.FULL_PERCENT)
                 .fontColor(Color.Grey)
                 .fontSize(StyleConstants.TEXT_FONT_SIZE_THIRTEEN)
