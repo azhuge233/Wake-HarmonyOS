@@ -253,6 +253,10 @@
 			"value": "Help"
 		},
 		{
+			"name": "page_more_clear",
+			"value": "Clear"
+		},
+		{
 			"name": "import_waiting_message",
 			"value": "Importing, please wait..."
 		},
@@ -324,6 +328,21 @@
 			"name": "color_mode_title",
 			"value": "Color Mode"
 		},
+		{
+			"name": "clear_title",
+			"value": "Warning!"
+		},
+		{
+			"name": "clear_message",
+			"value": "This action will delete all devices. Continue?"
+		},
+		{
+			"name": "clear_success",
+			"value": "Clear success!"
+		},
+		{
+			"name": "clear_failed",
+			"value": "Clear failed, please try again"
 		}
     ]
 }

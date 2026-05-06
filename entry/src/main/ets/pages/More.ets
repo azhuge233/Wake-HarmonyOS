@@ -121,10 +121,40 @@ struct More {
                 ]
             });
 
-            if (result.index == 0) await this.import();
-            else Logger.debug(this.LOG_TAG, "导入已取消");
+            if (result.index === 0) await this.import();
+            else Logger.warn(this.LOG_TAG, "导入已取消");
         } catch (err) {
             Logger.error(this.LOG_TAG, `导入弹窗失败, ${err}`);
+        }
+    }
+
+    async clear() {
+        try {
+            const result = await this.promptAction.showDialog({
+                title: $r("app.string.clear_title"),
+                message: $r("app.string.clear_message"),
+                buttons: [
+                    {
+                        text: $r("app.string.button_confirm_label"),
+                        color: $r("sys.color.font_primary")
+                    },
+                    {
+                        text: $r("app.string.button_cancel_label"),
+                        color: $r("sys.color.font_primary")
+                    }
+                ]
+            });
+
+            if(result.index === 0) {
+                const success = await this.deviceListViewModel.clearDevices();
+                if (success) {
+                    CommonUtils.alert($r("app.string.clear_success"), this.promptAction);
+                    this.pathStack?.pop("Clear press");
+                } else CommonUtils.alert($r("app.string.clear_failed"), this.promptAction);
+            } else Logger.warn(this.LOG_TAG, "清除已取消");
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `清除失败, ${err}`);
+            CommonUtils.alert($r("app.string.clear_failed"), this.promptAction);
         }
     }
 
@@ -169,6 +199,15 @@ struct More {
         Column() {
             Column() {
                 MoreMenuItem({
+                    menuText: $r("app.string.color_mode_title"),
+                    menuIcon: $r("app.media.brush")
+                }).onClick(() => {
+                    if (!this.isProcessing) {
+                        this.pathStack?.pushPath({ name: "ColorModeSettings" });
+                    } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+                })
+
+                MoreMenuItem({
                     menuText: $r("app.string.page_more_export"),
                     menuIcon: $r("app.media.arrow_up_circle")
                 }).onClick(async () => {
@@ -196,6 +235,18 @@ struct More {
                     if (!this.isProcessing) {
                         this.pathStack?.pushPath({ name: "Help" });
                     } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+                })
+
+                MoreMenuItem({
+                    menuText: $r("app.string.page_more_clear"),
+                    menuIcon: $r("app.media.clean")
+                }).onClick(async () => {
+                    if (this.isProcessing) {
+                        CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+                        return;
+                    }
+
+                    await this.clear();
                 })
             }
             .height(StyleConstants.FULL_PERCENT)

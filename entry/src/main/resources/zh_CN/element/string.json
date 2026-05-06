@@ -253,6 +253,10 @@
 			"value": "帮助"
 		},
 		{
+			"name": "page_more_clear",
+			"value": "清除"
+		},
+		{
 			"name": "import_waiting_message",
 			"value": "正在导入，请稍候..."
 		},
@@ -324,6 +328,21 @@
 			"name": "color_mode_title",
 			"value": "颜色模式"
 		},
+		{
+			"name": "clear_title",
+			"value": "注意"
+		},
+		{
+			"name": "clear_message",
+			"value": "此操作将清除所有设备，是否继续？"
+		},
+		{
+			"name": "clear_success",
+			"value": "清除成功！"
+		},
+		{
+			"name": "clear_failed",
+			"value": "清除失败，请重试"
 		}
     ]
 }
