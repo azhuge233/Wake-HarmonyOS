@@ -124,7 +124,7 @@ export default class NET {
                     await this.UDPv4.setExtraOptions({ broadcast: true });
                     Logger.debug(this.LOG_TAG, `成功设置 UDPv4 广播参数`);
                 } catch (err) {
-                    Logger.error(this.LOG_TAG, `UDPv4 端口绑定失败, ${err}`);
+                    Logger.error(this.LOG_TAG, `UDPv4 端口绑定失败, ${JSON.stringify(err)}`);
                 }
             }
         } catch (err) {
@@ -146,7 +146,7 @@ export default class NET {
                     await this.UDPv6.bind(bindV6)
                     Logger.debug(this.LOG_TAG, '成功绑定 UDPv6 端口');
                 } catch (err) {
-                    Logger.error(this.LOG_TAG, `UDPv6 端口绑定失败, ${err}`);
+                    Logger.error(this.LOG_TAG, `UDPv6 端口绑定失败, ${JSON.stringify(err)}`);
                 }
             }
         } catch (err) {
