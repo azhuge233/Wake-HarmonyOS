@@ -8,7 +8,6 @@ import CommonUtils from './CommonUtils';
 export default class NET {
     private LOG_TAG = '[NET]';
 
-
     ipv4Broadcast: string = '';
     hasBroadcastIP: boolean = false;
 
@@ -29,8 +28,8 @@ export default class NET {
                 const deviceNetmaskNumber = ipInfo.netmask;
 
                 // IPv4 广播地址计算
-                this.ipv4 = this.getIpStringFromNum(deviceIPNumber);
-                this.ipv4NetMask = this.getIpStringFromNum(deviceNetmaskNumber);
+                this.ipv4 = CommonUtils.getIpStringFromNum(deviceIPNumber);
+                this.ipv4NetMask = CommonUtils.getIpStringFromNum(deviceNetmaskNumber);
                 this.ipv4Broadcast = this.calcBroadcastIP(deviceIPNumber, deviceNetmaskNumber);
                 this.hasBroadcastIP = true;
 
@@ -170,16 +169,12 @@ export default class NET {
     private calcBroadcastIP(ip: number, netmask: number): string {
         // Calculate the broadcast address by OR-ing IP with the inverted subnet mask
         const broadcastIPNumber = ip | ~netmask;
-        return this.getIpStringFromNum(broadcastIPNumber);
+        return CommonUtils.getIpStringFromNum(broadcastIPNumber);
     }
 
     private buildMagicPacketPayload(mac: string): ArrayBuffer {
         let macAddrFinal: string = mac.replaceAll(mac.includes(':') ? ':' : '-', '');
         let dataStr = 'ff'.repeat(6) + macAddrFinal.repeat(16);
         return buffer.from(dataStr, 'hex').buffer;
-    }
-
-    private getIpStringFromNum(ipNum: number): string {
-        return (ipNum >>> 24) + '.' + (ipNum >> 16 & 0xFF) + '.' + (ipNum >> 8 & 0xFF) + '.' + (ipNum & 0xFF);
     }
 }

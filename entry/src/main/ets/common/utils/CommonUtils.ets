@@ -59,6 +59,11 @@ class CommonUtils {
         return '';
     }
 
+    // IP 地址转换
+    public getIpStringFromNum(ipNum: number): string {
+        return (ipNum >>> 24) + '.' + (ipNum >> 16 & 0xFF) + '.' + (ipNum >> 8 & 0xFF) + '.' + (ipNum & 0xFF);
+    }
+
     // 设备振动
     public vibrate(effectId: string) {
         try {
