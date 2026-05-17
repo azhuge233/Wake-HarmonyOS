@@ -34,29 +34,29 @@ struct More {
     private deviceListViewModel: DeviceListViewModel = new DeviceListViewModel();
     private newDeviceViewModel: DeviceViewModel = new DeviceViewModel();
 
-    private settingsEntries: Array<[Resource, Resource, () => void | Promise<void>]> = [
-      [$r("app.string.color_mode_title"), $r("app.media.brush"), () => {
+    private settingsEntries: Array<[Resource, Resource, Resource | null, () => void | Promise<void>]> = [
+      [$r("app.string.color_mode_title"), $r("app.media.brush"), $r("app.string.color_mode_desc"), () => {
           if (!this.isProcessing) {
               this.pathStack?.pushPath({ name: "ColorModeSettings" });
           } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
       }]
     ];
 
-    private functionEntries: Array<[Resource, Resource, () => void | Promise<void>]> = [
-      [$r("app.string.page_more_export"), $r("app.media.arrow_up_circle"), async () => {
+    private functionEntries: Array<[Resource, Resource, Resource | null, () => void | Promise<void>]> = [
+      [$r("app.string.page_more_export"), $r("app.media.arrow_up_circle"), $r("app.string.export_desc"), async () => {
           if (!this.isProcessing) {
               await this.export();
           } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
       }],
-      [$r("app.string.page_more_import"), $r("app.media.arrow_down_circle"), async () => {
+      [$r("app.string.page_more_import"), $r("app.media.arrow_down_circle"), $r("app.string.import_desc"), async () => {
           if (!this.isProcessing) {
               await this.export();
           } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
       }]
     ];
 
-    private othersEntries: Array<[Resource, Resource, () => void | Promise<void>]> = [
-      [$r("app.string.page_more_clear"), $r("app.media.clean"), async () => {
+    private othersEntries: Array<[Resource, Resource, Resource | null, () => void | Promise<void>]> = [
+      [$r("app.string.page_more_clear"), $r("app.media.clean"), null, async () => {
           if (this.isProcessing) {
               CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
               return;
@@ -227,12 +227,13 @@ struct More {
     }
 
     @Builder
-    EntryGroup(entries: Array<[Resource, Resource, () => void | Promise<void>]>) {
-        ForEach(entries, (item: [Resource, Resource, () => void | Promise<void>]) => {
+    EntryGroup(entries: Array<[Resource, Resource, Resource | null, () => void | Promise<void>]>) {
+        ForEach(entries, (item: [Resource, Resource, Resource | null, () => void | Promise<void>]) => {
             MoreMenuItem({
-                menuText: item[0],
+                menuTitleText: item[0],
+                menuDescText: item[2],
                 menuIcon: item[1]
-            }).onClick(item[2])
+            }).onClick(item[3])
         })
     }
 

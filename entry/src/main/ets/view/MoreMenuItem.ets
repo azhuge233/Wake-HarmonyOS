@@ -4,7 +4,8 @@ import StyleConstants from "../common/constants/StyleConstants";
 export default struct MoreMenuItem {
     private LOG_TAG = "[view/MenuItem]";
 
-    @Param menuText: Resource = $r("app.string.empty");
+    @Param menuTitleText: Resource = $r("app.string.empty");
+    @Param menuDescText: Resource | null = null;
     @Param menuIcon: Resource | string = $r("app.string.empty");
 
     build() {
@@ -14,13 +15,24 @@ export default struct MoreMenuItem {
                 .height(StyleConstants.ICON_HEIGHT)
                 .margin(StyleConstants.MARGIN_TEN)
 
-            Text(this.menuText)
-                .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                .fontWeight(FontWeight.Medium)
-                .align(Alignment.Center)
-                .textAlign(TextAlign.Start)
-                .height(StyleConstants.FIVE_PERCENT)
-                .width(StyleConstants.EIGHTY_PERCENT)
+            Column() {
+                Text(this.menuTitleText)
+                    .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
+                    .fontWeight(FontWeight.Medium)
+                    .align(Alignment.Center)
+                    .textAlign(TextAlign.Start)
+                    .width(StyleConstants.EIGHTY_PERCENT)
+
+                if(this.menuDescText) {
+                    Text(this.menuDescText)
+                        .fontSize(StyleConstants.TEXT_FONT_SIZE_TWELVE)
+                        .fontColor($r("sys.color.font_tertiary"))
+                        .fontWeight(FontWeight.Normal)
+                        .align(Alignment.Center)
+                        .textAlign(TextAlign.Start)
+                        .width(StyleConstants.EIGHTY_PERCENT)
+                }
+            }
         }
         .padding({
             top: StyleConstants.PADDING_FIVE,
