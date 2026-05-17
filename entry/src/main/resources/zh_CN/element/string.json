@@ -343,6 +343,18 @@
 		{
 			"name": "clear_failed",
 			"value": "清除失败，请重试"
+		},
+		{
+			"name": "color_mode_desc",
+			"value": "设置应用颜色模式"
+		},
+		{
+			"name": "import_desc",
+			"value": "从 JSON 文件还原设备"
+		},
+		{
+			"name": "export_desc",
+			"value": "将设备导出为 JSON 文件"
 		}
     ]
 }

@@ -343,6 +343,18 @@
     {
       "name": "clear_failed",
       "value": "Clear failed, please try again"
+    },
+    {
+      "name": "color_mode_desc",
+      "value": "Set app color mode"
+    },
+    {
+      "name": "import_desc",
+      "value": "Restore devices from JSON file"
+    },
+    {
+      "name": "export_desc",
+      "value": "Export devices to JSON file"
     }
   ]
 }
