@@ -4,8 +4,8 @@ import StyleConstants from "../common/constants/StyleConstants";
 export default struct MoreMenuItem {
     private LOG_TAG = "[view/MenuItem]";
 
-    @Param menuTitleText: Resource = $r("app.string.empty");
-    @Param menuDescText: Resource | null = null;
+    @Param menuTitleText: Resource | string = $r("app.string.empty");
+    @Param menuDescText: Resource | string | null = null;
     @Param menuIcon: Resource | string = $r("app.string.empty");
 
     build() {
