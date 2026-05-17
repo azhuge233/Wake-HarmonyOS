@@ -22,7 +22,7 @@ export default class NET {
 
     async refresh(): Promise<void> {
         try {
-            if (wifiManager.isWifiActive()) {
+            if (wifiManager.isWifiActive() && wifiManager.isConnected()) {
                 const ipInfo = wifiManager.getIpInfo();
 
                 const deviceIPNumber = ipInfo.ipAddress;
