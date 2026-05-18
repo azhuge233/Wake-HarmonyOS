@@ -55,7 +55,7 @@ struct More {
       }],
       [$r("app.string.page_more_import"), $r("app.media.arrow_down_circle"), $r("app.string.import_desc"), async () => {
           if (!this.isProcessing) {
-              await this.export();
+              await this.import();
           } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
       }]
     ];
