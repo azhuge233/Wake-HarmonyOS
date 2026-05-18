@@ -7,6 +7,7 @@
     "pages/Edit",
     "pages/SingleDeviceFormEdit",
     "pages/MultipleDevicesFormEdit",
-    "pages/ColorModeSettings"
+    "pages/ColorModeSettings",
+    "pages/NetworkInfo"
   ]
 }

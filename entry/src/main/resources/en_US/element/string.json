@@ -355,6 +355,197 @@
 		{
 			"name": "export_desc",
 			"value": "Export devices to JSON file"
+		},
+		{
+			"name": "network_info_title",
+			"value": "Network Information"
+		},
+		{
+			"name": "network_info_desc",
+			"value": "Show local network information"
+		},
+		{
+			"name": "network_info_is_active",
+			"value": "Wifi On/Off"
+		},
+		{
+			"name": "network_info_is_connected",
+			"value": "Wifi Connected"
+		},
+		{
+			"name": "network_info_is_hotspot",
+			"value": "Wifi is Hotspot"
+		},
+		{
+			"name": "network_info_v4_address",
+			"value": "IPv4 Address"
+		},
+		{
+			"name": "network_info_v4_gateway",
+			"value": "IPv4 Gateway"
+		},
+		{
+			"name": "network_info_v4_netmask",
+			"value": "IPv4 Netmask"
+		},
+		{
+			"name": "network_info_v4_primary_dns",
+			"value": "IPv4 Primary DNS"
+		},
+		{
+			"name": "network_info_v4_secondary_dns",
+			"value": "IPv4 Secondary DNS"
+		},
+		{
+			"name": "network_info_v4_dhcp_server",
+			"value": "IPv4 DHCP Server"
+		},
+		{
+			"name": "network_info_v4_dhcp_lease",
+			"value": "IPv4 DHCP Lease Time"
+		},{
+			"name": "network_info_v6_link_address",
+			"value": "IPv6 Link Address"
+		},
+		{
+			"name": "network_info_v6_global_address",
+			"value": "IPv6 Global Address"
+		},
+		{
+			"name": "network_info_v6_random_global_address",
+			"value": "IPv6 Random Global Address"
+		},
+		{
+			"name": "network_info_v6_unique_address",
+			"value": "IPv6 Unique Address"
+		},
+		{
+			"name": "network_info_v6_random_unique_address",
+			"value": "IPv6 Random Unique Address"
+		},
+		{
+			"name": "network_info_v6_gateway",
+			"value": "IPv6 Gateway"
+		},
+		{
+			"name": "network_info_v6_netmask",
+			"value": "IPv6 Netmask"
+		},
+		{
+			"name": "network_info_v6_primary_dns",
+			"value": "IPv6 Primary DNS"
+		},
+		{
+			"name": "network_info_v6_secondary_dns",
+			"value": "IPv4 Secondary DNS"
+		},
+		{
+			"name": "network_info_on",
+			"value": "On"
+		},
+		{
+			"name": "network_info_off",
+			"value": "Off"
+		},
+		{
+			"name": "network_info_yes",
+			"value": "Yes"
+		},
+		{
+			"name": "network_info_no",
+			"value": "No"
+		},
+		{
+			"name": "network_info_system_default_net",
+			"value": "System Default Net"
+		},
+		{
+			"name": "network_info_no_system_default_net",
+			"value": "None"
+		},
+		{
+			"name": "network_info_default_net_up_speed",
+			"value": "Link Up Bandwidth"
+		},
+		{
+			"name": "network_info_default_net_down_speed",
+			"value": "Link Down Bandwidth"
+		},
+		{
+			"name": "network_info_default_net_cap",
+			"value": "Capabilities"
+		},
+		{
+			"name": "network_info_default_net_bearer_type",
+			"value": "Bearer Type"
+		},
+		{
+			"name": "network_info_default_net_bearer_cellular",
+			"value": "Cellular"
+		},
+		{
+			"name": "network_info_default_net_bearer_wifi",
+			"value": "Wifi"
+		},
+		{
+			"name": "network_info_default_net_bearer_bluetooth",
+			"value": "Bluetooth"
+		},
+		{
+			"name": "network_info_default_net_bearer_ethernet",
+			"value": "Ethernet"
+		},
+		{
+			"name": "network_info_default_net_bearer_vpn",
+			"value": "VPN"
+		},
+		{
+			"name": "network_info_net_cap_mms",
+			"value": "MMS"
+		},
+		{
+			"name": "network_info_net_cap_not_metered",
+			"value": "Not Metered"
+		},
+		{
+			"name": "network_info_net_cap_internet",
+			"value": "Can Access Internet"
+		},
+		{
+			"name": "network_info_net_cap_not_vpn",
+			"value": "Not VPN"
+		},
+		{
+			"name": "network_info_net_cap_validated",
+			"value": "Internet Connection Validated"
+		},
+		{
+			"name": "network_info_net_cap_portal",
+			"value": "Needs Portal Login"
+		},
+		{
+			"name": "network_info_net_cap_check_conn",
+			"value": "Checking Internet Connection"
+		},
+		{
+			"name": "network_info_default_net_link_bandwidth_cannot_measure",
+			"value": "None"
+		},
+		{
+			"name": "network_info_basic_tab_title",
+			"value": "Basic Info"
+		},
+		{
+			"name": "network_info_v4_tab_title",
+			"value": "IPv4 Info"
+		},
+		{
+			"name": "network_info_v6_tab_title",
+			"value": "IPv6 Info"
+		},
+		{
+			"name": "network_info_default_network_tab_title",
+			"value": "Default Network"
 		}
     ]
 }

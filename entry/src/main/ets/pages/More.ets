@@ -43,6 +43,11 @@ struct More {
     ];
 
     private functionEntries: Array<[Resource, Resource, Resource | null, () => void | Promise<void>]> = [
+        [$r("app.string.network_info_title"), $r("app.media.wifi"), $r("app.string.network_info_desc"), async () => {
+            if (!this.isProcessing) {
+                this.pathStack?.pushPath({ name: "NetworkInfo" });
+            } else CommonUtils.alert($r("app.string.import_waiting_message"), this.promptAction);
+        }],
       [$r("app.string.page_more_export"), $r("app.media.arrow_up_circle"), $r("app.string.export_desc"), async () => {
           if (!this.isProcessing) {
               await this.export();

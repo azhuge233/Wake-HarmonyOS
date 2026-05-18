@@ -39,6 +39,14 @@
       "data": {
         "description" : "Color mode settings page"
       }
+    },
+    {
+      "name": "NetworkInfo",
+      "pageSourceFile": "src/main/ets/pages/NetworkInfo.ets",
+      "buildFunction": "NetworkInfoBuilder",
+      "data": {
+        "description" : "Network info page"
+      }
     }
   ]
 }

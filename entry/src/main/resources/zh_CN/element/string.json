@@ -355,6 +355,197 @@
 		{
 			"name": "export_desc",
 			"value": "将设备导出为 JSON 文件"
+		},
+		{
+			"name": "network_info_title",
+			"value": "网络信息"
+		},
+		{
+			"name": "network_info_desc",
+			"value": "显示本机网络信息"
+		},
+		{
+			"name": "network_info_is_active",
+			"value": "Wifi 是否开启"
+		},
+		{
+			"name": "network_info_is_connected",
+			"value": "Wifi 是否连接"
+		},
+		{
+			"name": "network_info_is_hotspot",
+			"value": "Wifi 是否是手机热点"
+		},
+		{
+			"name": "network_info_v4_address",
+			"value": "IPv4 地址"
+		},
+		{
+			"name": "network_info_v4_gateway",
+			"value": "IPv4 网关"
+		},
+		{
+			"name": "network_info_v4_netmask",
+			"value": "IPv4 子网掩码"
+		},
+		{
+			"name": "network_info_v4_primary_dns",
+			"value": "IPv4 首选 DNS"
+		},
+		{
+			"name": "network_info_v4_secondary_dns",
+			"value": "IPv4 备选 DNS"
+		},
+		{
+			"name": "network_info_v4_dhcp_server",
+			"value": "IPv4 DHCP 服务器"
+		},
+		{
+			"name": "network_info_v4_dhcp_lease",
+			"value": "IPv4 DHCP 租期"
+		},{
+			"name": "network_info_v6_link_address",
+			"value": "IPv6 链路地址"
+		},
+		{
+			"name": "network_info_v6_global_address",
+			"value": "IPv6 全局地址"
+		},
+		{
+			"name": "network_info_v6_random_global_address",
+			"value": "IPv6 随机全局地址"
+		},
+		{
+			"name": "network_info_v6_unique_address",
+			"value": "IPv6 唯一本地地址"
+		},
+		{
+			"name": "network_info_v6_random_unique_address",
+			"value": "IPv6 随机唯一本地地址"
+		},
+		{
+			"name": "network_info_v6_gateway",
+			"value": "IPv6 网关"
+		},
+		{
+			"name": "network_info_v6_netmask",
+			"value": "IPv6 网络掩码"
+		},
+		{
+			"name": "network_info_v6_primary_dns",
+			"value": "IPv6 首选 DNS"
+		},
+		{
+			"name": "network_info_v6_secondary_dns",
+			"value": "IPv6 备选 DNS"
+		},
+		{
+			"name": "network_info_on",
+			"value": "是"
+		},
+		{
+			"name": "network_info_off",
+			"value": "否"
+		},
+		{
+			"name": "network_info_yes",
+			"value": "是"
+		},
+		{
+			"name": "network_info_no",
+			"value": "否"
+		},
+		{
+			"name": "network_info_system_default_net",
+			"value": "系统默认网络"
+		},
+		{
+			"name": "network_info_no_system_default_net",
+			"value": "无"
+		},
+		{
+			"name": "network_info_default_net_up_speed",
+			"value": "上行带宽"
+		},
+		{
+			"name": "network_info_default_net_down_speed",
+			"value": "下行带宽"
+		},
+		{
+			"name": "network_info_default_net_cap",
+			"value": "网络能力"
+		},
+		{
+			"name": "network_info_default_net_bearer_type",
+			"value": "网络类型"
+		},
+		{
+			"name": "network_info_default_net_bearer_cellular",
+			"value": "蜂窝网络"
+		},
+		{
+			"name": "network_info_default_net_bearer_wifi",
+			"value": "Wifi"
+		},
+		{
+			"name": "network_info_default_net_bearer_bluetooth",
+			"value": "蓝牙"
+		},
+		{
+			"name": "network_info_default_net_bearer_ethernet",
+			"value": "以太网"
+		},
+		{
+			"name": "network_info_default_net_bearer_vpn",
+			"value": "VPN"
+		},
+		{
+			"name": "network_info_net_cap_mms",
+			"value": "彩信服务"
+		},
+		{
+			"name": "network_info_net_cap_not_metered",
+			"value": "非计费流量"
+		},
+		{
+			"name": "network_info_net_cap_internet",
+			"value": "可访问互联网"
+		},
+		{
+			"name": "network_info_net_cap_not_vpn",
+			"value": "非 VPN"
+		},
+		{
+			"name": "network_info_net_cap_validated",
+			"value": "已验证互联网可访问性"
+		},
+		{
+			"name": "network_info_net_cap_portal",
+			"value": "需要门户登录"
+		},
+		{
+			"name": "network_info_net_cap_check_conn",
+			"value": "正在检测互联网可访问性"
+		},
+		{
+			"name": "network_info_default_net_link_bandwidth_cannot_measure",
+			"value": "无法评估"
+		},
+		{
+			"name": "network_info_basic_tab_title",
+			"value": "基本信息"
+		},
+		{
+			"name": "network_info_v4_tab_title",
+			"value": "IPv4 信息"
+		},
+		{
+			"name": "network_info_v6_tab_title",
+			"value": "IPv6 信息"
+		},
+		{
+			"name": "network_info_default_network_tab_title",
+			"value": "默认网络信息"
 		}
     ]
 }
