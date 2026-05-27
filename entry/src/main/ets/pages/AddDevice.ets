@@ -89,111 +89,116 @@ struct AddDevice {
 
     build() {
         HdsNavDestination() {
-            Column() {
-                TextItem({
-                    inputType: INPUT_TYPE.MAC,
-                    inputId: CommonConstants.MAC_INPUT_ID,
-                    isDefaultFocus: true,
-                    textResource: $r("app.string.add_mac_input_label"),
-                    placeholderResource: $r("app.string.add_mac_input_placeholder"),
-                    text: this.newDevice.MAC,
-                    onInputChange: (value: string | number) => { this.newDevice.MAC = String(value) }
-                })
-                    .width(StyleConstants.EIGHTY_PERCENT)
-
-                TextItem({
-                    inputType: INPUT_TYPE.ALIAS,
-                    inputId: CommonConstants.ALIAS_INPUT_ID,
-                    isDefaultFocus: false,
-                    textResource: $r("app.string.add_alias_input_label"),
-                    placeholderResource: $r("app.string.add_alias_input_placeholder"),
-                    text: this.newDevice.Alias,
-                    onInputChange: (value: string | number) => { this.newDevice.Alias = String(value) }
-                })
-                    .width(StyleConstants.EIGHTY_PERCENT)
-
+            Scroll() {
                 Column() {
-                    Stack() {
-                        Divider()
-                            .strokeWidth(StyleConstants.DIVIDER_STOKE_WIDTH)
-                            .width(StyleConstants.EIGHTY_PERCENT)
-                            .color($r("sys.color.background_emphasize"))
+                    Blank()
+                        .layoutWeight(1)
 
-                        Row() {
-                            Text($r("app.string.divider_label"))
-                                .fontColor($r("sys.color.font_emphasize"))
-                                .fontSize(StyleConstants.DIVIDER_FONT_SIZE)
-                                .margin({
-                                    right: StyleConstants.MARGIN_ONE_PERCENT
-                                })
+                    TextItem({
+                        inputType: INPUT_TYPE.MAC,
+                        inputId: CommonConstants.MAC_INPUT_ID,
+                        isDefaultFocus: true,
+                        textResource: $r("app.string.add_mac_input_label"),
+                        placeholderResource: $r("app.string.add_mac_input_placeholder"),
+                        text: this.newDevice.MAC,
+                        onInputChange: (value: string | number) => { this.newDevice.MAC = String(value) }
+                    })
+                        .width(StyleConstants.EIGHTY_PERCENT)
 
-                            SymbolGlyph($r("sys.symbol.chevron_up"))
-                                .width(StyleConstants.DIVIDER_SYMBOL_SIZE)
-                                .height(StyleConstants.DIVIDER_SYMBOL_SIZE)
-                                .fontColor([$r("sys.color.font_emphasize")])
-                                .margin({
-                                    left: StyleConstants.MARGIN_ONE_PERCENT
-                                })
-                                .rotate({
-                                    angle: this.showAdvanced ? 0 : 180
-                                })
+                    TextItem({
+                        inputType: INPUT_TYPE.ALIAS,
+                        inputId: CommonConstants.ALIAS_INPUT_ID,
+                        isDefaultFocus: false,
+                        textResource: $r("app.string.add_alias_input_label"),
+                        placeholderResource: $r("app.string.add_alias_input_placeholder"),
+                        text: this.newDevice.Alias,
+                        onInputChange: (value: string | number) => { this.newDevice.Alias = String(value) }
+                    })
+                        .width(StyleConstants.EIGHTY_PERCENT)
+
+                    Column() {
+                        Stack() {
+                            Divider()
+                                .strokeWidth(StyleConstants.DIVIDER_STOKE_WIDTH)
+                                .width(StyleConstants.EIGHTY_PERCENT)
+                                .color($r("sys.color.background_emphasize"))
+
+                            Row() {
+                                Text($r("app.string.divider_label"))
+                                    .fontColor($r("sys.color.font_emphasize"))
+                                    .fontSize(StyleConstants.DIVIDER_FONT_SIZE)
+                                    .margin({
+                                        right: StyleConstants.MARGIN_ONE_PERCENT
+                                    })
+
+                                SymbolGlyph($r("sys.symbol.chevron_up"))
+                                    .width(StyleConstants.DIVIDER_SYMBOL_SIZE)
+                                    .height(StyleConstants.DIVIDER_SYMBOL_SIZE)
+                                    .fontColor([$r("sys.color.font_emphasize")])
+                                    .margin({
+                                        left: StyleConstants.MARGIN_ONE_PERCENT
+                                    })
+                                    .rotate({
+                                        angle: this.showAdvanced ? 0 : 180
+                                    })
+                            }
+                            .width(StyleConstants.TWENTY_PERCENT)
+                            .justifyContent(FlexAlign.Center)
+                            .alignItems(VerticalAlign.Center)
+                            .backgroundColor($r("sys.color.background_primary"))
+                            .margin({
+                                left: StyleConstants.ONE_PERCENT
+                            })
+                            .onClick(() => {
+                                this.showAdvanced = !this.showAdvanced;
+                            })
                         }
-                        .width(StyleConstants.TWENTY_PERCENT)
-                        .justifyContent(FlexAlign.Center)
-                        .alignItems(VerticalAlign.Center)
-                        .backgroundColor($r("sys.color.background_primary"))
+                        .alignContent(Alignment.Start)
                         .margin({
-                            left: StyleConstants.ONE_PERCENT
+                            top: StyleConstants.MARGIN_TWO_PERCENT
                         })
-                        .onClick(() => {
-                            this.showAdvanced = !this.showAdvanced;
-                        })
-                    }
-                    .alignContent(Alignment.Start)
-                    .margin({
-                        top: StyleConstants.MARGIN_TWO_PERCENT
-                    })
 
-                    if (this.showAdvanced) {
-                        TextItem({
-                            inputType: INPUT_TYPE.ADDRESS,
-                            inputId: CommonConstants.ADDRESS_INPUT_ID,
-                            isDefaultFocus: false,
-                            textResource: $r("app.string.add_address_input_label"),
-                            placeholderResource: $r("app.string.add_address_input_placeholder"),
-                            text: this.newDevice.Address,
-                            onInputChange: (value: string | number) => { this.newDevice.Address = String(value) }
-                        })
-                            .width(StyleConstants.EIGHTY_PERCENT)
+                        if(this.showAdvanced) {
+                            TextItem({
+                                inputType: INPUT_TYPE.ADDRESS,
+                                inputId: CommonConstants.ADDRESS_INPUT_ID,
+                                isDefaultFocus: false,
+                                textResource: $r("app.string.add_address_input_label"),
+                                placeholderResource: $r("app.string.add_address_input_placeholder"),
+                                text: this.newDevice.Address,
+                                onInputChange: (value: string | number) => { this.newDevice.Address = String(value) }
+                            })
+                                .width(StyleConstants.EIGHTY_PERCENT)
 
-                        TextItem({
-                            inputType: INPUT_TYPE.PORT,
-                            inputId: CommonConstants.PORT_INPUT_ID,
-                            isDefaultFocus: false,
-                            textResource: $r("app.string.add_port_input_label"),
-                            placeholderResource: $r("app.string.add_port_input_placeholder"),
-                            text: this.newDevice.Port,
-                            onInputChange: (value: string | number) => { this.newDevice.Port = Number(value) }
-                        })
-                            .width(StyleConstants.EIGHTY_PERCENT)
+                            TextItem({
+                                inputType: INPUT_TYPE.PORT,
+                                inputId: CommonConstants.PORT_INPUT_ID,
+                                isDefaultFocus: false,
+                                textResource: $r("app.string.add_port_input_label"),
+                                placeholderResource: $r("app.string.add_port_input_placeholder"),
+                                text: this.newDevice.Port,
+                                onInputChange: (value: string | number) => { this.newDevice.Port = Number(value) }
+                            })
+                                .width(StyleConstants.EIGHTY_PERCENT)
+                        }
                     }
+                    .alignItems(HorizontalAlign.Center)
+
+                    Button($r("app.string.button_add_machine_confirm"))
+                        .enabled(!CommonUtils.isStringNullOrEmpty(this.newDevice.MAC.trim()) && !CommonUtils.isStringNullOrEmpty(this.newDevice.Alias.trim()))
+                        .width(StyleConstants.SEVENTY_PERCENT)
+                        .margin({
+                            top: StyleConstants.MARGIN_TEN_PERCENT
+                        })
+                        .onClick(async () => {
+                            await this.saveDevice();
+                        })
+
+                    Blank()
+                        .layoutWeight(1)
                 }
-                .alignItems(HorizontalAlign.Center)
-
-
-                Button($r("app.string.button_add_machine_confirm"))
-                    .enabled(!CommonUtils.isStringNullOrEmpty(this.newDevice.MAC.trim()) && !CommonUtils.isStringNullOrEmpty(this.newDevice.Alias.trim()))
-                    .width(StyleConstants.SEVENTY_PERCENT)
-                    .margin({
-                        top: StyleConstants.MARGIN_TEN_PERCENT
-                    })
-                    .onClick(async () => {
-                        await this.saveDevice();
-                    })
             }
-            .height(StyleConstants.FULL_PERCENT)
-            .alignItems(HorizontalAlign.Center)
-            .justifyContent(FlexAlign.Center)
+            .width(StyleConstants.FULL_PERCENT)
         }
         .titleBar({
             content: {
