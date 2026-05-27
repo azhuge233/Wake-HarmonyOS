@@ -219,7 +219,7 @@ struct Index {
                     .width(StyleConstants.SIXTY_PERCENT)
                     .height(StyleConstants.SIXTY_PERCENT)
             }
-            .backgroundColor($r("app.color.red"))
+            .backgroundColor(Color.Red)
             .type(ButtonType.Circle)
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
