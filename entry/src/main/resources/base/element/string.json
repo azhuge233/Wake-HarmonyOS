@@ -547,6 +547,22 @@
     {
       "name": "network_info_default_network_tab_title",
       "value": "Default Network"
+    },
+    {
+      "name": "deletion_dialog_title",
+      "value": "Delete Device"
+    },
+    {
+      "name": "deletion_dialog_message",
+      "value": "Delete %s?"
+    },
+    {
+      "name": "deletion_dialog_confirm",
+      "value": "Delete"
+    },
+    {
+      "name": "deletion_dialog_cancel",
+      "value": "Cancel"
     }
   ]
 }

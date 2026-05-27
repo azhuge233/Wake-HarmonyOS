@@ -546,6 +546,22 @@
 		{
 			"name": "network_info_default_network_tab_title",
 			"value": "默认网络信息"
+		},
+		{
+			"name": "deletion_dialog_title",
+			"value": "删除设备"
+		},
+		{
+			"name": "deletion_dialog_message",
+			"value": "删除 %s?"
+		},
+		{
+			"name": "deletion_dialog_confirm",
+			"value": "删除"
+		},
+		{
+			"name": "deletion_dialog_cancel",
+			"value": "取消"
 		}
     ]
 }
