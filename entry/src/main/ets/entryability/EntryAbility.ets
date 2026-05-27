@@ -1,5 +1,5 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
-import { AppStorageV2, window } from '@kit.ArkUI';
+import { AppStorageV2, window, KeyboardAvoidMode } from '@kit.ArkUI';
 
 import { DB } from '../common/utils/DB';
 import Logger from '../common/utils/Logger';
@@ -87,6 +87,12 @@ export default class EntryAbility extends UIAbility {
     private loadContent(): void {
         if(this.currentWindowStage) {
             this.currentWindowStage.loadContent(this.targetPage, (err) => {
+                try {
+                    this.currentWindowStage?.getMainWindowSync().getUIContext().setKeyboardAvoidMode(KeyboardAvoidMode.RESIZE_WITH_CARET);
+                } catch (err) {
+                    Logger.error(this.LOG_TAG, `设置软键盘避让失败, ${err}`);
+                }
+
                 if (err.code) {
                     Logger.error(this.LOG_TAG, `loadContent() 加载 ${this.targetPage} 失败 ${JSON.stringify(err)}`,);
                     return;

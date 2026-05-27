@@ -1,4 +1,3 @@
-import { KeyboardAvoidMode } from '@kit.ArkUI';
 import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
 
 import Logger from '../common/utils/Logger';
@@ -30,11 +29,6 @@ struct AddDevice {
     private deviceList: DeviceListViewModel = new DeviceListViewModel();
 
     pathStack: NavPathStack | undefined = undefined;
-
-    aboutToAppear() {
-        // 设置软键盘避让
-        this.uiContext.setKeyboardAvoidMode(KeyboardAvoidMode.RESIZE);
-    }
 
     clearInput() {
         this.newDevice.MAC = '';
