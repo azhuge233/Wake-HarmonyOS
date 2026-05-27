@@ -43,7 +43,7 @@ export default struct TextItem {
                     .id(this.inputId)
                     .defaultFocus(this.isDefaultFocus)
                     .width(StyleConstants.EIGHTY_PERCENT)
-                    .placeholderColor($r("app.color.input_placeholder_grey"))
+                    .placeholderColor($r("sys.color.font_tertiary"))
                     .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
                     .maxLength(this.maxLength)
                     .type(this.inputType === INPUT_TYPE.PORT ? InputType.Number : InputType.Normal)

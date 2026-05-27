@@ -5,44 +5,8 @@
       "value": "#1b68f6"
     },
     {
-      "name": "white",
-      "value": "#FFFFFF"
-    },
-    {
-      "name": "input_placeholder_grey",
-      "value": "#6C6C6C"
-    },
-    {
-      "name": "banner_grey",
-      "value": "#CCCCCC"
-    },
-    {
-      "name": "lighter_black",
-      "value": "#111111"
-    },
-    {
-      "name": "black",
-      "value": "#000000"
-    },
-    {
-      "name": "red",
-      "value": "#FF0000"
-    },
-    {
       "name": "green",
       "value": "#00C000"
-    },
-    {
-      "name": "main_background_color",
-      "value": "#F1F3F5"
-    },
-    {
-      "name": "button_background_color",
-      "value": "#007DFF"
-    },
-    {
-      "name": "placeholder_color",
-      "value": "#BDC1C4"
     },
     {
       "name": "background_transparent",
