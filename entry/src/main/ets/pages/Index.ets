@@ -223,8 +223,28 @@ struct Index {
             .type(ButtonType.Circle)
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
-            .onClick(() => {
-                this.deviceList.deleteDevice(device.toDevice());
+            .onClick(async () => {
+                try {
+                    const result = await this.promptAction.showDialog({
+                        title: $r("app.string.deletion_dialog_title"),
+                        message: $r("app.string.deletion_dialog_message", device.Alias),
+                        buttons: [
+                            {
+                                text: $r("app.string.deletion_dialog_confirm"),
+                                color: $r("sys.color.warning")
+                            },
+                            {
+                                text: $r("app.string.deletion_dialog_cancel"),
+                                color: $r("sys.color.font_primary")
+                            }
+                        ]
+                    });
+
+                    if(result.index === 0) this.deviceList.deleteDevice(device.toDevice());
+                    else Logger.warn(this.LOG_TAG, `取消删除`);
+                } catch (err) {
+                    Logger.error(this.LOG_TAG, `删除设备失败, ${err}`);
+                }
             })
         }
         .margin({
