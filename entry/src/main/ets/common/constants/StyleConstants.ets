@@ -40,6 +40,7 @@ class StyleConstants {
     public readonly MARGIN_THREE = 3;
     public readonly MARGIN_TWO = 2;
 
+    public readonly PADDING_THIRTY = 30;
     public readonly PADDING_SIXTEEN = 16;
     public readonly PADDING_FIFTEEN = 15;
     public readonly PADDING_TEN = 10;
