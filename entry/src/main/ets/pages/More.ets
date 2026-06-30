@@ -161,6 +161,11 @@ struct More {
             if (result.index === 0) await this.import();
             else Logger.warn(this.LOG_TAG, "导入已取消");
         } catch (err) {
+            if (err && (err.code === 100006 || err.message?.toLowerCase().includes('cancel'))) {
+                Logger.warn(this.LOG_TAG, "用户取消对话框");
+                return;
+            }
+
             Logger.error(this.LOG_TAG, `导入弹窗失败, ${err}`);
         }
     }
@@ -190,6 +195,11 @@ struct More {
                 } else CommonUtils.alert($r("app.string.clear_failed"), this.promptAction);
             } else Logger.warn(this.LOG_TAG, "清除已取消");
         } catch (err) {
+            if (err && (err.code === 100006 || err.message?.toLowerCase().includes('cancel'))) {
+                Logger.warn(this.LOG_TAG, "用户取消对话框");
+                return;
+            }
+
             Logger.error(this.LOG_TAG, `清除失败, ${err}`);
             CommonUtils.alert($r("app.string.clear_failed"), this.promptAction);
         }
