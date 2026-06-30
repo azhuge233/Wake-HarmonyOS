@@ -196,19 +196,32 @@
     <div id="zhContent" class="lang-content active">
         <h1>📘 帮助中心</h1>
         <p>欢迎使用本应用！以下是常见问题与操作指引</p>
-        <h3>使用说明</h3>
+        <h2>使用说明</h2>
         <p>
             本应用仅支持典型的魔法数据包网络唤醒。<br/>
             应用会在 Wi-Fi 网络发生变化时自动刷新广播地址，当自动计算的广播地址出现异常，可以点击主界面的刷新按钮手动刷新广播地址。<br/>
             广播地址根据当前设备的 Wi-Fi IPv4 地址和子网掩码于<strong>本地计算</strong>。
         </p>
-        <h4>目标地址判断逻辑</h4>
+        <h3>设备添加</h3>
+        <p>
+            应用支持手动输入信息和邻居表（即 ARP/NDP 表）添加设备。<br/>
+            设备的邻居表通过 <b><code><a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references/js-apis-net-connection#connectiongetipneightable22" target="_blank">connection.getIpNeighTable()</a></code></b> API 获得，
+            该 API 需要受限权限 <b><code><a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/restricted-permissions#ohospermissionget_ip_mac_info" target="_blank">ohos.permission.GET_IP_MAC_INFO</a></code></b>，
+            安装应用时需确保账户添加了正确的权限 Profile。<br/>
+        </p>
+        <p style="padding-left: 20px; padding-right: 20px;">
+            <small>
+                在【<a href="https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/">AppGallery Connect</a> -> 证书、App ID 和 Profile -> Profile】页面添加 Profile。<br />
+                调试 Profile 有效期只有 7 天，长期 Profile 需要上架 AppGallery 时申请。
+            </small>
+        </p>
+        <h3>目标地址判断逻辑</h3>
         <ul>
             <li>当没有手动指定发送地址时，应用会默认将数据包发送至本地 IPv4 广播地址。</li>
             <li>发送地址设定为 IPv4 或 IPv6 时，应用会将数据包发送至指定地址。</li>
             <li>发送地址设定为域名时，应用会先尝试使用系统 DNS 解析域名，然后将数据包发送至解析到的地址。</li>
         </ul>
-        <h4>关于地址和端口设置</h4>
+        <h3>关于地址和端口设置</h3>
         <ul>
             <li>如果只设定了端口而没有设定地址，应用会忽略端口设置。</li>
             <li>手动设定 IPv4 地址时，请确保所处网络环境配置了正确的静态 ARP 绑定。</li>
@@ -226,19 +239,31 @@
     <div id="enContent" class="lang-content">
         <h1>📘 Help Center</h1>
         <p>Welcome to the app! Here are some frequently asked questions and how-to guides:</p>
-        <h3>User Guide</h3>
+        <h2>User Guide</h2>
         <p>
             This app only supports standard Magic Packet network wake-up.<br/>
             The app automatically refreshes the broadcast address when the Wi-Fi network changes. If the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main screen.<br/>
             The broadcast address is <strong>calculated locally</strong> based on the current device's Wi-Fi IPv4 address and subnet mask.
         </p>
-        <h4>Target Address Resolution Logic</h4>
+        <h3>Device Addition</h3>
+        <p>
+            The application supports adding devices by manually entering information or via the neighbor table (i.e., ARP/NDP table).<br/>
+            The device's neighbor table is obtained through the <b><code><a href="https://developer.huawei.com/consumer/en/doc/harmonyos-references/js-apis-net-connection#connectiongetipneightable22" target="_blank">connection.getIpNeighTable()</a></code></b> API,
+            which requires the restricted permission <b><code><a href="https://developer.huawei.com/consumer/en/doc/harmonyos-guides/restricted-permissions#ohospermissionget_ip_mac_info" target="_blank">ohos.permission.GET_IP_MAC_INFO</a></code></b>.
+            When installing the application, ensure that the correct permission Profile has been added to your account.<br/>
+        </p>
+        <p style="padding-left: 20px; padding-right: 20px;">
+            <small>
+                Debug Profiles are only valid for 7 days; a long-term Profile requires applying when publishing to AppGallery.
+            </small>
+        </p>
+        <h3>Target Address Resolution Logic</h3>
         <ul>
             <li>When no target address is manually specified, the app will send the packet to the local IPv4 broadcast address by default.</li>
             <li>If the target address is set to an IPv4 or IPv6 address, the app will send the packet to that specific address.</li>
             <li>If the target address is set to a domain name, the app will first resolve it using the system DNS, then send the packet to the resolved address.</li>
         </ul>
-        <h4>About Address and Port Settings</h4>
+        <h3>About Address and Port Settings</h3>
         <ul>
             <li>If a port is set but without an address, the app will ignore the port setting.</li>
             <li>When manually setting an IPv4 address, please ensure that the network environment has the correct static ARP binding configured.</li>
