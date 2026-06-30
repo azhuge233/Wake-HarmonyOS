@@ -47,6 +47,14 @@
       "data": {
         "description" : "Network info page"
       }
+    },
+    {
+      "name": "InputDialog",
+      "pageSourceFile": "src/main/ets/view/InputDialog.ets",
+      "buildFunction": "InputDialogBuilder",
+      "data": {
+        "description" : "NeighTable devices input dialog"
+      }
     }
   ]
 }
