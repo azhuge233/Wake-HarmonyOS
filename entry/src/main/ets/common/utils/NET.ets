@@ -104,6 +104,23 @@ export default class NET {
         }
     }
 
+    async getIPNeighTable(): Promise<connection.NetIpMacInfo[] | null> {
+        try {
+            const table = await connection.getIpNeighTable();
+
+            Logger.debug(this.LOG_TAG, `邻居表原始长度：${table.length}`);
+
+            const filteredEmptyMAC = table.filter(entry => !CommonUtils.isStringNullOrEmpty(entry.macAddress));
+
+            Logger.debug(this.LOG_TAG, `邻居表过滤后长度：${filteredEmptyMAC.length}`)
+
+            return filteredEmptyMAC;
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `获取邻居表错误: ${JSON.stringify(err)}`);
+            return null;
+        }
+    }
+
     private async udpBind() {
         try {
             const stateV4 = await this.UDPv4.getState();
