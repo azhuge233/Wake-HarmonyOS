@@ -614,6 +614,10 @@
 		{
 			"name": "add_neigh_table_device_dialog_ignore_ip_desc",
 			"value": "Only the device MAC address will be recorded. Magic packets will be sent to the broadcast address (can be modified later by editing the device)."
+		},
+		{
+			"name": "neigh_table_loading_message",
+			"value": "Loading, please wait..."
 		}
     ]
 }

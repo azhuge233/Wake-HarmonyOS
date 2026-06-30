@@ -186,7 +186,7 @@ struct AddDevice {
                         status: ProgressStatus.LOADING
                     })
 
-                Text($r("app.string.import_waiting_message"))
+                Text($r("app.string.neigh_table_loading_message"))
                     .margin({ top: StyleConstants.MARGIN_TWENTY })
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
                     .fontColor($r("sys.color.font_primary"))

@@ -614,6 +614,10 @@
 		{
 			"name": "add_neigh_table_device_dialog_ignore_ip_desc",
 			"value": "仅记录设备 MAC 地址，魔术包将被发送到广播地址 (可通过编辑设备修改)"
+		},
+		{
+			"name": "neigh_table_loading_message",
+			"value": "正在加载，请稍候..."
 		}
     ]
 }
