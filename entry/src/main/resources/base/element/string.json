@@ -149,6 +149,10 @@
       "value": "For card(form) interaction"
     },
     {
+      "name": "ip_mac_permission_reason",
+      "value": "For IP NeighTable"
+    },
+    {
       "name": "button_confirm_label",
       "value": "Confirm"
     },
@@ -563,6 +567,54 @@
     {
       "name": "deletion_dialog_cancel",
       "value": "Cancel"
+    },
+    {
+      "name": "manual_add_device_tab_title",
+      "value": "Manual"
+    },
+    {
+      "name": "neigh_table_add_device_tab_title",
+      "value": "Neighbor table"
+    },
+    {
+      "name": "neigh_table_load_button_label",
+      "value": "Load"
+    },
+    {
+      "name": "neigh_table_reload_button_label",
+      "value": "Reload"
+    },
+    {
+      "name": "load_neigh_table_failed",
+      "value": "Load neigh table failed!"
+    },
+    {
+      "name": "neigh_table_empty",
+      "value": "Empty neigh table"
+    },
+    {
+      "name": "neigh_table_press_load_label",
+      "value": "Tap the Load button below to load the neighbor table"
+    },
+    {
+      "name": "neigh_table_device_tile_interface_label",
+      "value": "Interface: %s"
+    },
+    {
+      "name": "add_neigh_table_device_dialog_title",
+      "value": "Complete neighbor table device information"
+    },
+    {
+      "name": "neigh_table_device_total_label",
+      "value": "Total %d devices"
+    },
+    {
+      "name": "add_neigh_table_device_dialog_ignore_ip",
+      "value": "Only the device MAC address will be recorded. Magic packets will be sent to the broadcast address (can be modified later by editing the device)."
+    },
+    {
+      "name": "add_neigh_table_device_dialog_ignore_ip_desc",
+      "value": "Complete neighbor table device information"
     }
   ]
 }

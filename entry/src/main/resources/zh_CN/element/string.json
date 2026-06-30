@@ -149,6 +149,10 @@
 			"value": "用于桌面卡片互动"
 		},
 		{
+			"name": "ip_mac_permission_reason",
+			"value": "用于获取邻居表"
+		},
+		{
 			"name": "button_confirm_label",
 			"value": "确认"
 		},
@@ -562,6 +566,54 @@
 		{
 			"name": "deletion_dialog_cancel",
 			"value": "取消"
+		},
+		{
+			"name": "manual_add_device_tab_title",
+			"value": "手动添加"
+		},
+		{
+			"name": "neigh_table_add_device_tab_title",
+			"value": "邻居表"
+		},
+		{
+			"name": "neigh_table_load_button_label",
+			"value": "加载"
+		},
+		{
+			"name": "neigh_table_reload_button_label",
+			"value": "重新加载"
+		},
+		{
+			"name": "load_neigh_table_failed",
+			"value": "邻居表加载失败!"
+		},
+		{
+			"name": "neigh_table_empty",
+			"value": "邻居表为空"
+		},
+		{
+			"name": "neigh_table_press_load_label",
+			"value": "点击下方的加载按钮载入邻居表"
+		},
+		{
+			"name": "neigh_table_device_tile_interface_label",
+			"value": "网络接口: %s"
+		},
+		{
+			"name": "add_neigh_table_device_dialog_title",
+			"value": "完善邻居表设备信息"
+		},
+		{
+			"name": "neigh_table_device_total_label",
+			"value": "共 %d 台设备"
+		},
+		{
+			"name": "add_neigh_table_device_dialog_ignore_ip",
+			"value": "忽略设备 IP 地址"
+		},
+		{
+			"name": "add_neigh_table_device_dialog_ignore_ip_desc",
+			"value": "仅记录设备 MAC 地址，魔术包将被发送到广播地址 (可通过编辑设备修改)"
 		}
     ]
 }
