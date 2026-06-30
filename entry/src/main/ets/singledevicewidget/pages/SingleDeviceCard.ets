@@ -90,7 +90,7 @@ struct SingleDeviceCard {
                         .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHT)
                         .fontWeight(FontWeight.Medium)
                         .fontColor(Color.White)
-                        .maxLines(1)
+                        .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
                         .textOverflow({ overflow: TextOverflow.Clip })
                         .margin({
                             bottom: StyleConstants.MARGIN_FIVE,
@@ -102,7 +102,7 @@ struct SingleDeviceCard {
                     Text(this.alias)
                         .fontWeight(FontWeight.Medium)
                         .fontColor(Color.White)
-                        .maxLines(1)
+                        .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
                         .textOverflow({ overflow: TextOverflow.Ellipsis })
                 }
             }
