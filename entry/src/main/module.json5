@@ -120,6 +120,10 @@
       {
         "name": "ohos.permission.KEEP_BACKGROUND_RUNNING",
         "reason": "$string:background_permission_reason"
+      },
+      {
+        "name": "ohos.permission.GET_IP_MAC_INFO",
+        "reason": "$string:ip_mac_permission_reason"
       }
     ]
   }
