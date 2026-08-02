@@ -9,8 +9,8 @@ import MultipleDevicesFormData from '../model/MultipleDevicesFormData';
 import CommonConstants from '../../common/constants/CommonConstants';
 import WidgetDevice from '../model/WidgetDevice';
 
-export default class SingleDeviceWidgetEntryAbility extends UIAbility {
-    private LOG_TAG = "[SingleDeviceWidgetEntryAbility]";
+export default class MultipleDevicesWidgetEntryAbility extends UIAbility {
+    private LOG_TAG = "[MultipleDevicesWidgetEntryAbility]";
 
     private db = DB.getInstance();
     private net = new NET();
