@@ -16,6 +16,7 @@
       "isDynamic": true,
       "isDefault": false,
       "updateEnabled": true,
+      "formConfigAbility": "ability://MultipleDevicesEditEntryAbility",
       "scheduledUpdateTime": "10:30",
       "updateDuration": 1,
       "defaultDimension": "2*4",
