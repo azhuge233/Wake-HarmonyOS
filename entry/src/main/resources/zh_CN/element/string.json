@@ -45,6 +45,13 @@
 			"value": "多设备卡片"
 		},
 		{
+			"name": "SingleDeviceEditEntryAbility_desc",
+			"value": "单设备卡片编辑能力"
+		},
+		{
+			"name": "SingleDeviceEditEntryAbility_label",
+			"value": "单设备卡片编辑"
+		},
 			"name": "SingleDeviceWidget_desc",
 			"value": "单设备卡片"
 		},

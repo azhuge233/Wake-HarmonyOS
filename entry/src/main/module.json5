@@ -58,6 +58,18 @@
         "startWindowIcon": "$media:startIcon",
         "startWindowBackground": "$color:start_window_background",
         "launchType": "multiton"
+      },
+      {
+        "name": 'SingleDeviceEditEntryAbility',
+        "srcEntry": "./ets/singledevicewidget/singledeviceeditentryability/singledeviceeditentryability.ets",
+        "description": '$string:SingleDeviceEditEntryAbility_desc',
+        "icon": "$media:app_icon_layered",
+        "label": "$string:SingleDeviceEditEntryAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "launchType": "multiton",
+        "removeMissionAfterTerminate": true
+      },
       }
     ],
     "extensionAbilities": [

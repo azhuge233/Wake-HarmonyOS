@@ -45,6 +45,13 @@
 			"value": "Multiple devices widget"
 		},
 		{
+			"name": "SingleDeviceEditEntryAbility_desc",
+			"value": "Single device widget edit ability"
+		},
+		{
+			"name": "SingleDeviceEditEntryAbility_label",
+			"value": "Single device widget edit"
+		},
 			"name": "SingleDeviceWidget_desc",
 			"value": "Single device widget"
 		},

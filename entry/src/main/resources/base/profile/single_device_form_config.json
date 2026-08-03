@@ -16,6 +16,7 @@
       "isDynamic": true,
       "isDefault": true,
       "updateEnabled": true,
+      "formConfigAbility": "ability://SingleDeviceEditEntryAbility",
       "scheduledUpdateTime": "10:30",
       "updateDuration": 1,
       "defaultDimension": "1*2",
