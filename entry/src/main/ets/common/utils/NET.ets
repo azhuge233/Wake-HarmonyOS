@@ -2,20 +2,21 @@ import wifiManager from '@ohos.wifiManager';
 import { socket, connection } from '@kit.NetworkKit';
 import { buffer } from '@kit.ArkTS';
 
-import Logger from "./Logger";
-import CommonUtils from './CommonUtils';
+import { Logger } from "./Logger";
+import { CommonUtils } from './CommonUtils';
 
-export default class NET {
+export class NET {
     private LOG_TAG = '[NET]';
 
     ipv4Broadcast: string = '';
     hasBroadcastIP: boolean = false;
+    neighTablePermissionDenied: boolean = false;
 
     private ipv4: string = '';
     private ipv4NetMask: string = '';
 
-    private UDPv4: socket.UDPSocket = socket.constructUDPSocketInstance();
-    private UDPv6: socket.UDPSocket = socket.constructUDPSocketInstance();
+    private UDPv4: socket.UDPSocket | null = null;
+    private UDPv6: socket.UDPSocket | null = null;
 
     private NoNetworkString = '󰚑';
 
@@ -92,6 +93,7 @@ export default class NET {
             await this.udpBind();
 
             const socketInstance = family === 2 ? this.UDPv6 : this.UDPv4;
+            if (!socketInstance) throw new Error('UDP socket 未初始化');
 
             await socketInstance.send(sendOptions);
             Logger.debug(this.LOG_TAG, `已向 ${finalAddress}:${finalPort} 发送魔法包，协议: ${family}`);
@@ -105,6 +107,8 @@ export default class NET {
     }
 
     async getIPNeighTable(): Promise<connection.NetIpMacInfo[] | null> {
+        this.neighTablePermissionDenied = false;
+
         try {
             const table = await connection.getIpNeighTable();
 
@@ -116,14 +120,22 @@ export default class NET {
 
             return filteredEmptyMAC;
         } catch (err) {
+            const businessErr = err as BusinessError;
+            this.neighTablePermissionDenied = businessErr.code === 201;
             Logger.error(this.LOG_TAG, `获取邻居表错误: ${JSON.stringify(err)}`);
             return null;
         }
     }
 
     private async udpBind() {
+        let udpV4 = this.UDPv4;
+        if (!udpV4) {
+            udpV4 = socket.constructUDPSocketInstance();
+            this.UDPv4 = udpV4;
+        }
+
         try {
-            const stateV4 = await this.UDPv4.getState();
+            const stateV4 = await udpV4.getState();
 
             Logger.debug(this.LOG_TAG, `UDPv4 状态: ${JSON.stringify(stateV4)}`);
 
@@ -134,10 +146,10 @@ export default class NET {
                 };
 
                 try {
-                    await this.UDPv4.bind(bindV4);
+                    await udpV4.bind(bindV4);
                     Logger.debug(this.LOG_TAG, '成功绑定 UDPv4 端口!');
 
-                    await this.UDPv4.setExtraOptions({ broadcast: true });
+                    await udpV4.setExtraOptions({ broadcast: true });
                     Logger.debug(this.LOG_TAG, `成功设置 UDPv4 广播参数`);
                 } catch (err) {
                     Logger.error(this.LOG_TAG, `UDPv4 端口绑定失败, ${JSON.stringify(err)}`);
@@ -147,8 +159,14 @@ export default class NET {
             Logger.error(this.LOG_TAG, `无法获取 UDPv4 状态`);
         }
 
+        let udpV6 = this.UDPv6;
+        if (!udpV6) {
+            udpV6 = socket.constructUDPSocketInstance();
+            this.UDPv6 = udpV6;
+        }
+
         try {
-            const stateV6 = await this.UDPv6.getState();
+            const stateV6 = await udpV6.getState();
 
             Logger.debug(this.LOG_TAG, `UDPv6 状态: ${JSON.stringify(stateV6)}`);
 
@@ -159,7 +177,7 @@ export default class NET {
                 };
 
                 try {
-                    await this.UDPv6.bind(bindV6)
+                    await udpV6.bind(bindV6)
                     Logger.debug(this.LOG_TAG, '成功绑定 UDPv6 端口');
                 } catch (err) {
                     Logger.error(this.LOG_TAG, `UDPv6 端口绑定失败, ${JSON.stringify(err)}`);
@@ -171,16 +189,33 @@ export default class NET {
     }
 
     private async udpReset() {
-        try {
-            await this.UDPv4.close();
-            await this.UDPv6.close();
+        const udpV4 = this.UDPv4;
+        const udpV6 = this.UDPv6;
+        this.UDPv4 = null;
+        this.UDPv6 = null;
 
-            this.UDPv4 = socket.constructUDPSocketInstance();
-            this.UDPv6 = socket.constructUDPSocketInstance();
-            Logger.debug(this.LOG_TAG, `已重置 UDP`);
-        } catch (err) {
-            Logger.error(this.LOG_TAG, `UDP 重置失败, ${err}`);
+        if (udpV4) {
+            try {
+                await udpV4.close();
+            } catch (err) {
+                Logger.error(this.LOG_TAG, `UDPv4 关闭失败, ${err}`);
+            }
         }
+
+        if (udpV6) {
+            try {
+                await udpV6.close();
+            } catch (err) {
+                Logger.error(this.LOG_TAG, `UDPv6 关闭失败, ${err}`);
+            }
+        }
+
+        Logger.debug(this.LOG_TAG, `已重置 UDP`);
+    }
+
+    // 页面/Ability 退出时释放 socket；下次 refresh() 或 send() 会懒创建
+    async close(): Promise<void> {
+        await this.udpReset();
     }
 
     private calcBroadcastIP(ip: number, netmask: number): string {

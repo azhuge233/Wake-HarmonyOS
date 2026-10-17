@@ -1,4 +1,4 @@
-export default class Device {
+export class Device {
     ID: number = -1;
     MAC: string = 'FF:FF:FF:FF:FF:FF';
     Alias: string = 'Dummy';

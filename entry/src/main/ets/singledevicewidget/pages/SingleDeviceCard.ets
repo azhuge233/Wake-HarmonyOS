@@ -1,5 +1,5 @@
-import StyleConstants from '../../common/constants/StyleConstants';
-import CommonConstants from '../../common/constants/CommonConstants'
+import { StyleConstants } from '../../common/constants/StyleConstants';
+import { CommonConstants } from '../../common/constants/CommonConstants'
 
 let storage = new LocalStorage();
 
@@ -10,11 +10,11 @@ struct SingleDeviceCard {
     @LocalStorageProp('isInitialized') private isInitialized: boolean = false;
     @LocalStorageProp('isRunning') private isRunning: boolean = false;
 
-    @LocalStorageProp('deviceID') private deviceID: string | null = null;
+    @LocalStorageProp('deviceID') private deviceID: number | null = null;
     @LocalStorageProp('alias') private alias: string | null = null;
     @LocalStorageProp('mac') private mac: string | null = null;
     @LocalStorageProp('address') private address: string | null = null;
-    @LocalStorageProp('port') private port: string | null = null;
+    @LocalStorageProp('port') private port: number | null = null;
 
     @LocalStorageProp('runResult') private runResult: string = '';
 
@@ -35,10 +35,6 @@ struct SingleDeviceCard {
                 data: data
             }
         });
-    }
-
-    aboutToAppear(): void {
-        this.sendMessageAction(CommonConstants.FormMessage_Restore, 'aboutToAppear()');
     }
 
     @Builder
@@ -99,7 +95,7 @@ struct SingleDeviceCard {
                 }
             } else {
                 Column() {
-                    Text(this.alias)
+                    Text(this.alias ?? '')
                         .fontWeight(FontWeight.Medium)
                         .fontColor(Color.White)
                         .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
@@ -129,7 +125,7 @@ struct SingleDeviceCard {
         .height(StyleConstants.FULL_PERCENT)
         .width(StyleConstants.FULL_PERCENT)
         .onAppear(() => {
-            this.sendMessageAction(CommonConstants.FormMessage_Restore, 'Init() Component');
+            this.sendMessageAction(CommonConstants.FORM_MESSAGE_RESTORE, 'Init() Component');
         })
         .onClick(() => {
             postCardAction(this, {
@@ -167,13 +163,13 @@ struct SingleDeviceCard {
         .onClick(() => {
             if(!this.isRunning) {
                 if(this.runResult !== '') { // 如果正在显示执行结果，恢复卡片显示
-                    this.sendMessageAction(CommonConstants.FormMessage_Restore, 'MainContent() Component');
+                    this.sendMessageAction(CommonConstants.FORM_MESSAGE_RESTORE, 'MainContent() Component');
                 } else if (this.isInitialized) { // 正常显示状态，执行指令
                     postCardAction(this, {
                         action: this.ActionTypeCall,
                         abilityName: this.WidgetEntryAbilityName,
                         params: {
-                            method: CommonConstants.FormCall_Run,
+                            method: CommonConstants.FORM_CALL_RUN,
                             formID: this.formID,
                             deviceID: this.deviceID,
                             alias: this.alias,

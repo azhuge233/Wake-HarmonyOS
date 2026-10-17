@@ -3,13 +3,14 @@ import { hdsMaterial, HdsNavigation, HdsNavigationMenuContentOptions, ScrollEffe
 import { connection } from "@kit.NetworkKit";
 
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
-import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
-import Logger from '../common/utils/Logger';
-import NET from '../common/utils/NET';
-import StyleConstants from '../common/constants/StyleConstants';
-import CommonUtils from '../common/utils/CommonUtils';
-import CommonConstants from '../common/constants/CommonConstants';
+import { DeviceListViewModel } from '../viewmodel/DeviceListViewModel';
+import { Logger } from '../common/utils/Logger';
+import { NET } from '../common/utils/NET';
+import { StyleConstants } from '../common/constants/StyleConstants';
+import { CommonUtils } from '../common/utils/CommonUtils';
+import { CommonConstants } from '../common/constants/CommonConstants';
 import DeviceTile from '../view/DeviceTile';
+import LoadingOverlay from '../view/LoadingOverlay';
 
 @Entry
 @ComponentV2
@@ -96,20 +97,20 @@ struct Index {
         await this.loadDevices();
 
         // 处理长按快捷方式跳转
-        if(AppStorage.has(CommonConstants.AppStorage_KEY_ShortcutPath)) {
+        if(AppStorage.has(CommonConstants.APP_STORAGE_KEY_SHORTCUT_PATH)) {
             Logger.debug(this.LOG_TAG, `检测到长按快捷方式页面`);
 
-            const path: string | undefined = AppStorage.get(CommonConstants.AppStorage_KEY_ShortcutPath);
+            const path: string | undefined = AppStorage.get(CommonConstants.APP_STORAGE_KEY_SHORTCUT_PATH);
             if (path) {
                 await this.goToSpecifyPage(path);
-                AppStorage.delete(CommonConstants.AppStorage_KEY_ShortcutPath);
+                AppStorage.delete(CommonConstants.APP_STORAGE_KEY_SHORTCUT_PATH);
             }
         }
     }
 
     async onPageHide(): Promise<void> {
         this.safeCloseSwipeActions();
-        await this.refreshIPBanner();
+        await this.net.close();
     }
 
     // 启用网络监听
@@ -219,8 +220,9 @@ struct Index {
                     .width(StyleConstants.SIXTY_PERCENT)
                     .height(StyleConstants.SIXTY_PERCENT)
             }
-            .backgroundColor(Color.Red)
+            .backgroundColor($r("sys.color.warning"))
             .type(ButtonType.Circle)
+            .accessibilityText($r("app.string.accessibility_delete_device"))
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
             .onClick(async () => {
@@ -264,6 +266,7 @@ struct Index {
             }
             .backgroundColor($r("app.color.green"))
             .type(ButtonType.Circle)
+            .accessibilityText($r("app.string.accessibility_edit_device"))
             .width(StyleConstants.DELETE_BUTTON_WIDTH)
             .height(StyleConstants.DELETE_BUTTON_HEIGHT)
             .onClick(async () => {
@@ -305,50 +308,18 @@ struct Index {
 
     @Builder
     LoadingContent() {
-        Stack() {
-            Column()
-                .width(StyleConstants.FULL_PERCENT)
-                .height(StyleConstants.FULL_PERCENT)
-                .backgroundColor($r("app.color.background_transparent"))
-                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
-                .onClick(() => {})
-
-
-            Column() {
-                Progress({ value: 0, total: 100, type: ProgressType.Ring })
-                    .width(StyleConstants.PROGRESS_WIDTH)
-                    .color(Color.Blue)
-                    .style({
-                        strokeWidth: StyleConstants.PROGRESS_STROKE_WIDTH,
-                        status: ProgressStatus.LOADING
-                    })
-
-                Text($r("app.string.import_waiting_message"))
-                    .margin({ top: StyleConstants.MARGIN_TWENTY })
-                    .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                    .fontColor($r("sys.color.font_primary"))
-            }
-            .width(StyleConstants.FULL_PERCENT)
-            .height(StyleConstants.FULL_PERCENT)
-            .justifyContent(FlexAlign.Center)
-            .onClick(() => {})
-        }
-        .onClick(() => {})
-        .onAppear(() => {
-            Logger.debug(this.LOG_TAG, "Blocking stack loaded!");
-        })
+        LoadingOverlay({ message: $r("app.string.loading_message") });
     }
-
     @Builder
     MainContent() {
         if (!this.isLoading && this.deviceList.devices.length === 0) {
             Column() {
                 Text($r("app.string.no_device_message"))
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHTEEN)
-                    .fontColor(Color.Gray)
+                    .fontColor($r("sys.color.font_secondary"))
                 Text($r("app.string.create_new_device_message"))
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
-                    .fontColor(Color.Gray)
+                    .fontColor($r("sys.color.font_secondary"))
                     .margin({ top: StyleConstants.MARGIN_TEN })
             }
             .height(StyleConstants.EIGHTY_FIVE_PERCENT)
@@ -386,13 +357,16 @@ struct Index {
                         right: StyleConstants.MARGIN_ONE_PERCENT,
                         bottom: StyleConstants.MARGIN_TWO_PERCENT
                     })
-                })
+                }, (device: DeviceViewModel) => device.ID.toString())
                 .onMove((from: number, to: number) => {
-                    const success = this.deviceList.reorderDevices(from, to);
-                    return success;
+                    // onMove 需要同步返回是否接受本次移动；数据库写入异步执行，失败只记录日志
+                    this.deviceList.reorderDevices(from, to).catch((err: Error) => {
+                        Logger.error(this.LOG_TAG, `重排设备失败, ${err}`);
+                    });
+                    return true;
                 }, {
                     onLongPress: () => {
-                        CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_SOFT);
+                        CommonUtils.vibrate(CommonConstants.VIBRATE_EFFECT_ID_SOFT);
                     }
                 })
             }
@@ -405,6 +379,7 @@ struct Index {
 
     build() {
         HdsNavigation(this.pageStack) {
+            // 单 TabContent 仅作为底部“添加新设备”入口；barPosition=End + 浮动样式把它当作底部操作按钮使用
             HdsTabs({ controller: this.tabController }) {
                 TabContent() {
                     Stack({ alignContent: Alignment.Top }) {

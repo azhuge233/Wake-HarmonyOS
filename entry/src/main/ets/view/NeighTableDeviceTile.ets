@@ -1,4 +1,4 @@
-import StyleConstants from "../common/constants/StyleConstants";
+import { StyleConstants } from "../common/constants/StyleConstants";
 
 @ComponentV2
 export default struct NeighTableDeviceTile {
@@ -7,7 +7,7 @@ export default struct NeighTableDeviceTile {
     @Param deviceMAC: string = '';
     @Param deviceAddress: string = '';
     @Param deviceInterface: string = '';
-    @Param addDevice: () => void = () => {};
+    @Event addDevice: () => void = () => {};
 
     build() {
         Row() {

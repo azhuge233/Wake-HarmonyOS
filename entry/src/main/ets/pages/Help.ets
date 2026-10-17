@@ -3,7 +3,7 @@ import { webview } from '@kit.ArkWeb';
 import { Want } from '@kit.AbilityKit';
 import { common } from '@kit.AbilityKit';
 
-import Logger from '../common/utils/Logger';
+import { Logger } from '../common/utils/Logger';
 
 @Builder
 export function HelpBuilder() {
@@ -31,10 +31,10 @@ struct Help {
 
         this.context.startAbility(want)
             .then(() => {
-                console.info(`成功在系统浏览器中打开: ${url}`);
+                Logger.info(`成功在系统浏览器中打开: ${url}`);
             })
             .catch((err: BusinessError) => {
-                console.error(`打开系统浏览器失败: ${JSON.stringify(err)}`);
+                Logger.error(`打开系统浏览器失败: ${JSON.stringify(err)}`);
             });
     }
 

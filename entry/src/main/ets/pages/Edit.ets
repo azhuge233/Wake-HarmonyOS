@@ -1,12 +1,12 @@
 import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
 
-import Logger from '../common/utils/Logger';
-import StyleConstants from '../common/constants/StyleConstants';
+import { Logger } from '../common/utils/Logger';
+import { StyleConstants } from '../common/constants/StyleConstants';
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
-import CommonConstants from '../common/constants/CommonConstants';
-import CommonUtils from '../common/utils/CommonUtils';
+import { CommonConstants } from '../common/constants/CommonConstants';
+import { CommonUtils } from '../common/utils/CommonUtils';
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
-import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
+import { DeviceListViewModel } from '../viewmodel/DeviceListViewModel';
 
 @Builder
 export function EditBuilder() {
@@ -90,10 +90,10 @@ struct Edit {
                         inputType: INPUT_TYPE.MAC,
                         inputId: CommonConstants.MAC_INPUT_ID,
                         isDefaultFocus: true,
-                        textResource: $r("app.string.add_mac_input_label"),
-                        placeholderResource: $r("app.string.add_mac_input_placeholder"),
-                        text: this.updatingDevice.MAC,
-                        onInputChange: (value: string | number) => { this.updatingDevice.MAC = String(value) }
+                        label: $r("app.string.add_mac_input_label"),
+                        placeholder: $r("app.string.add_mac_input_placeholder"),
+                        value: this.updatingDevice.MAC,
+                        onChange: (value: string) => { this.updatingDevice.MAC = value }
                     })
                         .width(StyleConstants.EIGHTY_PERCENT)
 
@@ -101,10 +101,10 @@ struct Edit {
                         inputType: INPUT_TYPE.ALIAS,
                         inputId: CommonConstants.ALIAS_INPUT_ID,
                         isDefaultFocus: false,
-                        textResource: $r("app.string.add_alias_input_label"),
-                        placeholderResource: $r("app.string.add_alias_input_placeholder"),
-                        text: this.updatingDevice.Alias,
-                        onInputChange: (value: string | number) => { this.updatingDevice.Alias = String(value) }
+                        label: $r("app.string.add_alias_input_label"),
+                        placeholder: $r("app.string.add_alias_input_placeholder"),
+                        value: this.updatingDevice.Alias,
+                        onChange: (value: string) => { this.updatingDevice.Alias = value }
                     })
                         .width(StyleConstants.EIGHTY_PERCENT)
 
@@ -155,10 +155,10 @@ struct Edit {
                                 inputType: INPUT_TYPE.ADDRESS,
                                 inputId: CommonConstants.ADDRESS_INPUT_ID,
                                 isDefaultFocus: false,
-                                textResource: $r("app.string.add_address_input_label"),
-                                placeholderResource: $r("app.string.add_address_input_placeholder"),
-                                text: this.updatingDevice.Address,
-                                onInputChange: (value: string | number) => { this.updatingDevice.Address = String(value) }
+                                label: $r("app.string.add_address_input_label"),
+                                placeholder: $r("app.string.add_address_input_placeholder"),
+                                value: this.updatingDevice.Address,
+                                onChange: (value: string) => { this.updatingDevice.Address = value }
                             })
                                 .width(StyleConstants.EIGHTY_PERCENT)
 
@@ -166,10 +166,10 @@ struct Edit {
                                 inputType: INPUT_TYPE.PORT,
                                 inputId: CommonConstants.PORT_INPUT_ID,
                                 isDefaultFocus: false,
-                                textResource: $r("app.string.add_port_input_label"),
-                                placeholderResource: $r("app.string.add_port_input_placeholder"),
-                                text: this.updatingDevice.Port,
-                                onInputChange: (value: string | number) => { this.updatingDevice.Port = Number(value) }
+                                label: $r("app.string.add_port_input_label"),
+                                placeholder: $r("app.string.add_port_input_placeholder"),
+                                value: String(this.updatingDevice.Port),
+                                onChange: (value: string) => { this.updatingDevice.Port = value === '' ? 0 : Number(value) }
                             })
                                 .width(StyleConstants.EIGHTY_PERCENT)
                         }
@@ -212,7 +212,10 @@ struct Edit {
             this.pathStack = context.pathStack;
             const param = this.pathStack.getParamByIndex(0) as Array<object>;
             this.deviceList = param[0] as DeviceListViewModel;
-            this.updatingDevice = param[1] as DeviceViewModel;
+            const source = param[1] as DeviceViewModel;
+            const copy = new DeviceViewModel();
+            copy.fromDevice(source.toDevice());
+            this.updatingDevice = copy;
         })
         .onBackPressed(() => {
             this.pathStack?.pop("Back pressed");

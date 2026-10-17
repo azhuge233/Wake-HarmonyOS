@@ -2,9 +2,9 @@ import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.Ab
 import { AppStorageV2, window, KeyboardAvoidMode } from '@kit.ArkUI';
 
 import { DB } from '../common/utils/DB';
-import Logger from '../common/utils/Logger';
+import { Logger } from '../common/utils/Logger';
 import { PM } from '../common/utils/PM';
-import CommonConstants from '../common/constants/CommonConstants';
+import { CommonConstants } from '../common/constants/CommonConstants';
 import { AppSettingsManager } from '../common/utils/AppSettingsManager';
 import { AppSettings } from '../model/AppSettings';
 
@@ -112,12 +112,12 @@ export default class EntryAbility extends UIAbility {
         this.targetPage = params.targetPage as string; // 目标页面
         const formID = params.formID as string; // formID
 
-        if(formID && formID.trim() !== '') AppStorage.setOrCreate(CommonConstants.AppStorage_KEY_FormID, formID);
+        if(formID && formID.trim() !== '') AppStorage.setOrCreate(CommonConstants.APP_STORAGE_KEY_FORM_ID, formID);
     }
 
     private handleShortcutWant(want: Want): void {
         Logger.debug(this.LOG_TAG, `长按快捷方式转入`);
-        if(want?.parameters?.shortCutKey) AppStorage.setOrCreate(CommonConstants.AppStorage_KEY_ShortcutPath, want?.parameters?.shortCutKey as string);
+        if(want?.parameters?.shortCutKey) AppStorage.setOrCreate(CommonConstants.APP_STORAGE_KEY_SHORTCUT_PATH, want?.parameters?.shortCutKey as string);
     }
 
     private async setColorMode(): Promise<void> {
@@ -131,7 +131,7 @@ export default class EntryAbility extends UIAbility {
 
             this.context.getApplicationContext().setColorMode(appSettings.colorMode);
 
-            AppStorageV2.connect(AppSettings, CommonConstants.AppStorage_KEY_AppSettings, () => appSettings);
+            AppStorageV2.connect(AppSettings, CommonConstants.APP_STORAGE_KEY_APP_SETTINGS, () => appSettings);
 
             Logger.debug(this.LOG_TAG, `setColorMode() 窗口颜色设置: ${appSettings.colorMode}`)
         } catch (err) {

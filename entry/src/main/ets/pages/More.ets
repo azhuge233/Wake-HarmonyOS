@@ -3,11 +3,13 @@ import { common } from '@kit.AbilityKit';
 import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
 import bundleManager from '@ohos.bundle.bundleManager';
 
-import Logger from '../common/utils/Logger';
+import { Logger } from '../common/utils/Logger';
 import MoreMenuItem from '../view/MoreMenuItem';
-import StyleConstants from '../common/constants/StyleConstants';
-import CommonUtils from '../common/utils/CommonUtils';
-import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
+import LoadingOverlay from '../view/LoadingOverlay';
+import { CommonConstants } from '../common/constants/CommonConstants';
+import { StyleConstants } from '../common/constants/StyleConstants';
+import { CommonUtils } from '../common/utils/CommonUtils';
+import { DeviceListViewModel } from '../viewmodel/DeviceListViewModel';
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 
 @Builder
@@ -100,10 +102,10 @@ struct More {
 
     async import(): Promise<void> {
         try {
-            const uris = await CommonUtils.pickFile(this.context);
-
-            // set to true, blocking user actions
+            // set to true before picking, blocking repeated imports
             this.isProcessing = true;
+
+            const uris = await CommonUtils.pickFile(this.context);
 
             if (uris.length > 0) {
                 let backupFilePath: string = uris[0];
@@ -117,14 +119,11 @@ struct More {
 
                 await this.deviceListViewModel.clearDevices();
 
-                let deviceOrder = 0;
-
                 for (let deviceJsonObject of deviceListJsonObject) {
                     this.newDeviceViewModel.MAC = deviceJsonObject.MAC;
                     this.newDeviceViewModel.Alias = deviceJsonObject.Alias;
                     this.newDeviceViewModel.Address = deviceJsonObject.Address ?? '';
                     this.newDeviceViewModel.Port = deviceJsonObject.Port ?? 9;
-                    this.newDeviceViewModel.OrderIndex = deviceJsonObject.OrderIndex == -1 ? deviceOrder : deviceJsonObject.OrderIndex;
 
                     await this.deviceListViewModel.addDevice(this.newDeviceViewModel.toDevice());
                 }
@@ -161,7 +160,7 @@ struct More {
             if (result.index === 0) await this.import();
             else Logger.warn(this.LOG_TAG, "导入已取消");
         } catch (err) {
-            if (err && (err.code === 100006 || err.message?.toLowerCase().includes('cancel'))) {
+            if (err && (err.code === CommonConstants.FILE_PICKER_CANCEL_ERROR_CODE || err.message?.toLowerCase().includes('cancel'))) {
                 Logger.warn(this.LOG_TAG, "用户取消对话框");
                 return;
             }
@@ -195,7 +194,7 @@ struct More {
                 } else CommonUtils.alert($r("app.string.clear_failed"), this.promptAction);
             } else Logger.warn(this.LOG_TAG, "清除已取消");
         } catch (err) {
-            if (err && (err.code === 100006 || err.message?.toLowerCase().includes('cancel'))) {
+            if (err && (err.code === CommonConstants.FILE_PICKER_CANCEL_ERROR_CODE || err.message?.toLowerCase().includes('cancel'))) {
                 Logger.warn(this.LOG_TAG, "用户取消对话框");
                 return;
             }
@@ -207,40 +206,8 @@ struct More {
 
     @Builder
     LoadingContent() {
-        Stack() {
-            Column()
-                .width(StyleConstants.FULL_PERCENT)
-                .height(StyleConstants.FULL_PERCENT)
-                .backgroundColor($r("app.color.background_transparent"))
-                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
-                .onClick(() => {})
-
-
-            Column() {
-                Progress({ value: 0, total: 100, type: ProgressType.Ring })
-                    .width(StyleConstants.PROGRESS_WIDTH)
-                    .color(Color.Blue)
-                    .style({
-                        strokeWidth: StyleConstants.PROGRESS_STROKE_WIDTH,
-                        status: ProgressStatus.LOADING
-                    })
-
-                Text($r("app.string.import_waiting_message"))
-                    .margin({ top: StyleConstants.MARGIN_TWENTY })
-                    .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                    .fontColor($r("sys.color.font_primary"))
-            }
-            .width(StyleConstants.FULL_PERCENT)
-            .height(StyleConstants.FULL_PERCENT)
-            .justifyContent(FlexAlign.Center)
-            .onClick(() => {})
-        }
-        .onClick(() => {})
-        .onAppear(() => {
-            Logger.debug(this.LOG_TAG, "Blocking stack loaded!");
-        })
+        LoadingOverlay({ message: $r("app.string.import_waiting_message") });
     }
-
     @Builder
     EntryGroup(entries: Array<[Resource, Resource, Resource | null, () => void | Promise<void>]>) {
         ForEach(entries, (item: [Resource, Resource, Resource | null, () => void | Promise<void>]) => {
@@ -249,7 +216,7 @@ struct More {
                 menuDescText: item[2],
                 menuIcon: item[1]
             }).onClick(item[3])
-        })
+        }, (item: [Resource, Resource, Resource | null, () => void | Promise<void>]) => item[1].id.toString())
     }
 
     @Builder

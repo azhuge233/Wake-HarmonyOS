@@ -2,14 +2,14 @@ import { common } from '@kit.AbilityKit';
 import { formProvider } from '@kit.FormKit';
 import { hdsMaterial, HdsNavigation, ScrollEffectType, HdsNavigationTitleMode } from '@kit.UIDesignKit';
 
-import StyleConstants from '../common/constants/StyleConstants';
-import Logger from '../common/utils/Logger';
+import { StyleConstants } from '../common/constants/StyleConstants';
+import { Logger } from '../common/utils/Logger';
 import { PM } from '../common/utils/PM';
-import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
-import SingleDeviceFormData from '../singledevicewidget/model/SingleDeviceFormData';
-import CommonConstants from '../common/constants/CommonConstants';
-import CommonUtils from '../common/utils/CommonUtils';
-import Device from '../model/Device';
+import { DeviceListViewModel } from '../viewmodel/DeviceListViewModel';
+import { SingleDeviceFormData } from '../singledevicewidget/model/SingleDeviceFormData';
+import { CommonConstants } from '../common/constants/CommonConstants';
+import { CommonUtils } from '../common/utils/CommonUtils';
+import { Device } from '../model/Device';
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
 
 @Entry
@@ -47,12 +47,12 @@ struct SingleDeviceFormEdit {
     }
 
     private handleParamsFromForm(): void {
-        if(AppStorage.has(CommonConstants.AppStorage_KEY_FormID)) {
-            const formIDParam: string | undefined = AppStorage.get(CommonConstants.AppStorage_KEY_FormID);
+        if(AppStorage.has(CommonConstants.APP_STORAGE_KEY_FORM_ID)) {
+            const formIDParam: string | undefined = AppStorage.get(CommonConstants.APP_STORAGE_KEY_FORM_ID);
             if(formIDParam) {
                 this.formID = formIDParam as string;
                 Logger.debug(this.LOG_TAG, `传入 formID: ${formIDParam}`);
-                AppStorage.delete(CommonConstants.AppStorage_KEY_FormID);
+                AppStorage.delete(CommonConstants.APP_STORAGE_KEY_FORM_ID);
             }
         }
 
@@ -136,10 +136,10 @@ struct SingleDeviceFormEdit {
         Column() {
             Text($r("app.string.no_device_message"))
                 .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHTEEN)
-                .fontColor(Color.Gray)
+                .fontColor($r("sys.color.font_secondary"))
             Text($r("app.string.form_edit_create_new_device_message"))
                 .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
-                .fontColor(Color.Gray)
+                .fontColor($r("sys.color.font_secondary"))
                 .margin({ top: StyleConstants.MARGIN_TEN })
         }
         .justifyContent(FlexAlign.Center)
@@ -227,7 +227,7 @@ struct SingleDeviceFormEdit {
                             right: StyleConstants.TWO_PERCENT,
                             bottom: StyleConstants.FIVE_PERCENT
                         })
-                    })
+                    }, (item: Device) => item.ID.toString())
                 }
                 .lanes(2)
                 .alignListItem(ListItemAlign.Center)

@@ -2,17 +2,31 @@ import { common, ConfigurationConstant } from '@kit.AbilityKit';
 import { hdsMaterial, HdsNavDestination } from '@kit.UIDesignKit';
 import { AppStorageV2 } from '@kit.ArkUI';
 
-import StyleConstants from '../common/constants/StyleConstants';
+import { StyleConstants } from '../common/constants/StyleConstants';
 import { AppSettingsManager } from '../common/utils/AppSettingsManager';
-import Logger from '../common/utils/Logger';
+import { Logger } from '../common/utils/Logger';
 import { AppSettings } from '../model/AppSettings';
-import CommonConstants from '../common/constants/CommonConstants';
+import { CommonConstants } from '../common/constants/CommonConstants';
 
-export const colorModeOptions: Map<string | Resource, ConfigurationConstant.ColorMode> = new Map([
-    [$r("app.string.page_color_mode_system"), ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET],
-    [$r("app.string.page_color_mode_light"), ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT],
-    [$r("app.string.page_color_mode_dark"), ConfigurationConstant.ColorMode.COLOR_MODE_DARK]
-]);
+function createDefaultAppSettings(): AppSettings {
+    return new AppSettings(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
+}
+
+export class ColorModeOption {
+    label: string | Resource;
+    mode: ConfigurationConstant.ColorMode;
+
+    constructor(label: string | Resource, mode: ConfigurationConstant.ColorMode) {
+        this.label = label;
+        this.mode = mode;
+    }
+}
+
+export const colorModeOptions: Array<ColorModeOption> = [
+    new ColorModeOption($r("app.string.page_color_mode_system"), ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET),
+    new ColorModeOption($r("app.string.page_color_mode_light"), ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT),
+    new ColorModeOption($r("app.string.page_color_mode_dark"), ConfigurationConstant.ColorMode.COLOR_MODE_DARK)
+];
 
 @Builder
 export function ColorModeSettingsBuilder() {
@@ -24,7 +38,7 @@ export function ColorModeSettingsBuilder() {
 struct ColorModeSettings {
     private LOG_TAG = "[pages/ColorModeSettings]";
 
-    @Local appSettings: AppSettings = AppStorageV2.connect(AppSettings, CommonConstants.AppStorage_KEY_AppSettings)!;
+    @Local appSettings: AppSettings = AppStorageV2.connect(AppSettings, CommonConstants.APP_STORAGE_KEY_APP_SETTINGS, () => createDefaultAppSettings())!;
 
     pathStack: NavPathStack | undefined = undefined;
 
@@ -33,34 +47,56 @@ struct ColorModeSettings {
 
     private asm: AppSettingsManager = AppSettingsManager.getInstance();
 
+    async aboutToAppear(): Promise<void> {
+        // 冷启动/页面恢复时可能先于 EntryAbility 连接，这里用持久化值回填
+        const persisted = await this.asm.get();
+        if (persisted && persisted.colorMode !== this.appSettings.colorMode) {
+            this.appSettings.colorMode = persisted.colorMode;
+            try {
+                this.context.getApplicationContext().setColorMode(persisted.colorMode);
+            } catch (err) {
+                Logger.error(this.LOG_TAG, `恢复窗口颜色模式失败, ${err}`);
+            }
+        }
+    }
+
+    private async applyColorMode(selectedColorMode: ConfigurationConstant.ColorMode): Promise<void> {
+        // 行点击和 Radio 共用同一条路径：写内存 + 持久化 + 应用窗口颜色
+        Logger.debug(this.LOG_TAG, `applyColorMode: selected=${selectedColorMode}, current=${this.appSettings.colorMode}`);
+        if (this.appSettings.colorMode === selectedColorMode) return;
+
+        this.appSettings.colorMode = selectedColorMode;
+        const saved = await this.asm.set(this.appSettings);
+        Logger.debug(this.LOG_TAG, `applyColorMode 保存: ${saved}, colorMode=${this.appSettings.colorMode}`);
+
+        try {
+            this.context.getApplicationContext().setColorMode(selectedColorMode);
+            Logger.debug(this.LOG_TAG, `窗口颜色设置: ${this.appSettings.colorMode}`);
+        } catch (err) {
+            Logger.error(this.LOG_TAG, `设置窗口颜色模式失败, ${err}`);
+        }
+    }
+
     @Builder
     MainContent() {
         Column() {
-            ForEach(Array.from(colorModeOptions.keys()), (item: Resource) => {
+            ForEach(colorModeOptions, (option: ColorModeOption) => {
                 Row() {
-                    Text(item)
+                    Text(option.label)
                         .fontColor($r("sys.color.font_primary"))
                         .layoutWeight(1)
                         .padding(StyleConstants.PADDING_FIFTEEN);
 
                     Radio({
-                        value: colorModeOptions.get(item)!.toString(),
+                        value: option.mode.toString(),
                         group: 'colorMode'
                     })
                         .height(StyleConstants.RADIO_SIZE)
                         .width(StyleConstants.RADIO_SIZE)
-                        .checked(colorModeOptions.get(item) === this.appSettings.colorMode)
+                        .checked(option.mode === this.appSettings.colorMode)
                         .onChange(async (isChecked: boolean) => {
                             if (isChecked) {
-                                const selectedColorMode = colorModeOptions.get(item)!;
-                                this.appSettings!.colorMode = selectedColorMode;
-                                await this.asm!.set(this.appSettings!);
-                                try {
-                                    this.context.getApplicationContext().setColorMode(selectedColorMode);
-                                    Logger.debug(this.LOG_TAG, `窗口颜色设置: ${this.appSettings.colorMode}`);
-                                } catch (err) {
-                                    Logger.error(this.LOG_TAG, `设置窗口颜色模式失败, ${err}`);
-                                }
+                                await this.applyColorMode(option.mode);
                             }
                         })
                         .padding({
@@ -73,9 +109,11 @@ struct ColorModeSettings {
                     color: $r("sys.color.font_tertiary")
                 })
                 .onClick(() => {
-                    this.appSettings.colorMode = colorModeOptions.get(item)!;
+                    this.applyColorMode(option.mode).catch((err: Error) => {
+                        Logger.error(this.LOG_TAG, `切换颜色模式失败, ${err}`);
+                    });
                 })
-            });
+            }, (option: ColorModeOption) => option.mode.toString());
         }
         .width(StyleConstants.FULL_PERCENT)
         .padding({

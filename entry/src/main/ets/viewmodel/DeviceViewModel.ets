@@ -1,4 +1,4 @@
-import Device from "../model/Device";
+import { Device } from "../model/Device";
 import { DeviceJsonObject } from "../model/JsonObject";
 
 @ObservedV2
@@ -10,7 +10,7 @@ export class DeviceViewModel {
     @Trace Port: number = 9;
     @Trace OrderIndex: number = -1;
 
-    updateDevice(device: Device) {
+    fromDevice(device: Device) {
         this.ID = device.ID;
         this.MAC = device.MAC;
         this.Alias = device.Alias;

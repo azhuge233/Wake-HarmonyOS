@@ -1,12 +1,12 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { formProvider } from '@kit.FormKit';
 
-import CommonUtils from '../../common/utils/CommonUtils';
-import Logger from '../../common/utils/Logger';
-import NET from '../../common/utils/NET';
+import { CommonUtils } from '../../common/utils/CommonUtils';
+import { Logger } from '../../common/utils/Logger';
+import { NET } from '../../common/utils/NET';
 import { DB } from '../../common/utils/DB';
-import SingleDeviceFormData from '../model/SingleDeviceFormData';
-import CommonConstants from '../../common/constants/CommonConstants';
+import { SingleDeviceFormData } from '../model/SingleDeviceFormData';
+import { CommonConstants } from '../../common/constants/CommonConstants';
 
 export default class SingleDeviceWidgetEntryAbility extends UIAbility {
     private LOG_TAG = "[SingleDeviceWidgetEntryAbility]";
@@ -43,7 +43,12 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
 
                 Logger.debug(this.LOG_TAG, `onCreate() 从 call 事件获得参数: ${this.formID}, ${this.deviceID}, ${this.alias}, ${this.mac}, ${this.address} ${this.port}`);
 
-                CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_HARD);
+                if (!this.formID || !this.mac) {
+                    Logger.error(this.LOG_TAG, `onCreate() 参数不完整: formID=${this.formID}, mac=${this.mac}`);
+                    return;
+                }
+
+                CommonUtils.vibrate(CommonConstants.VIBRATE_EFFECT_ID_HARD);
 
                 // 从数据库更新待执行的设备信息
                 // 防止执行时卡片UI没有及时更新
@@ -59,6 +64,7 @@ export default class SingleDeviceWidgetEntryAbility extends UIAbility {
         } catch (err) {
             Logger.error(this.LOG_TAG, `onCreate() 错误, ${err}`);
         } finally {
+            await this.net.close();
             CommonUtils.closeApplication(this.LOG_TAG, this.context);
         }
     }

@@ -2,8 +2,8 @@ import { relationalStore } from '@kit.ArkData';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { Context } from '@kit.AbilityKit';
 
-import Logger from '../utils/Logger';
-import Device from '../../model/Device';
+import { Logger } from '../utils/Logger';
+import { Device } from '../../model/Device';
 
 
 export class DB {
@@ -63,7 +63,8 @@ export class DB {
                 resolve(); // 解析Promise表示初始化完成
             }).catch((err: BusinessError) => {
                 Logger.error(this.LOG_TAG, `数据库初始化失败, ${err}`);
-                resolve(); // 即使失败也要resolve，避免永久阻塞
+                this.initPromise = null;
+                resolve(); // 允许下次 init() 重试
             });
         });
     }
@@ -85,28 +86,36 @@ export class DB {
                 this.KEY_ORDERINDEX
             ]);
 
-            if(queryResult === undefined) throw new Error("查询为空");
+            try {
+                if(queryResult === undefined) throw new Error("查询为空");
 
-            Logger.debug(this.LOG_TAG, `查询结果，行数: ${queryResult.rowCount}, 列数: ${queryResult.columnCount}`)
+                Logger.debug(this.LOG_TAG, `查询结果，行数: ${queryResult.rowCount}, 列数: ${queryResult.columnCount}`)
 
-            const devices: Array<Device> = [];
+                const devices: Array<Device> = [];
 
-            while (queryResult.goToNextRow()) {
-                const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
-                const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
-                const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
-                const addr = queryResult.getString(queryResult.getColumnIndex(this.KEY_ADDRESS));
-                const port = queryResult.getLong(queryResult.getColumnIndex(this.KEY_PORT));
-                const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
+                while (queryResult.goToNextRow()) {
+                    const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
+                    const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
+                    const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
+                    const addr = queryResult.getString(queryResult.getColumnIndex(this.KEY_ADDRESS));
+                    const port = queryResult.getLong(queryResult.getColumnIndex(this.KEY_PORT));
+                    const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
 
-                devices.push(new Device(id, mac, alias, addr, port, orderIndex));
+                    devices.push(new Device(id, mac, alias, addr, port, orderIndex));
+                }
+
+                devices.sort((a, b) => a.OrderIndex - b.OrderIndex);
+
+                Logger.debug(this.LOG_TAG, `设备列表长度: ${devices.length}`);
+
+                return devices;
+            } finally {
+                try {
+                    queryResult.close();
+                } catch (closeErr) {
+                    Logger.warn(this.LOG_TAG, `关闭查询结果失败, ${closeErr}`);
+                }
             }
-
-            devices.sort((a, b) => a.OrderIndex - b.OrderIndex);
-
-            Logger.debug(this.LOG_TAG, `设备列表长度: ${devices.length}`);
-
-            return devices;
         } catch (err) {
             throw new Error(`获取设备列表失败, ${err}`);
         }
@@ -229,9 +238,13 @@ export class DB {
             Logger.info(this.LOG_TAG, `批量排序更新成功，共处理 ${orderUpdates.length} 个条目。`);
             return true;
         } catch (err) {
-            // 回滚事务
-            this.rdbStore.rollBack();
-            Logger.error(this.LOG_TAG, `批量更新排序索引失败，已回滚: ${err}`);
+            // 回滚事务；回滚本身失败时不能掩盖原始错误
+            try {
+                this.rdbStore.rollBack();
+            } catch (rollbackErr) {
+                Logger.error(this.LOG_TAG, `回滚事务失败: ${rollbackErr}`);
+            }
+            Logger.error(this.LOG_TAG, `批量更新排序索引失败: ${err}`);
             return false;
         }
     }
@@ -268,23 +281,31 @@ export class DB {
                 this.KEY_ORDERINDEX
             ]);
 
-            if(queryResult.goToNextRow()) {
-                const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
-                const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
-                const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
-                const ip = queryResult.getString(queryResult.getColumnIndex(this.KEY_ADDRESS));
-                const port = queryResult.getLong(queryResult.getColumnIndex(this.KEY_PORT));
-                const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
+            try {
+                if(queryResult.goToNextRow()) {
+                    const id = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ID));
+                    const alias = queryResult.getString(queryResult.getColumnIndex(this.KEY_ALIAS));
+                    const mac = queryResult.getString(queryResult.getColumnIndex(this.KEY_MAC));
+                    const ip = queryResult.getString(queryResult.getColumnIndex(this.KEY_ADDRESS));
+                    const port = queryResult.getLong(queryResult.getColumnIndex(this.KEY_PORT));
+                    const orderIndex = queryResult.getLong(queryResult.getColumnIndex(this.KEY_ORDERINDEX));
 
-                const device = new Device(id, mac, alias, ip, port, orderIndex);
+                    const device = new Device(id, mac, alias, ip, port, orderIndex);
 
-                Logger.debug(this.LOG_TAG, `查询到 ${JSON.stringify(device)}`);
+                    Logger.debug(this.LOG_TAG, `查询到 ${JSON.stringify(device)}`);
 
-                return device;
+                    return device;
+                }
+
+                Logger.debug(this.LOG_TAG, `没有查询到 ID = ${deviceID} 的结果`)
+                return null;
+            } finally {
+                try {
+                    queryResult.close();
+                } catch (closeErr) {
+                    Logger.warn(this.LOG_TAG, `关闭查询结果失败, ${closeErr}`);
+                }
             }
-
-            Logger.debug(this.LOG_TAG, `没有查询到 ID = ${deviceID} 的结果`)
-            return null;
         } catch (err) {
             Logger.error(this.LOG_TAG, `getDeviceByID() 执行失败, ${err}`);
             return null;

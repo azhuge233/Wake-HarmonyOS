@@ -634,6 +634,22 @@
 		{
 			"name": "neigh_table_loading_message",
 			"value": "正在加载，请稍候..."
+		},
+		{
+			"name": "loading_message",
+			"value": "正在加载，请稍候..."
+		},
+		{
+			"name": "accessibility_edit_device",
+			"value": "编辑设备"
+		},
+		{
+			"name": "accessibility_delete_device",
+			"value": "删除设备"
+		},
+		{
+			"name": "neigh_table_permission_denied",
+			"value": "无法读取邻居表（权限不足），请使用“手动添加”"
 		}
     ]
 }

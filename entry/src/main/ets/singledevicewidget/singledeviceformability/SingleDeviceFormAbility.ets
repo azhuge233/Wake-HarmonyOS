@@ -3,10 +3,10 @@ import { Want } from '@kit.AbilityKit';
 
 import { PM } from '../../common/utils/PM';
 import { DB } from '../../common/utils/DB';
-import SingleDeviceFormData from '../model/SingleDeviceFormData';
-import CommonConstants from '../../common/constants/CommonConstants';
-import CommonUtils from '../../common/utils/CommonUtils';
-import Logger from '../../common/utils/Logger';
+import { SingleDeviceFormData } from '../model/SingleDeviceFormData';
+import { CommonConstants } from '../../common/constants/CommonConstants';
+import { CommonUtils } from '../../common/utils/CommonUtils';
+import { Logger } from '../../common/utils/Logger';
 
 export default class SingleDeviceFormAbility extends FormExtensionAbility {
     private LOG_TAG = '[SingleDeviceFormAbility]';
@@ -69,7 +69,7 @@ export default class SingleDeviceFormAbility extends FormExtensionAbility {
         const action = messageObj.formAction as string;
 
         // 根据 action 执行：更新卡片信息
-        if(action === CommonConstants.FormMessage_Restore) await this.handleRestoreAction(formId, messageObj.data as string);
+        if(action === CommonConstants.FORM_MESSAGE_RESTORE) await this.handleRestoreAction(formId, messageObj.data as string);
         else Logger.warn(this.LOG_TAG, `onFormEvent() 未知指令: ${action}`);
     }
 

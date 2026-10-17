@@ -2,8 +2,12 @@ import { preferences } from '@kit.ArkData';
 import { deviceInfo } from '@kit.BasicServicesKit';
 import { ConfigurationConstant } from '@kit.AbilityKit';
 
-import Logger from '../utils/Logger';
+import { Logger } from '../utils/Logger';
 import { AppSettings } from '../../model/AppSettings';
+
+interface StoredAppSettings {
+    colorMode: number;
+}
 
 @ObservedV2
 export class AppSettingsManager {
@@ -44,7 +48,10 @@ export class AppSettingsManager {
         if(!this.checkReady()) return false;
 
         try {
-            await this.dataPreferences?.put(this.STORE_KEY, appSettings);
+            // 只持久化纯数据，避免 @ObservedV2 代理对象序列化后字段异常
+            const stored: StoredAppSettings = { colorMode: appSettings.colorMode as number };
+            Logger.debug(this.LOG_TAG, `set() 写入: ${JSON.stringify(stored)}`);
+            await this.dataPreferences?.put(this.STORE_KEY, stored);
             if(!this.isGSKVSupported) await this.dataPreferences?.flush();
             return true;
         } catch (err) {
@@ -58,11 +65,13 @@ export class AppSettingsManager {
 
         try {
             const storeObj = await this.dataPreferences!.get(this.STORE_KEY, '') as Record<string, Object>;
+            Logger.debug(this.LOG_TAG, `get() 读取: ${JSON.stringify(storeObj)}`);
 
             if(storeObj && typeof storeObj === 'object') {
-                return new AppSettings(
-                    storeObj.colorMode as ConfigurationConstant.ColorMode
-                );
+                const colorMode = storeObj.colorMode;
+                if (typeof colorMode === 'number') {
+                    return new AppSettings(colorMode as ConfigurationConstant.ColorMode);
+                }
             }
 
             return null;

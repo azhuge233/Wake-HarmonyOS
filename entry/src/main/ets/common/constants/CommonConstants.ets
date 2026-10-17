@@ -4,19 +4,22 @@ class CommonConstants {
     public readonly ADDRESS_INPUT_ID = "address_input";
     public readonly PORT_INPUT_ID = "port_input";
 
-    public readonly Vibrate_Effect_ID_SOFT = 'haptic.effect.soft';
-    public readonly Vibrate_Effect_ID_HARD = 'haptic.effect.hard';
+    public readonly VIBRATE_EFFECT_ID_SOFT = 'haptic.effect.soft';
+    public readonly VIBRATE_EFFECT_ID_HARD = 'haptic.effect.hard';
 
-    public readonly AppStorage_KEY_ShortcutPath = 'path';
-    public readonly AppStorage_KEY_FormID = 'formID';
-    public readonly AppStorage_KEY_AppSettings = "AppSettings";
+    public readonly APP_STORAGE_KEY_SHORTCUT_PATH = 'path';
+    public readonly APP_STORAGE_KEY_FORM_ID = 'formID';
+    public readonly APP_STORAGE_KEY_APP_SETTINGS = "AppSettings";
 
-    public readonly FormMessage_Restore = 'restore';
+    public readonly FILE_PICKER_CANCEL_ERROR_CODE = 100006;
 
-    public readonly FormCall_Run = 'run';
+    public readonly FORM_MESSAGE_RESTORE = 'restore';
 
-    public readonly FormResult_MapKey_Single = 'single';
-    public readonly FormResult_MapKey_Multiple = 'multiple';
+    public readonly FORM_CALL_RUN = 'run';
+
+    public readonly FORM_RESULT_MAP_KEY_SINGLE = 'single';
+    public readonly FORM_RESULT_MAP_KEY_MULTIPLE = 'multiple';
 }
 
-export default new CommonConstants();
+const commonConstants = new CommonConstants();
+export { commonConstants as CommonConstants };

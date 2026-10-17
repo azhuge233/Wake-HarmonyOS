@@ -2,16 +2,17 @@ import { hdsMaterial, HdsNavDestination, HdsNavigationMenuContentOptions, HdsTab
     HdsTabsController } from '@kit.UIDesignKit';
 import { connection } from '@kit.NetworkKit';
 
-import Logger from '../common/utils/Logger';
+import { Logger } from '../common/utils/Logger';
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
-import StyleConstants from '../common/constants/StyleConstants';
-import CommonConstants from '../common/constants/CommonConstants';
-import CommonUtils from '../common/utils/CommonUtils';
+import { StyleConstants } from '../common/constants/StyleConstants';
+import { CommonConstants } from '../common/constants/CommonConstants';
+import { CommonUtils } from '../common/utils/CommonUtils';
 import { DeviceViewModel } from '../viewmodel/DeviceViewModel';
-import DeviceListViewModel from '../viewmodel/DeviceListViewModel';
-import NET from '../common/utils/NET';
+import { DeviceListViewModel } from '../viewmodel/DeviceListViewModel';
+import { NET } from '../common/utils/NET';
 import NeighTableDeviceTile from '../view/NeighTableDeviceTile';
 import { DialogData } from '../view/InputDialog';
+import LoadingOverlay from '../view/LoadingOverlay';
 
 @Builder
 export function AddDeviceBuilder() {
@@ -27,7 +28,9 @@ struct AddDevice {
     @Local neighTableDevices: connection.NetIpMacInfo[] | null = null;
 
     @Local showAdvanced: boolean = false;
+    @Local portEdited: boolean = false;
     @Local isLoadingNeighTable: boolean = false;
+    @Local neighTablePermissionDenied: boolean = false;
 
     private uiContext = this.getUIContext();
     private promptAction = this.uiContext.getPromptAction();
@@ -64,11 +67,16 @@ struct AddDevice {
         await this.loadNeighTable();
     }
 
+    async aboutToDisappear(): Promise<void> {
+        await this.net.close();
+    }
+
     private clearInput() {
         this.newDevice.MAC = '';
         this.newDevice.Alias = '';
         this.newDevice.Address = '';
         this.newDevice.Port = 9;
+        this.portEdited = false;
     }
 
     private async saveDeviceManual() {
@@ -90,12 +98,10 @@ struct AddDevice {
                 return;
             }
 
-            if (!CommonUtils.isStringNullOrEmpty(port.toString())) {
-                if (port < 1 || port > 65535) {
-                    CommonUtils.alert($r("app.string.port_invalid"), this.promptAction);
-                    this.focusController.requestFocus(CommonConstants.PORT_INPUT_ID);
-                    return;
-                }
+            if (Number.isNaN(port) || port < 1 || port > 65535) {
+                CommonUtils.alert($r("app.string.port_invalid"), this.promptAction);
+                this.focusController.requestFocus(CommonConstants.PORT_INPUT_ID);
+                return;
             }
         } catch (err) {
             Logger.error(this.LOG_TAG, `移动输入焦点失败, ${err}`);
@@ -126,9 +132,12 @@ struct AddDevice {
 
         try {
             const table = await this.net.getIPNeighTable();
+            this.neighTablePermissionDenied = this.net.neighTablePermissionDenied;
 
-            if (!table) CommonUtils.alert($r("app.string.neigh_table_empty"), this.promptAction);
-            else this.neighTableDevices = table;
+            if (!table) {
+                this.neighTableDevices = [];
+                if (!this.neighTablePermissionDenied) CommonUtils.alert($r("app.string.neigh_table_empty"), this.promptAction);
+            } else this.neighTableDevices = table;
         } catch (err) {
             CommonUtils.alert($r("app.string.load_neigh_table_failed"), this.promptAction);
         }
@@ -140,13 +149,13 @@ struct AddDevice {
         return this.neighTableDevices === null || this.neighTableDevices.length === 0;
     }
 
-    private async inputPopup(): Promise<DialogData | string> {
+    private async inputPopup(): Promise<DialogData | undefined> {
         return new Promise((resolve) => {
             this.pageStack?.pushPath({
                 name: "InputDialog",
                 onPop: (popInfo) => {
                     CommonUtils.returnFromSubPage(popInfo);
-                    resolve(popInfo.result as DialogData);
+                    resolve(popInfo.result as DialogData | undefined);
                 }
             });
         });
@@ -168,40 +177,8 @@ struct AddDevice {
 
     @Builder
     LoadingContent() {
-        Stack() {
-            Column()
-                .width(StyleConstants.FULL_PERCENT)
-                .height(StyleConstants.FULL_PERCENT)
-                .backgroundColor($r("app.color.background_transparent"))
-                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
-                .onClick(() => {})
-
-
-            Column() {
-                Progress({ value: 0, total: 100, type: ProgressType.Ring })
-                    .width(StyleConstants.PROGRESS_WIDTH)
-                    .color(Color.Blue)
-                    .style({
-                        strokeWidth: StyleConstants.PROGRESS_STROKE_WIDTH,
-                        status: ProgressStatus.LOADING
-                    })
-
-                Text($r("app.string.neigh_table_loading_message"))
-                    .margin({ top: StyleConstants.MARGIN_TWENTY })
-                    .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                    .fontColor($r("sys.color.font_primary"))
-            }
-            .width(StyleConstants.FULL_PERCENT)
-            .height(StyleConstants.FULL_PERCENT)
-            .justifyContent(FlexAlign.Center)
-            .onClick(() => {})
-        }
-        .onClick(() => {})
-        .onAppear(() => {
-            Logger.debug(this.LOG_TAG, "Blocking stack loaded!");
-        })
+        LoadingOverlay({ message: $r("app.string.neigh_table_loading_message") });
     }
-
     @Builder
     NeighTableDeviceList() {
         if (!this.isNeighTableEmpty()) {
@@ -216,7 +193,7 @@ struct AddDevice {
                                 this.clearInput();
                                 const dialogData = await this.inputPopup();
 
-                                if(typeof(dialogData) === "string") Logger.warn(this.LOG_TAG, `取消添加设备`);
+                                if (!dialogData) Logger.warn(this.LOG_TAG, `取消添加设备`);
                                 else {
                                     this.newDevice.MAC = item.macAddress;
                                     this.newDevice.Alias = dialogData.deviceAlias;
@@ -230,7 +207,7 @@ struct AddDevice {
                                             CommonUtils.alert($r("app.string.add_machine_success", this.newDevice.Alias), this.promptAction);
                                             this.deleteAddedDevice(this.newDevice.MAC, item.ipAddress.address);
                                         } else {
-                                            Logger.debug(this.LOG_TAG, `设备已添加 - MAC: ${this.newDevice.MAC}, Alias: ${this.newDevice.Alias}, Address: ${this.newDevice.Address}, Port: ${this.newDevice.Port}`);
+                                            Logger.error(this.LOG_TAG, `设备添加失败 - MAC: ${this.newDevice.MAC}, Alias: ${this.newDevice.Alias}, Address: ${this.newDevice.Address}, Port: ${this.newDevice.Port}`);
                                             CommonUtils.alert($r("app.string.add_machine_failed", dialogData.deviceAlias), this.promptAction);
                                         }
                                     } catch (err) {
@@ -247,7 +224,7 @@ struct AddDevice {
                                 bottom: StyleConstants.MARGIN_TWO_PERCENT
                             })
                     }
-                })
+                }, (item: connection.NetIpMacInfo) => item.macAddress + item.ipAddress.address)
             }
             .width(StyleConstants.FULL_PERCENT)
             .height(StyleConstants.FULL_PERCENT)
@@ -276,10 +253,10 @@ struct AddDevice {
                     inputType: INPUT_TYPE.MAC,
                     inputId: CommonConstants.MAC_INPUT_ID,
                     isDefaultFocus: true,
-                    textResource: $r("app.string.add_mac_input_label"),
-                    placeholderResource: $r("app.string.add_mac_input_placeholder"),
-                    text: this.newDevice.MAC,
-                    onInputChange: (value: string | number) => { this.newDevice.MAC = String(value) }
+                    label: $r("app.string.add_mac_input_label"),
+                    placeholder: $r("app.string.add_mac_input_placeholder"),
+                    value: this.newDevice.MAC,
+                    onChange: (value: string) => { this.newDevice.MAC = value }
                 })
                     .width(StyleConstants.EIGHTY_PERCENT)
 
@@ -287,10 +264,10 @@ struct AddDevice {
                     inputType: INPUT_TYPE.ALIAS,
                     inputId: CommonConstants.ALIAS_INPUT_ID,
                     isDefaultFocus: false,
-                    textResource: $r("app.string.add_alias_input_label"),
-                    placeholderResource: $r("app.string.add_alias_input_placeholder"),
-                    text: this.newDevice.Alias,
-                    onInputChange: (value: string | number) => { this.newDevice.Alias = String(value) }
+                    label: $r("app.string.add_alias_input_label"),
+                    placeholder: $r("app.string.add_alias_input_placeholder"),
+                    value: this.newDevice.Alias,
+                    onChange: (value: string) => { this.newDevice.Alias = value }
                 })
                     .width(StyleConstants.EIGHTY_PERCENT)
 
@@ -341,10 +318,10 @@ struct AddDevice {
                             inputType: INPUT_TYPE.ADDRESS,
                             inputId: CommonConstants.ADDRESS_INPUT_ID,
                             isDefaultFocus: false,
-                            textResource: $r("app.string.add_address_input_label"),
-                            placeholderResource: $r("app.string.add_address_input_placeholder"),
-                            text: this.newDevice.Address,
-                            onInputChange: (value: string | number) => { this.newDevice.Address = String(value) }
+                            label: $r("app.string.add_address_input_label"),
+                            placeholder: $r("app.string.add_address_input_placeholder"),
+                            value: this.newDevice.Address,
+                            onChange: (value: string) => { this.newDevice.Address = value }
                         })
                             .width(StyleConstants.EIGHTY_PERCENT)
 
@@ -352,10 +329,13 @@ struct AddDevice {
                             inputType: INPUT_TYPE.PORT,
                             inputId: CommonConstants.PORT_INPUT_ID,
                             isDefaultFocus: false,
-                            textResource: $r("app.string.add_port_input_label"),
-                            placeholderResource: $r("app.string.add_port_input_placeholder"),
-                            text: this.newDevice.Port,
-                            onInputChange: (value: string | number) => { this.newDevice.Port = Number(value) }
+                            label: $r("app.string.add_port_input_label"),
+                            placeholder: $r("app.string.add_port_input_placeholder"),
+                            value: this.portEdited ? String(this.newDevice.Port) : '',
+                            onChange: (value: string) => {
+                                this.portEdited = true;
+                                this.newDevice.Port = value === '' ? 9 : Number(value);
+                            }
                         })
                             .width(StyleConstants.EIGHTY_PERCENT)
                     }
@@ -397,6 +377,18 @@ struct AddDevice {
 
             Stack() {
                 this.NeighTableDeviceList();
+
+                if (this.neighTablePermissionDenied) {
+                    Text($r("app.string.neigh_table_permission_denied"))
+                        .width(StyleConstants.FULL_PERCENT)
+                        .textAlign(TextAlign.Center)
+                        .fontSize(StyleConstants.TEXT_FONT_SIZE_THIRTEEN)
+                        .fontColor($r("sys.color.font_secondary"))
+                        .padding({
+                            left: StyleConstants.PADDING_THIRTY,
+                            right: StyleConstants.PADDING_THIRTY
+                        })
+                }
 
                 if(this.isLoadingNeighTable) this.LoadingContent();
             }

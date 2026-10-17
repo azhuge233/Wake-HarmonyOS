@@ -1,4 +1,4 @@
-export default class WidgetDevice {
+export class WidgetDevice {
     id: number;
     alias: string;
     mac: string;

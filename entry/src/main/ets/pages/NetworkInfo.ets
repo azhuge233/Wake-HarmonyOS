@@ -3,9 +3,9 @@ import { connection } from '@kit.NetworkKit';
 import { common } from '@kit.AbilityKit';
 import { hdsMaterial, HdsNavDestination, HdsTabs, HdsTabsController } from '@kit.UIDesignKit';
 
-import Logger from '../common/utils/Logger';
-import StyleConstants from '../common/constants/StyleConstants';
-import CommonUtils from '../common/utils/CommonUtils';
+import { Logger } from '../common/utils/Logger';
+import { StyleConstants } from '../common/constants/StyleConstants';
+import { CommonUtils } from '../common/utils/CommonUtils';
 
 @Builder
 export function NetworkInfoBuilder() {
@@ -16,8 +16,6 @@ export function NetworkInfoBuilder() {
 @ComponentV2
 struct NetworkInfo {
     private LOG_TAG = '[pages/NetworkInfo]';
-
-    @Local isProcessing: boolean = false;
 
     @Local basicInfoList: Array<[string | Resource, string | Resource]> = [];
     @Local v4InfoList: Array<[string | Resource, string | Resource]> = [];
@@ -59,15 +57,12 @@ struct NetworkInfo {
     }
 
     private init() {
-        this.isProcessing = true;
-
         this.getWifiInfo();
         this.getIPv4Info();
         this.getIPv6Info();
         this.getNetworkInfo();
 
         Logger.debug(this.LOG_TAG, "refreshNetwork");
-        this.isProcessing = false;
     }
 
     private getWifiInfo() {
@@ -192,42 +187,6 @@ struct NetworkInfo {
     }
 
     @Builder
-    LoadingContent() {
-        Stack() {
-            Column()
-                .width(StyleConstants.FULL_PERCENT)
-                .height(StyleConstants.FULL_PERCENT)
-                .backgroundColor($r("app.color.background_transparent"))
-                .blur(StyleConstants.PROGRESS_COLUMN_BLUR_LEVEL)
-                .onClick(() => {})
-
-
-            Column() {
-                Progress({ value: 0, total: 100, type: ProgressType.Ring })
-                    .width(StyleConstants.PROGRESS_WIDTH)
-                    .color(Color.Blue)
-                    .style({
-                        strokeWidth: StyleConstants.PROGRESS_STROKE_WIDTH,
-                        status: ProgressStatus.LOADING
-                    })
-
-                Text($r("app.string.import_waiting_message"))
-                    .margin({ top: StyleConstants.MARGIN_TWENTY })
-                    .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
-                    .fontColor($r("sys.color.font_primary"))
-            }
-            .width(StyleConstants.FULL_PERCENT)
-            .height(StyleConstants.FULL_PERCENT)
-            .justifyContent(FlexAlign.Center)
-            .onClick(() => {})
-        }
-        .onClick(() => {})
-        .onAppear(() => {
-            Logger.debug(this.LOG_TAG, "Blocking stack loaded!");
-        })
-    }
-
-    @Builder
     ListBuilder(list: Array<[string | Resource, string | Resource]>, listScroller: ListScroller) {
         List({ scroller: listScroller }) {
             ForEach(list, (item: [string | Resource, string | Resource]) => {
@@ -268,9 +227,9 @@ struct NetworkInfo {
                     },
                     color: $r("sys.color.font_tertiary")
                 })
-            })
-        }
-        .width(StyleConstants.FULL_PERCENT)
+                }, (item: [string | Resource, string | Resource], index: number) => index.toString())
+            }
+            .width(StyleConstants.FULL_PERCENT)
         .height(StyleConstants.FULL_PERCENT)
         .alignListItem(ListItemAlign.Center)
     }
@@ -311,8 +270,6 @@ struct NetworkInfo {
         HdsNavDestination() {
             Stack({ alignContent: Alignment.Top }) {
                 this.MainContent();
-
-                if (this.isProcessing) this.LoadingContent();
             }
         }
         .titleBar({

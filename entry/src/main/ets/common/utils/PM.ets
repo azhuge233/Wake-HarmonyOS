@@ -1,10 +1,10 @@
 import preferences from '@ohos.data.preferences';
 import { deviceInfo } from '@kit.BasicServicesKit';
 
-import Logger from './Logger';
-import SingleDeviceFormData from '../../singledevicewidget/model/SingleDeviceFormData';
-import Device from '../../model/Device';
-import MultipleDevicesFormData from '../../multipledeviceswidget/model/MultipleDevicesFormData';
+import { Logger } from './Logger';
+import { SingleDeviceFormData } from '../../singledevicewidget/model/SingleDeviceFormData';
+import { Device } from '../../model/Device';
+import { MultipleDevicesFormData } from '../../multipledeviceswidget/model/MultipleDevicesFormData';
 
 export class PM {
     private LOG_TAG = '[PM]';
@@ -46,7 +46,8 @@ export class PM {
                 resolve(); // 解析Promise表示初始化完成
             }).catch((err: BusinessError) => {
                 Logger.error(this.LOG_TAG, `首选项初始化失败, ${err}`);
-                resolve(); // 即使失败也要resolve，避免永久阻塞
+                this.initPromise = null;
+                resolve(); // 允许下次 init() 重试
             });
         });
     }
@@ -120,6 +121,16 @@ export class PM {
         }
     }
 
+    // deviceList 属性只存在于多设备卡片数据中；解析后判断属性，避免 MAC/别名里出现 deviceList 时误判
+    private isMultipleCardData(raw: string): boolean {
+        try {
+            const parsed = JSON.parse(raw) as Record<string, Object>;
+            return Array.isArray(parsed['deviceList']);
+        } catch (err) {
+            return false;
+        }
+    }
+
     async getAllCardBindingsSingle(): Promise<Array<SingleDeviceFormData>> {
         await this.waitForReady();
 
@@ -128,7 +139,7 @@ export class PM {
         try {
             const formDataMap = (await this.dataPreferences.getAll() ?? {}) as Record<string, string>;
             let keys = Object.keys(formDataMap);
-            keys = keys.filter(key => !formDataMap[key].includes("deviceList"));
+            keys = keys.filter(key => !this.isMultipleCardData(formDataMap[key]));
 
             return keys.map(key => JSON.parse(formDataMap[key]) as SingleDeviceFormData);
         } catch (err) {
@@ -147,8 +158,8 @@ export class PM {
 
             let updatedFormIDs: string[] = [];
 
-            // 更新所有绑定该指令的卡片，统计受影响的 formID
-            formDataArr.forEach(async formData => {
+            // 更新所有绑定该设备的卡片，统计受影响的 formID
+            for (const formData of formDataArr) {
                 if(formData.deviceID === device.ID) {
                     updatedFormIDs.push(formData.formID);
 
@@ -159,11 +170,11 @@ export class PM {
 
                     await this.bindSingle(formData.formID, formData);
                 }
-            });
+            }
 
             return updatedFormIDs;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `updateByDeviceSingle() 更新指令绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `updateByDeviceSingle() 更新设备绑定失败, ${err}`);
             return [];
         }
     }
@@ -178,17 +189,17 @@ export class PM {
 
             let removedFormIDs: string[] = [];
 
-            // 删除所有绑定该指令的卡片，统计受影响的 formID
-            formDataArr.forEach(async formData => {
+            // 删除所有绑定该设备的卡片，统计受影响的 formID
+            for (const formData of formDataArr) {
                 if(formData.deviceID === deviceID) {
                     removedFormIDs.push(formData.formID);
                     await this.unbind(formData.formID);
                 }
-            });
+            }
 
             return removedFormIDs;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdSingle() 删除指令绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdSingle() 删除设备绑定失败, ${err}`);
             return [];
         }
     }
@@ -235,7 +246,7 @@ export class PM {
         try {
             const formDataMap = (await this.dataPreferences.getAll() ?? {}) as Record<string, string>;
             let keys = Object.keys(formDataMap);
-            keys = keys.filter(key => formDataMap[key].includes("deviceList"));
+            keys = keys.filter(key => this.isMultipleCardData(formDataMap[key]));
 
             return keys.map(key => JSON.parse(formDataMap[key]) as MultipleDevicesFormData);
         } catch (err) {
@@ -254,7 +265,7 @@ export class PM {
 
             let updatedFormIDs: string[] = [];
 
-            // 更新所有绑定该指令的卡片，统计受影响的 formID
+            // 更新所有绑定该设备的卡片，统计受影响的 formID
             for(const formData of formDataArr) {
                 let needsUpdate: boolean = false;
 
@@ -279,7 +290,7 @@ export class PM {
 
             return updatedFormIDs;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `updateByDeviceMultiple() 更新指令绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `updateByDeviceMultiple() 更新设备绑定失败, ${err}`);
             return [];
         }
     }
@@ -294,19 +305,19 @@ export class PM {
 
             let affectedFormIDs: string[] = [];
 
-            // 删除所有绑定该指令的卡片，统计受影响的 formID
+            // 删除所有绑定该设备的卡片，统计受影响的 formID
             for(let formData of formDataArr) {
-                // 过滤掉要删除的指令
+                // 过滤掉要删除的设备
                 const originalLength = formData.deviceList.length;
                 formData.deviceList = formData.deviceList.filter(
                   shortcut => shortcut.id !== deviceID
                 );
 
-                // 如果指令列表有变化
+                // 如果设备列表有变化
                 if(formData.deviceList.length !== originalLength) {
                     affectedFormIDs.push(formData.formID);
 
-                    // 如果指令列表为空，删除整个卡片
+                    // 如果设备列表为空，删除整个卡片
                     if(formData.deviceList.length === 0) await this.unbind(formData.formID);
                     else await this.bindMultiple(formData.formID, formData); // 否则更新卡片
                 }
@@ -314,7 +325,7 @@ export class PM {
 
             return affectedFormIDs;
         } catch (err) {
-            Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdMultiple() 删除指令绑定失败, ${err}`);
+            Logger.error(this.LOG_TAG, `removeBindingsByDeviceIdMultiple() 删除设备绑定失败, ${err}`);
             return [];
         }
     }

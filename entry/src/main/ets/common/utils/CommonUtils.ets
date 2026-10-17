@@ -7,11 +7,11 @@ import { vibrator } from '@kit.SensorServiceKit';
 import { buffer } from '@kit.ArkTS';
 import { formBindingData } from '@kit.FormKit';
 
-import Logger from './Logger';
-import StyleConstants from '../constants/StyleConstants';
+import { Logger } from './Logger';
+import { StyleConstants } from '../constants/StyleConstants';
 import { DeviceJsonObject } from '../../model/JsonObject';
-import SingleDeviceFormData from '../../singledevicewidget/model/SingleDeviceFormData'
-import MultipleDevicesFormData from '../../multipledeviceswidget/model/MultipleDevicesFormData';
+import { SingleDeviceFormData } from '../../singledevicewidget/model/SingleDeviceFormData'
+import { MultipleDevicesFormData } from '../../multipledeviceswidget/model/MultipleDevicesFormData';
 
 class CommonUtils {
     private LOG_TAG = "[CommonUtils]";
@@ -119,10 +119,12 @@ class CommonUtils {
 
                 let jsonFile = fs.openSync(savePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
 
-                let writeLen = fs.writeSync(jsonFile.fd, json);
-                Logger.debug(this.LOG_TAG, `配置文件已保存, 路径: ${jsonFile.path}, 写入长度: ${writeLen}`);
-
-                fs.closeSync(jsonFile);
+                try {
+                    let writeLen = fs.writeSync(jsonFile.fd, json);
+                    Logger.debug(this.LOG_TAG, `配置文件已保存, 路径: ${jsonFile.path}, 写入长度: ${writeLen}`);
+                } finally {
+                    fs.closeSync(jsonFile);
+                }
                 return true;
             }
 
@@ -154,25 +156,27 @@ class CommonUtils {
         try {
             let file = fs.openSync(uri, fs.OpenMode.READ_ONLY);
 
-            let fileStat = fs.statSync(file.fd);
-            let fileSize = fileStat.size;
-            Logger.debug(this.LOG_TAG, `文件大小: ${fileSize} 字节`);
+            try {
+                let fileStat = fs.statSync(file.fd);
+                let fileSize = fileStat.size;
+                Logger.debug(this.LOG_TAG, `文件大小: ${fileSize} 字节`);
 
-            // 读取文件
-            // cannot use readText(Sync), throws 13900002 error(No such file or directory)
-            let arrayBuffer = new ArrayBuffer(fileSize);
-            let readLen = fs.readSync(file.fd, arrayBuffer);
+                // 读取文件
+                // cannot use readText(Sync), throws 13900002 error(No such file or directory)
+                let arrayBuffer = new ArrayBuffer(fileSize);
+                let readLen = fs.readSync(file.fd, arrayBuffer);
 
-            Logger.debug(this.LOG_TAG, `从文件读取 ${readLen} 字节`);
-            if (readLen !== fileSize) Logger.warn(this.LOG_TAG,
-                `应读取 ${fileSize} 字节, 但实际读取 ${readLen}`);
+                Logger.debug(this.LOG_TAG, `从文件读取 ${readLen} 字节`);
+                if (readLen !== fileSize) Logger.warn(this.LOG_TAG,
+                    `应读取 ${fileSize} 字节, 但实际读取 ${readLen}`);
 
-            let jsonString = buffer.from(arrayBuffer, 0, readLen).toString();
+                let jsonString = buffer.from(arrayBuffer, 0, readLen).toString();
 
-            fs.closeSync(file);
-
-            Logger.debug(this.LOG_TAG, `读取成功, 内容长度: ${jsonString.length}`);
-            return jsonString;
+                Logger.debug(this.LOG_TAG, `读取成功, 内容长度: ${jsonString.length}`);
+                return jsonString;
+            } finally {
+                fs.closeSync(file);
+            }
         } catch (err) {
             Logger.error(this.LOG_TAG, `文件读取失败, ${err}`);
             return undefined;
@@ -186,9 +190,9 @@ class CommonUtils {
             const deviceListJsonObject = JSON.parse(jsonStr) as Array<DeviceJsonObject>;
 
             if (Array.isArray(deviceListJsonObject)) {
-                Logger.debug(this.LOG_TAG, `数据解析成功, 指令列表长度: ${deviceListJsonObject.length}`);
+                Logger.debug(this.LOG_TAG, `数据解析成功, 设备列表长度: ${deviceListJsonObject.length}`);
                 return deviceListJsonObject;
-            } else throw new Error("解析失败，指令列表非数组");
+            } else throw new Error("解析失败，设备列表非数组");
         } catch (err) {
             Logger.error(this.LOG_TAG, `数据解析失败, 代码: ${err.code}, 错误信息: ${err.message}`);
             throw new Error(err);
@@ -248,4 +252,5 @@ class CommonUtils {
     }
 }
 
-export default new CommonUtils();
+const commonUtils = new CommonUtils();
+export { commonUtils as CommonUtils };

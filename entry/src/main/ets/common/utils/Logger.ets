@@ -11,20 +11,21 @@ class Logger {
     }
 
     debug(...args: string[]) {
-        hilog.debug(this.domain, this.prefix, this.format, args);
+        hilog.debug(this.domain, this.prefix, this.format, ...args);
     }
 
     info(...args: string[]) {
-        hilog.info(this.domain, this.prefix, this.format, args);
+        hilog.info(this.domain, this.prefix, this.format, ...args);
     }
 
     warn(...args: string[]) {
-        hilog.warn(this.domain, this.prefix, this.format, args);
+        hilog.warn(this.domain, this.prefix, this.format, ...args);
     }
 
     error(...args: string[]) {
-        hilog.error(this.domain, this.prefix, this.format, args);
+        hilog.error(this.domain, this.prefix, this.format, ...args);
     }
 }
 
-export default new Logger('[Wake]');
+const logger = new Logger('[Wake]');
+export { logger as Logger };

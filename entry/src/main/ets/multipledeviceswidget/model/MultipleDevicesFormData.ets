@@ -1,6 +1,6 @@
-import WidgetDevice from "./WidgetDevice";
+import { WidgetDevice } from "./WidgetDevice";
 
-export default class MultipleDevicesFormData {
+export class MultipleDevicesFormData {
     formID: string = '';
     isInitialized: boolean = false;
     isRunning: boolean = false;

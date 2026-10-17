@@ -1,6 +1,6 @@
-import StyleConstants from "../common/constants/StyleConstants";
-import CommonUtils from "../common/utils/CommonUtils";
-import CommonConstants from "../common/constants/CommonConstants";
+import { StyleConstants } from "../common/constants/StyleConstants";
+import { CommonUtils } from "../common/utils/CommonUtils";
+import { CommonConstants } from "../common/constants/CommonConstants";
 
 @ComponentV2
 export default struct DeviceTile {
@@ -10,7 +10,7 @@ export default struct DeviceTile {
     @Param deviceAlias: string = '';
     @Param deviceAddress: string = '';
     @Param devicePort: number = 9;
-    @Param sendPacket: (mac: string, targetAddr: string, targetPort: number) => void = () => {};
+    @Event sendPacket: (mac: string, targetAddr: string, targetPort: number) => void = () => {};
 
     build() {
         Row() {
@@ -39,7 +39,7 @@ export default struct DeviceTile {
             Column() {
                 Button($r("app.string.button_wake_label"))
                     .onClick(() => {
-                        CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_HARD);
+                        CommonUtils.vibrate(CommonConstants.VIBRATE_EFFECT_ID_HARD);
                         this.sendPacket(this.deviceMAC, this.deviceAddress, this.devicePort);
                     })
             }

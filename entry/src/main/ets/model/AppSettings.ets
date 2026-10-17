@@ -1,7 +1,8 @@
 import { ConfigurationConstant } from '@kit.AbilityKit';
 
+@ObservedV2
 export class AppSettings {
-    colorMode: ConfigurationConstant.ColorMode;
+    @Trace colorMode: ConfigurationConstant.ColorMode;
 
     constructor(colorMode: ConfigurationConstant.ColorMode) {
         this.colorMode = colorMode;

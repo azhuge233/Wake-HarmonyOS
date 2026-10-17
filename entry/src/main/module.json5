@@ -61,7 +61,7 @@
       },
       {
         "name": 'SingleDeviceEditEntryAbility',
-        "srcEntry": "./ets/singledevicewidget/singledeviceeditentryability/singledeviceeditentryability.ets",
+        "srcEntry": "./ets/singledevicewidget/singledeviceeditentryability/SingleDeviceEditEntryAbility.ets",
         "description": '$string:SingleDeviceEditEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:SingleDeviceEditEntryAbility_label",

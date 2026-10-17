@@ -99,4 +99,5 @@ class StyleConstants {
     public readonly RADIO_SIZE = 35;
 }
 
-export default new StyleConstants();
+const styleConstants = new StyleConstants();
+export { styleConstants as StyleConstants };

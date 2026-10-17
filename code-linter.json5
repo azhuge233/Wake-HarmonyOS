@@ -16,5 +16,25 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-  }
+  },
+  "overrides": [
+    {
+      // 这些文件的 await 目标均为 async/Promise，CodeLinter 类型推断误报；只关闭本规则，保留其余检查
+      "files": [
+        "entry/src/main/ets/common/utils/DB.ets",
+        "entry/src/main/ets/common/utils/NET.ets",
+        "entry/src/main/ets/common/utils/PM.ets",
+        "entry/src/main/ets/model/DeviceList.ets",
+        "entry/src/main/ets/multipledeviceswidget/multipledevicesformability/MultipleDevicesFormAbility.ets",
+        "entry/src/main/ets/multipledeviceswidget/multipledeviceswidgetentryability/MultipleDevicesWidgetEntryAbility.ets",
+        "entry/src/main/ets/pages/AddDevice.ets",
+        "entry/src/main/ets/pages/Index.ets",
+        "entry/src/main/ets/singledevicewidget/singledeviceformability/SingleDeviceFormAbility.ets",
+        "entry/src/main/ets/singledevicewidget/singledevicewidgetentryability/SingleDeviceWidgetEntryAbility.ets"
+      ],
+      "rules": {
+        "@typescript-eslint/await-thenable": "off"
+      }
+    }
+  ]
 }

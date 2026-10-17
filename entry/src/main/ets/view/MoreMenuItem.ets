@@ -1,4 +1,4 @@
-import StyleConstants from "../common/constants/StyleConstants";
+import { StyleConstants } from "../common/constants/StyleConstants";
 
 @ComponentV2
 export default struct MoreMenuItem {
@@ -6,7 +6,7 @@ export default struct MoreMenuItem {
 
     @Param menuTitleText: Resource | string = $r("app.string.empty");
     @Param menuDescText: Resource | string | null = null;
-    @Param menuIcon: Resource | string = $r("app.string.empty");
+    @Param menuIcon: Resource | string = $r("app.media.icon");
 
     build() {
         Row() {
@@ -19,7 +19,6 @@ export default struct MoreMenuItem {
                 Text(this.menuTitleText)
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
                     .fontWeight(FontWeight.Medium)
-                    .align(Alignment.Center)
                     .textAlign(TextAlign.Start)
                     .width(StyleConstants.EIGHTY_PERCENT)
 

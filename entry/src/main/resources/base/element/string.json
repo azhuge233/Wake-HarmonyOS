@@ -635,6 +635,22 @@
     {
       "name": "neigh_table_loading_message",
       "value": "Loading, please wait..."
+    },
+    {
+      "name": "loading_message",
+      "value": "Loading, please wait..."
+    },
+    {
+      "name": "accessibility_edit_device",
+      "value": "Edit device"
+    },
+    {
+      "name": "accessibility_delete_device",
+      "value": "Delete device"
+    },
+    {
+      "name": "neigh_table_permission_denied",
+      "value": "Cannot read the neighbor table (missing permission). Use manual add instead."
     }
   ]
 }

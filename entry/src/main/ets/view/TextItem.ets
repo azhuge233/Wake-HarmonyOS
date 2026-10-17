@@ -1,4 +1,4 @@
-import StyleConstants from "../common/constants/StyleConstants";
+import { StyleConstants } from "../common/constants/StyleConstants";
 
 export enum INPUT_TYPE {
     NONE = 0,
@@ -8,16 +8,20 @@ export enum INPUT_TYPE {
     PORT = 4
 }
 
+/**
+ * 受控输入项：值由父组件持有（value），本组件只负责显示和回传输入。
+ * 父组件更新 value 时 TextInput 同步刷新；不要在本组件内保存输入副本。
+ */
 @ComponentV2
 export default struct TextItem {
-    @Param text: string | number = '';
+    @Param value: string = '';
     @Param inputType: INPUT_TYPE = INPUT_TYPE.NONE;
     @Param inputId: string = '';
     @Param isDefaultFocus: boolean = false;
-    @Param textResource: Resource = $r("app.string.empty");
-    @Param placeholderResource: Resource = $r("app.string.empty");
+    @Param label: Resource = $r("app.string.empty");
+    @Param placeholder: Resource = $r("app.string.empty");
 
-    @Event onInputChange: (value: string | number) => void = (value: string | number) => {};
+    @Event onChange: (value: string) => void = (value: string) => {};
 
     private maxLength: number = StyleConstants.TEXT_INPUT_DEFAULT_MAX_LENGTH;
 
@@ -30,15 +34,15 @@ export default struct TextItem {
     build() {
         Column() {
             Row() {
-                Text(this.textResource)
+                Text(this.label)
                     .alignSelf(ItemAlign.Center)
                     .margin({
                         right: StyleConstants.MARGIN_FIVE,
                     })
 
                 TextInput({
-                    placeholder: this.placeholderResource,
-                    text: `${this.text}`
+                    placeholder: this.placeholder,
+                    text: this.value
                 })
                     .id(this.inputId)
                     .defaultFocus(this.isDefaultFocus)
@@ -48,7 +52,7 @@ export default struct TextItem {
                     .maxLength(this.maxLength)
                     .type(this.inputType === INPUT_TYPE.PORT ? InputType.Number : InputType.Normal)
                     .onChange((value: string) => {
-                        this.onInputChange(value);
+                        this.onChange(value);
                     })
             }
             .width(StyleConstants.FULL_PERCENT)

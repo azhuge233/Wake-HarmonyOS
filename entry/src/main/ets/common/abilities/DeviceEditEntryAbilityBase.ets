@@ -2,29 +2,35 @@ import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from "@kit.Ab
 import { AppStorageV2, window, KeyboardAvoidMode } from '@kit.ArkUI';
 
 import { DB } from '../../common/utils/DB';
-import Logger from '../../common/utils/Logger';
+import { Logger } from '../../common/utils/Logger';
 import { PM } from '../../common/utils/PM';
-import CommonConstants from '../../common/constants/CommonConstants';
+import { CommonConstants } from '../../common/constants/CommonConstants';
 import { AppSettingsManager } from '../../common/utils/AppSettingsManager';
 import { AppSettings } from '../../model/AppSettings';
-import CommonUtils from "../../common/utils/CommonUtils";
+import { CommonUtils } from '../../common/utils/CommonUtils';
 
-export default class SingleDeviceEditEntryAbility extends UIAbility {
-    private LOG_TAG = "[SingleDeviceEditEntryAbility]";
+export default class DeviceEditEntryAbilityBase extends UIAbility {
+    protected LOG_TAG: string;
+    protected targetPage: string;
+    protected deviceTypeLabel: string;
 
-    private targetPage: string = 'pages/SingleDeviceFormEdit';
     private currentWindowStage: window.WindowStage | null = null;
 
     private db = DB.getInstance();
     private pm = PM.getInstance();
     private asm = AppSettingsManager.getInstance();
 
+    constructor(targetPage: string, logTag: string, deviceTypeLabel: string) {
+        super();
+        this.targetPage = targetPage;
+        this.LOG_TAG = logTag;
+        this.deviceTypeLabel = deviceTypeLabel;
+    }
+
     onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
         Logger.debug(this.LOG_TAG, `onCreate()`);
 
         this.init();
-
-        // Logger.warn(this.LOG_TAG, `${JSON.stringify(want.parameters)}`);
 
         this.handleFormWant(want);
 
@@ -44,31 +50,24 @@ export default class SingleDeviceEditEntryAbility extends UIAbility {
     }
 
     async onWindowStageCreate(windowStage: window.WindowStage): Promise<void> {
-        // Main window is created, set main page for this ability
         Logger.debug(this.LOG_TAG, `onWindowStageCreate()`);
 
-        // 设置当前窗口为传入窗口
         if (this.currentWindowStage === null) this.currentWindowStage = windowStage;
 
-        // 从首选项加载并设置颜色模式
         await this.setColorMode();
 
-        // 加载页面
         this.loadContent();
     }
 
     onWindowStageDestroy(): void {
-        // Main window is destroyed, release UI related resources
         Logger.debug(this.LOG_TAG, `onWindowStageDestroy()`);
     }
 
     onForeground(): void {
-        // Ability has brought to foreground
         Logger.debug(this.LOG_TAG, `onForeground()`);
     }
 
     onBackground(): void {
-        // Ability has back to background
         Logger.debug(this.LOG_TAG, `onBackground()`);
     }
 
@@ -82,9 +81,9 @@ export default class SingleDeviceEditEntryAbility extends UIAbility {
     private handleFormWant(want: Want): void {
         const formID: string = want.parameters?.formId as string;
 
-        Logger.debug(this.LOG_TAG, `编辑单设备卡片，卡片 ID = ${formID}`);
+        Logger.debug(this.LOG_TAG, `编辑${this.deviceTypeLabel}卡片，卡片 ID = ${formID}`);
 
-        if(formID && formID.trim() !== '') AppStorage.setOrCreate(CommonConstants.AppStorage_KEY_FormID, formID);
+        if(formID && formID.trim() !== '') AppStorage.setOrCreate(CommonConstants.APP_STORAGE_KEY_FORM_ID, formID);
         else {
             Logger.warn(this.LOG_TAG, 'handleFormWant() 卡片 ID 无效');
             CommonUtils.closeApplication(this.LOG_TAG, this.context);
@@ -120,7 +119,7 @@ export default class SingleDeviceEditEntryAbility extends UIAbility {
 
             this.context.getApplicationContext().setColorMode(appSettings.colorMode);
 
-            AppStorageV2.connect(AppSettings, CommonConstants.AppStorage_KEY_AppSettings, () => appSettings);
+            AppStorageV2.connect(AppSettings, CommonConstants.APP_STORAGE_KEY_APP_SETTINGS, () => appSettings);
 
             Logger.debug(this.LOG_TAG, `setColorMode() 窗口颜色设置: ${appSettings.colorMode}`)
         } catch (err) {

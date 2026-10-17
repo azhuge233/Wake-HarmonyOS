@@ -1,12 +1,12 @@
-import StyleConstants from '../../common/constants/StyleConstants';
-import CommonConstants from '../../common/constants/CommonConstants'
-import WidgetDevice from '../model/WidgetDevice';
+import { StyleConstants } from '../../common/constants/StyleConstants';
+import { CommonConstants } from '../../common/constants/CommonConstants'
+import { WidgetDevice } from '../model/WidgetDevice';
 
 let storage = new LocalStorage();
 
 @Entry(storage)
 @Component
-struct SingleDeviceCard {
+struct MultipleDevicesCard {
     @LocalStorageProp('formID') private formID: string = '';
     @LocalStorageProp('isInitialized') private isInitialized: boolean = false;
     @LocalStorageProp('isRunning') private isRunning: boolean = false;
@@ -32,10 +32,6 @@ struct SingleDeviceCard {
                 data: data
             }
         });
-    }
-
-    aboutToAppear(): void {
-        this.sendMessageAction(CommonConstants.FormMessage_Restore, 'aboutToAppear()');
     }
 
     @Builder
@@ -106,12 +102,12 @@ struct SingleDeviceCard {
                             bottom: StyleConstants.MARGIN_THREE
                         })
                         .onClick(() => {
-                            if (this.isInitialized) {
+                            if (this.isInitialized && !this.isRunning) {
                                 postCardAction(this, {
                                     action: this.ActionTypeCall,
                                     abilityName: this.WidgetEntryAbilityName,
                                     params: {
-                                        method: CommonConstants.FormCall_Run,
+                                        method: CommonConstants.FORM_CALL_RUN,
                                         formID: this.formID,
                                         deviceID: device.id,
                                         mac: device.mac,
@@ -122,7 +118,7 @@ struct SingleDeviceCard {
                                 });
                             }
                         })
-                    })
+                    }, (device: WidgetDevice) => device.id.toString())
                 }
                 .lanes(2)
                 .layoutWeight(1)
@@ -152,7 +148,7 @@ struct SingleDeviceCard {
         .height(StyleConstants.FULL_PERCENT)
         .width(StyleConstants.FULL_PERCENT)
         .onAppear(() => {
-            this.sendMessageAction(CommonConstants.FormMessage_Restore, 'Init() Component');
+            this.sendMessageAction(CommonConstants.FORM_MESSAGE_RESTORE, 'Init() Component');
         })
         .onClick(() => {
             postCardAction(this, {
@@ -185,7 +181,7 @@ struct SingleDeviceCard {
         .width(StyleConstants.FULL_PERCENT)
         .onClick(() => {
             if(!this.isRunning && this.runResult !== '') {
-                this.sendMessageAction(CommonConstants.FormMessage_Restore, 'MainContent() Component');
+                this.sendMessageAction(CommonConstants.FORM_MESSAGE_RESTORE, 'MainContent() Component');
             }
         })
     }

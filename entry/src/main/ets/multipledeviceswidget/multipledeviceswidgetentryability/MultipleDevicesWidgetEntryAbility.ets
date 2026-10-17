@@ -1,13 +1,13 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { formProvider } from '@kit.FormKit';
 
-import CommonUtils from '../../common/utils/CommonUtils';
-import Logger from '../../common/utils/Logger';
-import NET from '../../common/utils/NET';
+import { CommonUtils } from '../../common/utils/CommonUtils';
+import { Logger } from '../../common/utils/Logger';
+import { NET } from '../../common/utils/NET';
 import { DB } from '../../common/utils/DB';
-import MultipleDevicesFormData from '../model/MultipleDevicesFormData';
-import CommonConstants from '../../common/constants/CommonConstants';
-import WidgetDevice from '../model/WidgetDevice';
+import { MultipleDevicesFormData } from '../model/MultipleDevicesFormData';
+import { CommonConstants } from '../../common/constants/CommonConstants';
+import { WidgetDevice } from '../model/WidgetDevice';
 
 export default class MultipleDevicesWidgetEntryAbility extends UIAbility {
     private LOG_TAG = "[MultipleDevicesWidgetEntryAbility]";
@@ -44,7 +44,12 @@ export default class MultipleDevicesWidgetEntryAbility extends UIAbility {
 
                 Logger.debug(this.LOG_TAG, `onCreate() 从 call 事件获得参数: ${this.formID}, ${this.deviceID}, ${this.mac}, ${this.address}, ${this.port}, ${this.deviceList}`);
 
-                CommonUtils.vibrate(CommonConstants.Vibrate_Effect_ID_HARD);
+                if (!this.formID || !this.mac || !this.deviceList) {
+                    Logger.error(this.LOG_TAG, `onCreate() 参数不完整: formID=${this.formID}, mac=${this.mac}, deviceList=${this.deviceList}`);
+                    return;
+                }
+
+                CommonUtils.vibrate(CommonConstants.VIBRATE_EFFECT_ID_HARD);
 
                 // 从数据库更新待执行的设备信息
                 // 防止执行时卡片UI没有及时更新
@@ -60,6 +65,7 @@ export default class MultipleDevicesWidgetEntryAbility extends UIAbility {
         } catch (err) {
             Logger.error(this.LOG_TAG, `onCreate() 错误, ${err}`);
         } finally {
+            await this.net.close();
             CommonUtils.closeApplication(this.LOG_TAG, this.context);
         }
     }

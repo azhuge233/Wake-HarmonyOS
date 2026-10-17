@@ -5,7 +5,7 @@ export class DeviceJsonObject {
     Port: number | null = null;
     OrderIndex: number = -1;
 
-    constructor(mac: string, alias: string, addr: string | null = null, port: number | null = null, orderIndex: number) {
+    constructor(mac: string, alias: string, addr: string | null = null, port: number | null = null, orderIndex: number = -1) {
         this.MAC = mac;
         this.Alias = alias;
         this.Address = addr;

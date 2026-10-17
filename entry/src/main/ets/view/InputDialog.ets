@@ -1,8 +1,8 @@
 import { hdsMaterial, HdsNavDestination, ScrollEffectType } from "@kit.UIDesignKit";
 
-import CommonConstants from "../common/constants/CommonConstants";
-import StyleConstants from "../common/constants/StyleConstants";
-import CommonUtils from "../common/utils/CommonUtils";
+import { CommonConstants } from "../common/constants/CommonConstants";
+import { StyleConstants } from "../common/constants/StyleConstants";
+import { CommonUtils } from "../common/utils/CommonUtils";
 import TextItem, { INPUT_TYPE } from '../view/TextItem';
 
 @ObservedV2
@@ -37,10 +37,10 @@ export struct InputDialog {
                 inputType: INPUT_TYPE.ALIAS,
                 inputId: CommonConstants.ALIAS_INPUT_ID,
                 isDefaultFocus: false,
-                textResource: $r("app.string.add_alias_input_label"),
-                placeholderResource: $r("app.string.add_alias_input_placeholder"),
-                text: this.data.deviceAlias,
-                onInputChange: (value: string | number) => { this.data.deviceAlias = String(value) }
+                label: $r("app.string.add_alias_input_label"),
+                placeholder: $r("app.string.add_alias_input_placeholder"),
+                value: this.data.deviceAlias,
+                onChange: (value: string) => { this.data.deviceAlias = value }
             })
                 .width(StyleConstants.EIGHTY_PERCENT)
                 .margin({
@@ -81,7 +81,10 @@ export struct InputDialog {
                     top: StyleConstants.MARGIN_EIGHT_PERCENT
                 })
                 .onClick(() => {
-                    this.pathStack.pop(this.data);
+                    this.pathStack.pop({
+                        deviceAlias: this.data.deviceAlias,
+                        ignoreIP: this.data.ignoreIP
+                    });
                 })
         }
         .width(StyleConstants.FULL_PERCENT)
@@ -113,7 +116,7 @@ export struct InputDialog {
         .mode(NavDestinationMode.DIALOG)
         .backgroundColor($r("sys.color.background_primary"))
         .onBackPressed(() => {
-            this.pathStack.pop("");
+            this.pathStack.pop();
             return true;
         })
         .onReady((context) => {
