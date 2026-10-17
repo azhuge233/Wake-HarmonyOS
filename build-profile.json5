@@ -1,20 +1,6 @@
 {
   "app": {
-    "signingConfigs": [
-      {
-        "name": "default",
-        "type": "HarmonyOS",
-        "material": {
-          "certpath": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_UqXOcAMYrmNcxdOAf0z354QyMC5aAeZ6BqjTLq2F9cg=.cer",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001A998F66427E37D4BA8663AB4A2E1BD40DD42454E9897A1A112A772EC508B2418A01C16E1CA15F",
-          "profile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_UqXOcAMYrmNcxdOAf0z354QyMC5aAeZ6BqjTLq2F9cg=.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\azhuge233\\.ohos\\config\\default_Wake-ohos_UqXOcAMYrmNcxdOAf0z354QyMC5aAeZ6BqjTLq2F9cg=.p12",
-          "storePassword": "0000001A0DD5DDA44248855418F3CFE2B256615D2D4D2555D72D156D4B07522337B18AD1E73A896A3DE2"
-        }
-      }
-    ],
+    "signingConfigs": [],
     "products": [
       {
         "name": "default",

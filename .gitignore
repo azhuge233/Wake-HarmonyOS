@@ -11,3 +11,5 @@
 **/.test
 /.appanalyzer
 /.codegenie/
+/external-signing-config.json
+/.build-profile.signing-backup.json5
