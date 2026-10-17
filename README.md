@@ -1,5 +1,7 @@
 # Wake-HarmonyOS
 
+> **Note**: After commit [`f6b6bf3`](https://github.com/azhuge233/Wake-HarmonyOS/commit/f6b6bf34e40f9a2bf579beea19df0d2af1eacf11) (v2.7.3), this project is maintained with AI assistance.
+
 Simple Wake-on-LAN application for HarmonyOS NEXT (5.0+).
 
 Supports standard WoL, device import/export (as .json file) and cards.
