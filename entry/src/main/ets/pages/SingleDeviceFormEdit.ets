@@ -212,6 +212,7 @@ struct SingleDeviceFormEdit {
                                         .onChange((isChecked: boolean) => {
                                             this.handleCheckboxChange(item.ID, isChecked);
                                         })
+                                        .hitTestBehavior(HitTestMode.None)
 
                                 }
                                 .width(StyleConstants.TWENTY_PERCENT)
@@ -220,6 +221,9 @@ struct SingleDeviceFormEdit {
                             .height(StyleConstants.TEN_PERCENT)
                             .width(StyleConstants.FULL_PERCENT)
                             .borderStyle(BorderStyle.Solid)
+                            .onClick(() => {
+                                this.handleCheckboxChange(item.ID, this.selectedID !== item.ID);
+                            })
                         }
                         .margin({
                             top: StyleConstants.FIVE_PERCENT,
