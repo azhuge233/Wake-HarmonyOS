@@ -9,7 +9,7 @@ import { LoadingOverlay } from '../component/LoadingOverlay';
 import { MoreMenuItem } from '../component/MoreMenuItem';
 import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
 import { showToast } from '../feedback/Feedback';
-import { resourceText } from '../util/ResourceText';
+import { resourceTextFormatted } from '../util/ResourceText';
 
 /** 更多页的一行：标题、图标、描述、动作 */
 class MenuEntry {
@@ -185,23 +185,27 @@ struct More {
     }
 
     /**
-     * 导入完成提示：两个失败数都要说。逐条入库失败数（summary.failed）与卡片刷新失败数（cardsFailed）
-     * 各自并进同一句；两者都为 0 才是纯「导入成功」。文案复用现有三句资源拼出，不新增 key。
+     * 导入完成提示：四种情形各取一句完整文案，不拼句子。两个失败数都为 0 才是纯「导入成功」，
+     * 其余三种交给 importDoneText 按情形选 key；数字作为格式化实参进句子，不接在句子后面。
      */
     private showImportDone(summary: ImportSummary): void {
         if (summary.failed === 0 && summary.cardsFailed === 0) {
             showToast(this.promptAction, $r('app.string.import_success'));
             return;
         }
+        showToast(this.promptAction, this.importDoneText(summary));
+    }
 
-        const parts: string[] = [resourceText($r('app.string.import_success'), this.context)];
+    /** 有失败时的提示：三分支互斥且穷尽——两者都有、只有入库失败、只有卡片刷新失败；前提是两个失败数不全为 0（由 showImportDone 保证） */
+    private importDoneText(summary: ImportSummary): string {
+        if (summary.failed > 0 && summary.cardsFailed > 0) {
+            return resourceTextFormatted($r('app.string.import_partial_both'), this.context,
+                [summary.failed, summary.cardsFailed]);
+        }
         if (summary.failed > 0) {
-            parts.push(`${resourceText($r('app.string.import_failed'), this.context)} ${summary.failed}`);
+            return resourceTextFormatted($r('app.string.import_partial_rows'), this.context, [summary.failed]);
         }
-        if (summary.cardsFailed > 0) {
-            parts.push(`${resourceText($r('app.string.card_refresh_failed'), this.context)} ${summary.cardsFailed}`);
-        }
-        showToast(this.promptAction, parts.join(' '));
+        return resourceTextFormatted($r('app.string.import_partial_cards'), this.context, [summary.cardsFailed]);
     }
 
     private async clearAll(): Promise<void> {

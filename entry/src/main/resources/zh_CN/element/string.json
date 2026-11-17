@@ -670,6 +670,18 @@
 		{
 			"name": "clear_waiting_message",
 			"value": "正在清除，请稍候…"
+		},
+		{
+			"name": "import_partial_rows",
+			"value": "导入完成，未入库 %d 条"
+		},
+		{
+			"name": "import_partial_cards",
+			"value": "导入完成，卡片未刷新 %d 张"
+		},
+		{
+			"name": "import_partial_both",
+			"value": "导入完成，未入库 %d 条，卡片未刷新 %d 张"
 		}
     ]
 }

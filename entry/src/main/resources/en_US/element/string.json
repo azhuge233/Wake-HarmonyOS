@@ -658,6 +658,18 @@
 		{
 			"name": "clear_waiting_message",
 			"value": "Clearing, please wait..."
+		},
+		{
+			"name": "import_partial_rows",
+			"value": "Import finished, not imported: %d"
+		},
+		{
+			"name": "import_partial_cards",
+			"value": "Import finished, cards not refreshed: %d"
+		},
+		{
+			"name": "import_partial_both",
+			"value": "Import finished, not imported: %d, cards not refreshed: %d"
 		}
     ]
 }
