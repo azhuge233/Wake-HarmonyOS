@@ -8,6 +8,7 @@ import { DeviceService } from '../../domain/DeviceService';
 import { DraftIssue } from '../../viewmodel/DeviceAddViewModel';
 import { DeviceEditViewModel } from '../../viewmodel/DeviceEditViewModel';
 import { DeviceViewModel } from '../../viewmodel/DeviceViewModel';
+import { CollapsibleDivider } from '../component/CollapsibleDivider';
 import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
 import TextItem, { INPUT_TYPE } from '../component/TextItem';
 import { showToast } from '../feedback/Feedback';
@@ -112,45 +113,12 @@ struct Edit {
                     .width('80%')
 
                 Column() {
-                    Stack() {
-                        Divider()
-                            .strokeWidth(2)
-                            .width('80%')
-                            .color($r('sys.color.background_emphasize'))
-
-                        Row() {
-                            Text($r('app.string.divider_label'))
-                                .fontColor($r('sys.color.font_emphasize'))
-                                .fontSize(12)
-                                .margin({
-                                    right: '1%'
-                                })
-
-                            SymbolGlyph($r('sys.symbol.chevron_up'))
-                                .width(15)
-                                .height(15)
-                                .fontColor([$r('sys.color.font_emphasize')])
-                                .margin({
-                                    left: '1%'
-                                })
-                                .rotate({
-                                    angle: this.showAdvanced ? 0 : 180
-                                })
-                        }
-                        .width('20%')
-                        .justifyContent(FlexAlign.Center)
-                        .alignItems(VerticalAlign.Center)
-                        .backgroundColor($r('sys.color.background_primary'))
-                        .margin({
-                            left: '1%'
-                        })
-                        .onClick(() => {
+                    CollapsibleDivider({
+                        label: $r('app.string.divider_label'),
+                        expanded: this.showAdvanced,
+                        onToggle: () => {
                             this.showAdvanced = !this.showAdvanced;
-                        })
-                    }
-                    .alignContent(Alignment.Start)
-                    .margin({
-                        top: '2%'
+                        }
                     })
 
                     if (this.showAdvanced) {

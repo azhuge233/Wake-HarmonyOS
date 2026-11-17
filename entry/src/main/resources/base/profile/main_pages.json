@@ -7,7 +7,8 @@
     "ui/pages/Edit",
     "ui/pages/form/SingleDeviceFormEdit",
     "ui/pages/form/MultipleDevicesFormEdit",
-    "ui/pages/ColorModeSettings",
+    "ui/pages/DataManagement",
+    "ui/pages/About",
     "ui/pages/NetworkInfo"
   ]
 }

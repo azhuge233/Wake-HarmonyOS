@@ -2,6 +2,7 @@ import { common } from '@kit.AbilityKit';
 import { HdsTabs, HdsTabsController, hdsMaterial } from '@kit.UIDesignKit';
 
 import { Logger } from '../../common/log/Logger';
+import { StyleConstants } from '../../common/constants/StyleConstants';
 import {
     DefaultNetSnapshot,
     Ipv4Snapshot,
@@ -165,11 +166,18 @@ struct NetworkInfo {
         return rows;
     }
 
+    /** 一个页签的读数卡：卡面四件套与设置卡同组常量；行间发丝线画在相邻两行之间，首行之上、末行之下不画 */
     @Builder
-    ListBuilder(list: Array<InfoRow>, listScroller: ListScroller) {
-        List({ scroller: listScroller }) {
-            ForEach(list, (item: InfoRow) => {
-                ListItem() {
+    InfoCard(list: Array<InfoRow>) {
+        Column() {
+            ForEach(list, (item: InfoRow, index: number) => {
+                Column() {
+                    if (index > 0) {
+                        Divider()
+                            .strokeWidth(StyleConstants.BORDER_WIDTH)
+                            .color($r('sys.color.comp_divider'))
+                    }
+
                     Column() {
                         Text(item[0])
                             .width('100%')
@@ -190,23 +198,43 @@ struct NetworkInfo {
                                 overflow: TextOverflow.MARQUEE
                             })
                     }
-                    .margin({
-                        top: 3,
-                        bottom: 3
+                    .width('100%')
+                    .padding({
+                        top: StyleConstants.ROW_VERTICAL_PADDING,
+                        bottom: StyleConstants.ROW_VERTICAL_PADDING,
+                        left: StyleConstants.CARD_PADDING,
+                        right: StyleConstants.CARD_PADDING
                     })
                 }
-                .width('85%')
-                .padding({
-                    left: 5,
-                    right: 5
-                })
-                .border({
-                    width: {
-                        bottom: 0.5
-                    },
-                    color: $r('sys.color.font_tertiary')
-                })
+                .width('100%')
             }, (item: InfoRow, index: number) => index.toString())
+        }
+        .width('100%')
+        .backgroundColor($r('sys.color.comp_background_primary'))
+        .border({
+            width: StyleConstants.CARD_BORDER_WIDTH,
+            color: $r('sys.color.comp_divider')
+        })
+        .borderRadius(StyleConstants.CARD_RADIUS)
+        .clip(true)
+    }
+
+    @Builder
+    ListBuilder(list: Array<InfoRow>, listScroller: ListScroller) {
+        List({ scroller: listScroller }) {
+            // 页签无读数时不渲染 ListItem：无卡、无空态文案
+            if (list.length > 0) {
+                ListItem() {
+                    this.InfoCard(list);
+                }
+                .width('100%')
+                .padding({
+                    top: StyleConstants.CARD_SPACE,
+                    bottom: StyleConstants.CARD_SPACE,
+                    left: StyleConstants.PAGE_PADDING,
+                    right: StyleConstants.PAGE_PADDING
+                })
+            }
         }
         .width('100%')
         .height('100%')
@@ -221,19 +249,35 @@ struct NetworkInfo {
         }) {
             TabContent() {
                 this.ListBuilder(this.basicInfoList, this.listScrollers[0]);
-            }.tabBar($r('app.string.network_info_basic_tab_title'))
+            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_basic_tab_title'))
+                .indicator({
+                    color: $r('sys.color.font_emphasize'),
+                    height: 2
+                }))
 
             TabContent() {
                 this.ListBuilder(this.v4InfoList, this.listScrollers[1]);
-            }.tabBar($r('app.string.network_info_v4_tab_title'))
+            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_v4_tab_title'))
+                .indicator({
+                    color: $r('sys.color.font_emphasize'),
+                    height: 2
+                }))
 
             TabContent() {
                 this.ListBuilder(this.v6InfoList, this.listScrollers[2]);
-            }.tabBar($r('app.string.network_info_v6_tab_title'))
+            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_v6_tab_title'))
+                .indicator({
+                    color: $r('sys.color.font_emphasize'),
+                    height: 2
+                }))
 
             TabContent() {
                 this.ListBuilder(this.defaultNetInfoList, this.listScrollers[3]);
-            }.tabBar($r('app.string.network_info_default_network_tab_title'))
+            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_default_network_tab_title'))
+                .indicator({
+                    color: $r('sys.color.font_emphasize'),
+                    height: 2
+                }))
         }
         .barMode(BarMode.Scrollable)
         .scrollable(true)
@@ -254,6 +298,7 @@ struct NetworkInfo {
             title: $r('app.string.network_info_title'),
             logTag: this.LOG_TAG,
             fillSize: true,
+            pageBackground: $r('sys.color.background_secondary'),
             bindScrollables: this.listScrollers as Scroller[],
             content: (): void => {
                 this.PageContent();

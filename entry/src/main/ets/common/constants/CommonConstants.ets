@@ -17,11 +17,13 @@ class CommonConstants {
     // 与 ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET 同值；领域层不引 AbilityKit，故此处给数值
     public readonly COLOR_MODE_NOT_SET = -1;
 
-    public readonly FILE_PICKER_CANCEL_ERROR_CODE = 100006;
-
     public readonly FORM_MESSAGE_RESTORE = 'restore';
 
     public readonly FORM_CALL_RUN = 'run';
+
+    // 关于页的开源地址与作者：作者名下划线 = 仓库属主
+    public readonly OPEN_SOURCE_URL = 'https://github.com/azhuge233/Wake-HarmonyOS';
+    public readonly OPEN_SOURCE_AUTHOR = 'azhuge233';
 }
 
 const commonConstants = new CommonConstants();

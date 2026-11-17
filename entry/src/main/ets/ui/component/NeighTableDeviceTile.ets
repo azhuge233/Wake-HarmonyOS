@@ -33,7 +33,7 @@ export struct NeighTableDeviceTile {
                         overflow: TextOverflow.MARQUEE
                     })
             }
-            .width(StyleConstants.SIXTY_FIVE_PERCENT)
+            .width(StyleConstants.SEVENTY_TWO_PERCENT)
             .alignItems(HorizontalAlign.Center)
             .padding({
                 left: StyleConstants.PADDING_TWO,
@@ -44,12 +44,20 @@ export struct NeighTableDeviceTile {
                 Button($r('app.string.button_add_machine_confirm'))
                     .onClick(() => this.onAdd());
             }
-            .width(StyleConstants.TWENTY_PERCENT)
+            .width(StyleConstants.TWENTY_TWO_PERCENT)
             .alignItems(HorizontalAlign.Center)
         }
         .width(StyleConstants.FULL_PERCENT)
         .height(StyleConstants.DEVICE_TILE_HEIGHT)
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.Center)
+        // 卡面四件套与设备条目同一组常量：两处条目同形，取值只有一处来源
+        .backgroundColor($r('sys.color.comp_background_primary'))
+        .border({
+            width: StyleConstants.CARD_BORDER_WIDTH,
+            color: $r('sys.color.comp_divider')
+        })
+        .borderRadius(StyleConstants.CARD_RADIUS)
+        .clip(true)
     }
 }

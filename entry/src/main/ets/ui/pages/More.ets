@@ -1,29 +1,39 @@
-import { common } from '@kit.AbilityKit';
+import { common, ConfigurationConstant } from '@kit.AbilityKit';
+import { AppStorageV2 } from '@kit.ArkUI';
 
+import { CommonConstants } from '../../common/constants/CommonConstants';
+import { StyleConstants } from '../../common/constants/StyleConstants';
 import { Logger } from '../../common/log/Logger';
-import { BackupService, ExportOutcome, ImportSummary } from '../../domain/BackupService';
-import { CardBindingService } from '../../domain/CardBindingService';
-import { DeviceService } from '../../domain/DeviceService';
+import { AppSettingsService } from '../../domain/AppSettingsService';
+import { AppSettings } from '../../viewmodel/AppSettings';
 import { MoreViewModel } from '../../viewmodel/MoreViewModel';
-import { LoadingOverlay } from '../component/LoadingOverlay';
 import { MoreMenuItem } from '../component/MoreMenuItem';
 import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
+import { SettingGroup } from '../component/SettingGroup';
+import { SettingRow } from '../component/SettingRow';
 import { showToast } from '../feedback/Feedback';
-import { resourceTextFormatted } from '../util/ResourceText';
+import { apply } from '../util/ColorModeApplier';
 
-/** 更多页的一行：标题、图标、描述、动作 */
-class MenuEntry {
-    title: Resource;
-    icon: Resource;
-    desc: Resource | null;
-    action: () => void;
+/** 颜色模式的一档：显示文字 + 平台枚举值 */
+class ColorModeOption {
+    label: ResourceStr;
+    mode: ConfigurationConstant.ColorMode;
 
-    constructor(title: Resource, icon: Resource, desc: Resource | null, action: () => void) {
-        this.title = title;
-        this.icon = icon;
-        this.desc = desc;
-        this.action = action;
+    constructor(label: ResourceStr, mode: ConfigurationConstant.ColorMode) {
+        this.label = label;
+        this.mode = mode;
     }
+}
+
+/** 三档顺序即下拉框顺序：跟随系统 / 浅色 / 深色 */
+const colorModeOptions: Array<ColorModeOption> = [
+    new ColorModeOption($r('app.string.page_color_mode_system'), ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET),
+    new ColorModeOption($r('app.string.page_color_mode_light'), ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT),
+    new ColorModeOption($r('app.string.page_color_mode_dark'), ConfigurationConstant.ColorMode.COLOR_MODE_DARK)
+];
+
+function createDefaultAppSettings(): AppSettings {
+    return new AppSettings(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
 }
 
 @Builder
@@ -31,12 +41,19 @@ export function MoreBuilder() {
     More();
 }
 
+/**
+ * 设置首页：四张卡——颜色模式（行内选择）、网络信息、数据管理、关于。
+ * 颜色模式的三档选项与「写共享状态 + 落盘 + 应用」逻辑只在本页；导出 / 导入 / 清除搬进 DataManagement，
+ * 版本号搬进 About，本页不再有版本号页脚。
+ */
 @ComponentV2
 struct More {
     private LOG_TAG = '[ui/pages/More]';
 
-    private viewModel: MoreViewModel = new MoreViewModel(BackupService.instance(),
-        DeviceService.instance(), CardBindingService.instance());
+    @Local appSettings: AppSettings = AppStorageV2.connect(AppSettings,
+        CommonConstants.APP_SETTINGS_STORAGE_KEY, () => createDefaultAppSettings())!;
+
+    private viewModel: MoreViewModel = new MoreViewModel(AppSettingsService.instance());
 
     private uiContext = this.getUIContext();
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
@@ -44,292 +61,171 @@ struct More {
 
     pathStack: NavPathStack | undefined = undefined;
 
-    private settingsEntries: Array<MenuEntry> = [
-        new MenuEntry($r('app.string.color_mode_title'), $r('app.media.brush'), $r('app.string.color_mode_desc'),
-            () => {
-                if (this.viewModel.busy === 'idle') {
-                    this.pathStack?.pushPath({ name: 'ColorModeSettings', param: this.pathStack });
-                } else {
-                    this.showBusy();
-                }
-            })
-    ];
+    async aboutToAppear(): Promise<void> {
+        // 冷启动/页面恢复时可能先于 EntryAbility 连接，这里用持久化值回填
+        const loaded = await this.viewModel.load();
+        if (!loaded.ok) {
+            // 读不到持久化值：本次沿用已在用的模式，不把失败当成「未写入」写回去；
+            // 失败必须看得见——选中态照旧呈现而不提示，等于在 UI 面把失败又当成了未写入
+            Logger.error(this.LOG_TAG, `读取颜色模式失败，本次沿用当前模式: ${loaded.error}`);
+            showToast(this.promptAction, $r('app.string.unkown_error'));
+            return;
+        }
 
-    private functionEntries: Array<MenuEntry> = [
-        new MenuEntry($r('app.string.network_info_title'), $r('app.media.wifi'), $r('app.string.network_info_desc'),
-            () => {
-                if (this.viewModel.busy === 'idle') {
-                    this.pathStack?.pushPath({ name: 'NetworkInfo', param: this.pathStack });
-                } else {
-                    this.showBusy();
-                }
-            }),
-        new MenuEntry($r('app.string.page_more_export'), $r('app.media.arrow_up_circle'),
-            $r('app.string.export_desc'), () => {
-                if (this.viewModel.busy === 'idle') {
-                    this.exportDevices().catch((err: Error) => {
-                        Logger.error(this.LOG_TAG, `导出失败, ${err}`);
-                        showToast(this.promptAction, $r('app.string.export_failed'));
-                    });
-                } else {
-                    this.showBusy();
-                }
-            }),
-        new MenuEntry($r('app.string.page_more_import'), $r('app.media.arrow_down_circle'),
-            $r('app.string.import_desc'), () => {
-                if (this.viewModel.busy === 'idle') {
-                    this.importConfirm().catch((err: Error) => {
-                        Logger.error(this.LOG_TAG, `导入失败, ${err}`);
-                        showToast(this.promptAction, $r('app.string.import_failed'));
-                    });
-                } else {
-                    this.showBusy();
-                }
-            })
-    ];
+        const persisted: number = loaded.value ?? this.appSettings.colorMode;
+        if (persisted !== this.appSettings.colorMode) {
+            this.appSettings.colorMode = persisted as ConfigurationConstant.ColorMode;
+            apply(this.context, persisted);
+        }
+    }
 
-    private othersEntries: Array<MenuEntry> = [
-        new MenuEntry($r('app.string.page_more_clear'), $r('app.media.clean'), null, () => {
-            if (this.viewModel.busy !== 'idle') {
-                this.showBusy();
-                return;
+    /** 选中即生效：写共享状态 + 落盘 + 应用；保存失败时三处都不动 */
+    private async applyColorMode(option: ConfigurationConstant.ColorMode): Promise<void> {
+        if (this.appSettings.colorMode === option) return;
+
+        const saved = await this.viewModel.save(option);
+        if (!saved.ok) {
+            Logger.error(this.LOG_TAG, `保存颜色模式失败: ${option}, ${saved.error}`);
+            showToast(this.promptAction, $r('app.string.unkown_error'));
+            return;
+        }
+
+        this.appSettings.colorMode = option;
+        apply(this.context, option);
+    }
+
+    /** 下拉框的选项与当前档：显示文字来自三档表，下标按当前共享状态认 */
+    private colorModeSelectOptions(): Array<SelectOption> {
+        const options: Array<SelectOption> = [];
+        for (const option of colorModeOptions) {
+            const item: SelectOption = { value: option.label };
+            options.push(item);
+        }
+        return options;
+    }
+
+    private colorModeIndex(): number {
+        for (let index = 0; index < colorModeOptions.length; index++) {
+            if (colorModeOptions[index].mode === this.appSettings.colorMode) return index;
+        }
+        return 0;
+    }
+
+    private colorModeLabel(): ResourceStr {
+        return colorModeOptions[this.colorModeIndex()].label;
+    }
+
+    @Builder
+    ColorModeSelect() {
+        Select(this.colorModeSelectOptions())
+            .selected(this.colorModeIndex())
+            .value(this.colorModeLabel())
+            .font({ size: StyleConstants.TEXT_FONT_SIZE_FOURTEEN })
+            .fontColor($r('sys.color.font_secondary'))
+            .margin({ left: StyleConstants.MARGIN_TEN })
+            .onSelect((index: number) => {
+                this.applyColorMode(colorModeOptions[index].mode).catch((err: Error) => {
+                    Logger.error(this.LOG_TAG, `切换颜色模式失败, ${err}`);
+                });
+            })
+    }
+
+    @Builder
+    ColorModeRow() {
+        SettingRow({
+            icon: $r('sys.symbol.brush'),
+            title: $r('app.string.color_mode_title'),
+            desc: $r('app.string.color_mode_desc'),
+            showArrow: false,
+            interactive: false,
+            trailing: (): void => {
+                this.ColorModeSelect();
             }
-            this.clearAll().catch((err: Error) => {
-                Logger.error(this.LOG_TAG, `清除失败, ${err}`);
-                showToast(this.promptAction, $r('app.string.clear_failed'));
-            });
         })
-    ];
-
-    aboutToAppear(): void {
-        this.viewModel.loadVersion();
     }
 
-    /** 重入提示：按忙的种类给同一句等待文案；导出不造文案（系统保存对话框占屏，页面不在前台） */
-    private showBusy(): void {
-        if (this.viewModel.busy === 'importing') showToast(this.promptAction, $r('app.string.import_waiting_message'));
-        else if (this.viewModel.busy === 'clearing') showToast(this.promptAction, $r('app.string.clear_waiting_message'));
-    }
-
-    private async exportDevices(): Promise<void> {
-        const outcome: ExportOutcome = await this.viewModel.exportDevices();
-        if (outcome.ok) {
-            showToast(this.promptAction, $r('app.string.export_success'));
-            return;
-        }
-
-        if (outcome.reason === 'cancelled') {
-            Logger.warn(this.LOG_TAG, '导出取消');
-            return;
-        }
-
-        showToast(this.promptAction, $r('app.string.export_failed'));
-    }
-
-    /**
-     * 弹窗的 try 只包弹窗：入库那段的抛出要一路回落到条目调用处的 .catch（那里提示 import_failed），
-     * 包在这里就会被“导入弹窗失败”的日志吃掉，用户侧变成“点了一下什么也没发生”。
-     */
-    private async importConfirm(): Promise<void> {
-        let confirmed = false;
-        try {
-            const result = await this.promptAction.showDialog({
-                title: $r('app.string.import_title'),
-                message: $r('app.string.import_message'),
-                buttons: [
-                    {
-                        text: $r('app.string.button_confirm_label'),
-                        color: $r('sys.color.font_primary')
-                    },
-                    {
-                        text: $r('app.string.button_cancel_label'),
-                        color: $r('sys.color.font_primary')
-                    }
-                ]
-            });
-
-            confirmed = result.index === 0;
-        } catch (err) {
-            Logger.error(this.LOG_TAG, `导入弹窗失败, ${err}`);
-            return;
-        }
-
-        if (confirmed) await this.importDevices();
-        else Logger.warn(this.LOG_TAG, '导入已取消');
-    }
-
-    private async importDevices(): Promise<void> {
-        let uri: string | null = null;
-        try {
-            uri = await this.viewModel.pickBackupFile();
-        } catch (err) {
-            Logger.error(this.LOG_TAG, `选择备份文件失败, ${err}`);
-            showToast(this.promptAction, $r('app.string.import_failed'));
-            return;
-        }
-
-        if (uri === null) {
-            Logger.warn(this.LOG_TAG, '未选择备份文件');
-            return;
-        }
-
-        const result = await this.viewModel.importFromFile(uri);
-        if (result.ok && result.value !== null) {
-            this.showImportDone(result.value);
-            this.pathStack?.pop('Import back');
-            return;
-        }
-
-        Logger.error(this.LOG_TAG, `导入失败: ${result.error}`);
-        showToast(this.promptAction, $r('app.string.import_failed'));
-    }
-
-    /**
-     * 导入完成提示：四种情形各取一句完整文案，不拼句子。两个失败数都为 0 才是纯「导入成功」，
-     * 其余三种交给 importDoneText 按情形选 key；数字作为格式化实参进句子，不接在句子后面。
-     */
-    private showImportDone(summary: ImportSummary): void {
-        if (summary.failed === 0 && summary.cardsFailed === 0) {
-            showToast(this.promptAction, $r('app.string.import_success'));
-            return;
-        }
-        showToast(this.promptAction, this.importDoneText(summary));
-    }
-
-    /** 有失败时的提示：三分支互斥且穷尽——两者都有、只有入库失败、只有卡片刷新失败；前提是两个失败数不全为 0（由 showImportDone 保证） */
-    private importDoneText(summary: ImportSummary): string {
-        if (summary.failed > 0 && summary.cardsFailed > 0) {
-            return resourceTextFormatted($r('app.string.import_partial_both'), this.context,
-                [summary.failed, summary.cardsFailed]);
-        }
-        if (summary.failed > 0) {
-            return resourceTextFormatted($r('app.string.import_partial_rows'), this.context, [summary.failed]);
-        }
-        return resourceTextFormatted($r('app.string.import_partial_cards'), this.context, [summary.cardsFailed]);
-    }
-
-    private async clearAll(): Promise<void> {
-        try {
-            const result = await this.promptAction.showDialog({
-                title: $r('app.string.clear_title'),
-                message: $r('app.string.clear_message'),
-                buttons: [
-                    {
-                        text: $r('app.string.button_confirm_label'),
-                        color: $r('sys.color.font_primary')
-                    },
-                    {
-                        text: $r('app.string.button_cancel_label'),
-                        color: $r('sys.color.font_primary')
-                    }
-                ]
-            });
-
-            if (result.index !== 0) {
-                Logger.warn(this.LOG_TAG, '清除已取消');
-                return;
+    @Builder
+    NetworkInfoRow() {
+        MoreMenuItem({
+            menuTitleText: $r('app.string.network_info_title'),
+            menuDescText: $r('app.string.network_info_desc'),
+            menuIcon: $r('sys.symbol.wifi'),
+            onTap: () => {
+                this.pathStack?.pushPath({ name: 'NetworkInfo', param: this.pathStack });
             }
+        })
+    }
 
-            const cleared = await this.viewModel.clearAll();
-            if (!cleared) {
-                showToast(this.promptAction, $r('app.string.clear_failed'));
-                return;
+    @Builder
+    DataManagementRow() {
+        MoreMenuItem({
+            menuTitleText: $r('app.string.data_management_title'),
+            menuDescText: $r('app.string.data_management_desc'),
+            menuIcon: $r('sys.symbol.doc_plaintext'),
+            onTap: () => {
+                this.pathStack?.pushPath({ name: 'DataManagement', param: this.pathStack });
             }
-
-            // 顺序与 Edit.updateDevice 一致：先报清除成功，再让卡片失败停在最后一句上
-            showToast(this.promptAction, $r('app.string.clear_success'));
-            const refreshError = this.viewModel.consumeCardRefreshError();
-            if (refreshError !== '') showToast(this.promptAction, $r('app.string.card_refresh_failed'));
-
-            this.pathStack?.pop('Clear press');
-        } catch (err) {
-            Logger.error(this.LOG_TAG, `清除失败, ${err}`);
-            showToast(this.promptAction, $r('app.string.clear_failed'));
-        }
+        })
     }
 
     @Builder
-    EntryGroup(entries: Array<MenuEntry>) {
-        ForEach(entries, (item: MenuEntry) => {
-            MoreMenuItem({
-                menuTitleText: item.title,
-                menuDescText: item.desc,
-                menuIcon: item.icon,
-                onTap: item.action
-            })
-        }, (item: MenuEntry) => item.icon.id.toString())
-    }
-
-    @Builder
-    EntryDivider() {
-        Divider()
-            .lineCap(LineCapStyle.Round)
-            .strokeWidth(2)
-            .width('90%')
-    }
-
-    @Builder
-    VersionFooter() {
-        Text(`${this.viewModel.versionName} (${this.viewModel.versionCode})`)
-            .width('100%')
-            .fontColor(Color.Grey)
-            .fontSize(13)
-            .alignSelf(ItemAlign.End)
-            .textAlign(TextAlign.Center)
+    AboutRow() {
+        MoreMenuItem({
+            menuTitleText: $r('app.string.about_title'),
+            menuIcon: $r('sys.symbol.info_circle'),
+            onTap: () => {
+                this.pathStack?.pushPath({ name: 'About', param: this.pathStack });
+            }
+        })
     }
 
     @Builder
     PageContent() {
-        Column() {
-            Column() {
-                this.EntryGroup(this.settingsEntries);
+        Column({ space: StyleConstants.CARD_SPACE }) {
+            SettingGroup({
+                rows: (): void => {
+                    this.ColorModeRow();
+                }
+            })
 
-                this.EntryDivider();
+            SettingGroup({
+                rows: (): void => {
+                    this.NetworkInfoRow();
+                }
+            })
 
-                this.EntryGroup(this.functionEntries);
+            SettingGroup({
+                rows: (): void => {
+                    this.DataManagementRow();
+                }
+            })
 
-                this.EntryDivider();
-
-                this.EntryGroup(this.othersEntries);
-            }
-            .height('100%')
-            .width('100%')
-
-            this.VersionFooter();
+            SettingGroup({
+                rows: (): void => {
+                    this.AboutRow();
+                }
+            })
         }
-        .height('100%')
-        .width('100%')
-    }
-
-    @Builder
-    PageOverlay() {
-        // 遮罩只在入库与清除这两段：导出无遮罩，选文件期间也无遮罩
-        if (this.viewModel.busy === 'importing') {
-            LoadingOverlay({ message: $r('app.string.import_waiting_message') })
-        } else if (this.viewModel.busy === 'clearing') {
-            LoadingOverlay({ message: $r('app.string.clear_waiting_message') })
-        }
+        .width(StyleConstants.FULL_PERCENT)
+        .padding({
+            top: StyleConstants.PAGE_PADDING,
+            bottom: StyleConstants.PAGE_PADDING,
+            left: StyleConstants.PAGE_PADDING,
+            right: StyleConstants.PAGE_PADDING
+        })
     }
 
     build() {
         PageScaffold({
             title: $r('app.string.more_title'),
             logTag: this.LOG_TAG,
+            scrollable: true,
+            pageBackground: $r('sys.color.background_secondary'),
             content: (): void => {
                 this.PageContent();
             },
-            overlayContent: (): void => {
-                this.PageOverlay();
-            },
             onReady: (ctx: PageReadyContext) => {
                 this.pathStack = (ctx.param as NavPathStack | undefined) ?? ctx.pathStack;
-            },
-            onBack: () => {
-                if (this.viewModel.busy === 'importing' || this.viewModel.busy === 'clearing') {
-                    this.showBusy();
-                    return true;
-                }
-                return false;
             }
         })
     }

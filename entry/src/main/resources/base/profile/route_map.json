@@ -33,11 +33,19 @@
       }
     },
     {
-      "name": "ColorModeSettings",
-      "pageSourceFile": "src/main/ets/ui/pages/ColorModeSettings.ets",
-      "buildFunction": "ColorModeSettingsBuilder",
+      "name": "DataManagement",
+      "pageSourceFile": "src/main/ets/ui/pages/DataManagement.ets",
+      "buildFunction": "DataManagementBuilder",
       "data": {
-        "description" : "Color mode settings page"
+        "description" : "Data management page"
+      }
+    },
+    {
+      "name": "About",
+      "pageSourceFile": "src/main/ets/ui/pages/About.ets",
+      "buildFunction": "AboutBuilder",
+      "data": {
+        "description" : "About page"
       }
     },
     {

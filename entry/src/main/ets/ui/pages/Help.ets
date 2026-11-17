@@ -1,9 +1,8 @@
-import { common, Want } from '@kit.AbilityKit';
+import { common } from '@kit.AbilityKit';
 import { webview } from '@kit.ArkWeb';
-import { BusinessError } from '@kit.BasicServicesKit';
 
-import { Logger } from '../../common/log/Logger';
 import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
+import { openInSystemBrowser } from '../util/ExternalLink';
 
 @Builder
 export function HelpBuilder() {
@@ -21,22 +20,6 @@ struct Help {
 
     pathStack: NavPathStack | undefined = undefined;
 
-    private openInSystemBrowser(url: string): void {
-        const want: Want = {
-            'action': 'ohos.want.action.viewData',
-            'entities': ['entity.system.browsable'],
-            'uri': url
-        };
-
-        this.context.startAbility(want)
-            .then(() => {
-                Logger.info(this.LOG_TAG, `成功在系统浏览器中打开: ${url}`);
-            })
-            .catch((err: BusinessError) => {
-                Logger.error(this.LOG_TAG, `打开系统浏览器失败: ${JSON.stringify(err)}`);
-            });
-    }
-
     @Builder
     PageContent() {
         Column() {
@@ -51,7 +34,8 @@ struct Help {
                     const url = event.data.getRequestUrl();
 
                     if (url.startsWith('http://') || url.startsWith('https://')) {
-                        this.openInSystemBrowser(url);
+                        // 打开外链的唯一实现在 ui/util/ExternalLink；日志标签仍用本页的
+                        openInSystemBrowser(this.LOG_TAG, this.context, url);
                         return true;
                     }
 

@@ -23,6 +23,13 @@ export struct AppInput {
                 .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
                 .maxLength(this.maxLength)
                 .type(this.numeric ? InputType.Number : InputType.Normal)
+                // 输入区与页面底之间留一条边界；底透明，不叠第二层底色
+                .border({
+                    width: StyleConstants.CARD_BORDER_WIDTH,
+                    color: $r('sys.color.comp_divider')
+                })
+                .borderRadius(StyleConstants.INPUT_BORDER_RADIUS)
+                .backgroundColor(Color.Transparent)
                 .onChange((value: string) => {
                     this.onValueChange(value);
                 });

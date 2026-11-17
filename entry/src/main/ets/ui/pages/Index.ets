@@ -226,10 +226,9 @@ struct Index {
     DeleteButton(device: DeviceViewModel) {
         Row() {
             Button() {
-                Image($r('app.media.trash'))
-                    .objectFit(ImageFit.Cover)
-                    .width('60%')
-                    .height('60%')
+                SymbolGlyph($r('sys.symbol.trash'))
+                    .fontSize(StyleConstants.ICON_WIDTH)
+                    .fontColor([$r('sys.color.font_primary')])
             }
             .backgroundColor($r('sys.color.warning'))
             .type(ButtonType.Circle)
@@ -250,10 +249,9 @@ struct Index {
     EditButton(device: DeviceViewModel) {
         Row() {
             Button() {
-                Image($r('app.media.square_and_pencil'))
-                    .objectFit(ImageFit.Cover)
-                    .width('60%')
-                    .height('60%')
+                SymbolGlyph($r('sys.symbol.square_and_pencil'))
+                    .fontSize(StyleConstants.ICON_WIDTH)
+                    .fontColor([$r('sys.color.font_primary')])
             }
             .backgroundColor($r('app.color.green'))
             .type(ButtonType.Circle)
@@ -298,7 +296,7 @@ struct Index {
 
     @Builder
     DeviceListContent() {
-        List({ scroller: this.scrollerForList }) {
+        List({ scroller: this.scrollerForList, space: StyleConstants.CARD_SPACE }) {
             ForEach(this.deviceList.devices, (device: DeviceViewModel) => {
                 ListItem() {
                     DeviceTile({
@@ -315,12 +313,6 @@ struct Index {
                             this.DeleteButton(device);
                         }
                     }
-                })
-                .margin({
-                    top: '2%',
-                    left: '1%',
-                    right: '1%',
-                    bottom: '2%'
                 })
             }, (device: DeviceViewModel) =>
                 // key 带字段值：ForEach 只按 key 复用条目，只拿 ID 做 key 时字段变了条目仍是旧的
@@ -342,6 +334,14 @@ struct Index {
         .alignSelf(ItemAlign.Start)
         .height('100%')
         .width('100%')
+        // 设备卡左右内缩走列表内边距；底部让出量走内容末尾留白，不写在 padding 上（否则被抬的是视口）
+        .padding({
+            top: StyleConstants.PAGE_PADDING,
+            left: StyleConstants.PAGE_PADDING,
+            right: StyleConstants.PAGE_PADDING
+        })
+        // 悬浮栏压住内容（barOverlap），滚动范围末尾让出「胶囊高 + 离底距 + 页面内边距」
+        .contentEndOffset(StyleConstants.TAB_BAR_HEIGHT + StyleConstants.PAGE_PADDING)
     }
 
     private vibrateForReorder(): void {
@@ -402,6 +402,12 @@ struct Index {
             .barOverlap(true)
             .barFloatingStyle({
                 barBottomMargin: StyleConstants.BAR_BOTTOM_MARGIN,
+                // 三档同值：胶囊在分屏与全屏之间不跳宽
+                barWidth: {
+                    smallWidth: StyleConstants.TAB_BAR_WIDTH,
+                    mediumWidth: StyleConstants.TAB_BAR_WIDTH,
+                    largeWidth: StyleConstants.TAB_BAR_WIDTH
+                },
                 systemMaterialEffect: {
                     materialType: hdsMaterial.MaterialType.ADAPTIVE,
                     materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
@@ -429,6 +435,8 @@ struct Index {
             enableComponentSafeArea: true
         })
         .bindToScrollable([this.scrollerForList])
+        // 页面底铺在根节点：悬浮栏保持系统材质叠在其上，栏内外的底是同一层
+        .backgroundColor($r('sys.color.background_secondary'))
         .onAppear(() => {
             Logger.debug(this.LOG_TAG, 'Loaded!');
         })

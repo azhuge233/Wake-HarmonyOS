@@ -9,7 +9,8 @@ import { SettingRow } from './SettingRow';
 export struct MoreMenuItem {
     @Param menuTitleText: ResourceStr = '';
     @Param menuDescText: ResourceStr | null = null;
-    @Param menuIcon: ResourceStr = $r('app.media.icon');
+    // 无默认值：图标必由调用方给，默认图标归零后 icon.png 才能删除
+    @Require @Param menuIcon: Resource;
     @Event onTap: () => void = () => {
     };
 
@@ -19,6 +20,8 @@ export struct MoreMenuItem {
                 icon: this.menuIcon,
                 title: this.menuTitleText,
                 desc: this.menuDescText ?? '',
+                showArrow: true,
+                interactive: true,
                 onTap: () => this.onTap()
             })
         }

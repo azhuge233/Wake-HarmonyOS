@@ -6,6 +6,7 @@ import {
 } from '@kit.UIDesignKit';
 
 import { CommonConstants } from '../../common/constants/CommonConstants';
+import { StyleConstants } from '../../common/constants/StyleConstants';
 import { Logger } from '../../common/log/Logger';
 import { PortInput } from '../../common/util/PortInput';
 import { isStringNullOrEmpty } from '../../common/util/Strings';
@@ -15,6 +16,7 @@ import { NeighborCandidate, NeighborService } from '../../domain/NeighborService
 import { DeviceAddViewModel, DraftIssue } from '../../viewmodel/DeviceAddViewModel';
 import { AppButton } from '../component/AppButton';
 import { AppEmptyState } from '../component/AppEmptyState';
+import { CollapsibleDivider } from '../component/CollapsibleDivider';
 import { LoadingOverlay } from '../component/LoadingOverlay';
 import { NeighTableDeviceTile } from '../component/NeighTableDeviceTile';
 import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
@@ -169,8 +171,8 @@ struct AddDevice {
                             }
                         })
                             .margin({
-                                top: '2%',
-                                bottom: '2%'
+                                top: StyleConstants.CARD_SPACE,
+                                bottom: StyleConstants.CARD_SPACE
                             })
                     }
                 }, (item: NeighborCandidate) => item.mac + item.ip)
@@ -178,7 +180,10 @@ struct AddDevice {
             .width('100%')
             .height('100%')
             .padding({
-                top: 2
+                top: 2,
+                // 卡片横向内缩：与主界面设备列表同档，纵向间距由 ListItem 的 CARD_SPACE 承担
+                left: StyleConstants.PAGE_PADDING,
+                right: StyleConstants.PAGE_PADDING
             })
         }
     }
@@ -216,45 +221,12 @@ struct AddDevice {
                     .width('80%')
 
                 Column() {
-                    Stack() {
-                        Divider()
-                            .strokeWidth(2)
-                            .width('80%')
-                            .color($r('sys.color.background_emphasize'))
-
-                        Row() {
-                            Text($r('app.string.divider_label'))
-                                .fontColor($r('sys.color.font_emphasize'))
-                                .fontSize(12)
-                                .margin({
-                                    right: '1%'
-                                })
-
-                            SymbolGlyph($r('sys.symbol.chevron_up'))
-                                .width(15)
-                                .height(15)
-                                .fontColor([$r('sys.color.font_emphasize')])
-                                .margin({
-                                    left: '1%'
-                                })
-                                .rotate({
-                                    angle: this.showAdvanced ? 0 : 180
-                                })
-                        }
-                        .width('20%')
-                        .justifyContent(FlexAlign.Center)
-                        .alignItems(VerticalAlign.Center)
-                        .backgroundColor($r('sys.color.background_primary'))
-                        .margin({
-                            left: '1%'
-                        })
-                        .onClick(() => {
+                    CollapsibleDivider({
+                        label: $r('app.string.divider_label'),
+                        expanded: this.showAdvanced,
+                        onToggle: () => {
                             this.showAdvanced = !this.showAdvanced;
-                        })
-                    }
-                    .alignContent(Alignment.Start)
-                    .margin({
-                        top: '2%'
+                        }
                     })
 
                     if (this.showAdvanced) {
@@ -379,12 +351,18 @@ struct AddDevice {
         }) {
             TabContent() {
                 this.ManualAdd();
-            }.tabBar($r('app.string.manual_add_device_tab_title'))
+            }.tabBar(SubTabBarStyle.of($r('app.string.manual_add_device_tab_title'))
+                .selectedMode(SelectedMode.BOARD)
+                .board({ borderRadius: StyleConstants.CARD_RADIUS }))
 
             TabContent() {
                 this.NeighTableAdd();
-            }.tabBar($r('app.string.neigh_table_add_device_tab_title'))
+            }.tabBar(SubTabBarStyle.of($r('app.string.neigh_table_add_device_tab_title'))
+                .selectedMode(SelectedMode.BOARD)
+                .board({ borderRadius: StyleConstants.CARD_RADIUS }))
         }
+        // 页签栏是控件不是页底：表单页不铺页面底分层，页签栏单独给一档底色，与内容区同色
+        .barBackgroundColor($r('sys.color.background_secondary'))
     }
 
     @Builder

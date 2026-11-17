@@ -1,46 +1,25 @@
 class StyleConstants {
     public readonly FULL_PERCENT = '100%';
-    public readonly NINETY_FIVE_PERCENT = '95%';
-    public readonly NINETY_PERCENT = '90%';
     public readonly EIGHTY_FIVE_PERCENT = '85%';
     public readonly EIGHTY_PERCENT = '80%';
-    public readonly SEVENTY_FIVE_PERCENT = '75%';
+    public readonly SEVENTY_TWO_PERCENT = '72%';
     public readonly SEVENTY_PERCENT = '70%';
-    public readonly SIXTY_FIVE_PERCENT = '65%';
     public readonly SIXTY_PERCENT = '60%';
-    public readonly HALF_PERCENT = '50%';
-    public readonly FORTY_PERCENT = '40%';
     public readonly THIRTY_PERCENT = '30%';
-    public readonly TWENTY_FIVE_PERCENT = '25%';
+    public readonly TWENTY_TWO_PERCENT = '22%';
     public readonly TWENTY_PERCENT = '20%';
-    public readonly FIFTEEN_PERCENT = '15%';
     public readonly TEN_PERCENT = '10%';
     public readonly FIVE_PERCENT = '5%';
-    public readonly THREE_PERCENT = '3%';
     public readonly TWO_PERCENT = '2%';
-    public readonly ONE_PERCENT = '1%';
 
-    public readonly MARGIN_TEN_PERCENT = '10%';
-    public readonly MARGIN_NINE_PERCENT = '9%';
-    public readonly MARGIN_EIGHT_PERCENT = '8%';
-    public readonly MARGIN_SEVEN_PERCENT = '7%';
-    public readonly MARGIN_SIX_PERCENT = '6%';
-    public readonly MARGIN_FIVE_PERCENT = '5%';
-    public readonly MARGIN_FOUR_PERCENT = '4%';
-    public readonly MARGIN_THREE_PERCENT = '3%';
     public readonly MARGIN_TWO_PERCENT = '2%';
-    public readonly MARGIN_ONE_PERCENT = '1%';
 
-    public readonly MARGIN_TWENTY_EIGHT = 28;
     public readonly MARGIN_TWENTY = 20;
     public readonly MARGIN_TEN = 10;
     public readonly MARGIN_EIGHT = 8;
-    public readonly MARGIN_SEVEN = 7;
     public readonly MARGIN_FIVE = 5;
     public readonly MARGIN_THREE = 3;
-    public readonly MARGIN_TWO = 2;
 
-    public readonly PADDING_THIRTY = 30;
     public readonly PADDING_SIXTEEN = 16;
     public readonly PADDING_FIFTEEN = 15;
     public readonly PADDING_TEN = 10;
@@ -60,20 +39,17 @@ class StyleConstants {
     public readonly TEXT_FONT_SIZE_FOURTEEN = 14;
     public readonly TEXT_FONT_SIZE_THIRTEEN = 13;
     public readonly TEXT_FONT_SIZE_TWELVE = 12;
-    public readonly TEXT_FONT_SIZE_TEN = 10;
     public readonly TEXT_FONT_SIZE_EIGHT = 8;
-
-    public readonly BANNER_MAX_LINE = 1;
-    public readonly BANNER_FONT_SIZE = 15;
-    public readonly BANNER_FONT_WEIGHT = 5;
-
-    public readonly TOAST_BOTTOM_SPACE = '10px';
 
     public readonly DELETE_BUTTON_WIDTH = 40;
     public readonly DELETE_BUTTON_HEIGHT = 40;
 
     public readonly ICON_HEIGHT = 28;
     public readonly ICON_WIDTH = 28;
+    // 图标盒宽固定：文字列左缘由它钉住，不再由图标尺寸加左右外边距凑出
+    public readonly ICON_BOX_WIDTH = 32;
+    // 图标盒到文字列的距离
+    public readonly ICON_TEXT_GAP = 12;
 
     public readonly PROGRESS_WIDTH = 100;
     public readonly PROGRESS_COLUMN_BLUR_LEVEL = 8;
@@ -82,21 +58,39 @@ class StyleConstants {
     public readonly LOADING_WIDTH = 128;
 
     public readonly BORDER_RADIUS_THIRTEEN = 13;
-    public readonly BORDER_RADIUS_TWELVE = 12;
-    public readonly BORDER_RADIUS_ELEVEN = 11;
     public readonly BORDER_WIDTH = 0.5
+
+    // 输入框圆角：描边取 CARD_BORDER_WIDTH，底色透明
+    public readonly INPUT_BORDER_RADIUS = 8;
 
     public readonly FORM_ITEM_HEIGHT = 45;
 
     public readonly BAR_BOTTOM_MARGIN = 28;
 
-    public readonly DEVICE_TILE_HEIGHT = 60;
+    /** 底部悬浮胶囊的留底高度：胶囊高 + 离底距，列表末尾按它让出底带 */
+    public get TAB_BAR_HEIGHT(): number {
+        return this.TAB_BAR_CAPSULE_HEIGHT + this.BAR_BOTTOM_MARGIN;
+    }
 
-    public readonly DIVIDER_STOKE_WIDTH = 2;
+    public readonly DEVICE_TILE_HEIGHT = 76;
+
+    // 卡面四件套的取值：设备条目、设置四张卡与网络信息页签卡共用同一组
+    public readonly CARD_RADIUS = 16;
+    public readonly CARD_BORDER_WIDTH = 1;
+    public readonly CARD_PADDING = 16;
+    public readonly CARD_SPACE = 12;
+
+    public readonly ROW_VERTICAL_PADDING = 12;
+    public readonly PAGE_PADDING = 16;
+
+    public readonly TAB_BAR_CAPSULE_HEIGHT = 56;
+    // 三档同值：分档会让胶囊在分屏与全屏之间跳宽；按英文「Add New Device」在 12fp 下的宽度定，留出胶囊内边距
+    public readonly TAB_BAR_WIDTH = 140;
+
+    // 可折叠分组头的线宽与文字、箭头尺寸
+    public readonly DIVIDER_STOKE_WIDTH = 1;
     public readonly DIVIDER_FONT_SIZE = 12;
     public readonly DIVIDER_SYMBOL_SIZE = 15;
-
-    public readonly RADIO_SIZE = 35;
 }
 
 const styleConstants = new StyleConstants();

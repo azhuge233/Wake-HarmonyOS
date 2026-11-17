@@ -277,6 +277,30 @@
 			"value": "Clear All Devices"
 		},
 		{
+			"name": "data_management_title",
+			"value": "Data Management"
+		},
+		{
+			"name": "data_management_desc",
+			"value": "Export, import or clear devices"
+		},
+		{
+			"name": "about_title",
+			"value": "About"
+		},
+		{
+			"name": "about_version",
+			"value": "Version"
+		},
+		{
+			"name": "about_author",
+			"value": "Author"
+		},
+		{
+			"name": "about_open_source",
+			"value": "Open Source"
+		},
+		{
 			"name": "import_waiting_message",
 			"value": "Importing, please wait..."
 		},
@@ -634,6 +658,18 @@
 		{
 			"name": "neigh_table_loading_message",
 			"value": "Loading, please wait..."
+		},
+		{
+			"name": "loading_message",
+			"value": "Loading, please wait..."
+		},
+		{
+			"name": "accessibility_edit_device",
+			"value": "Edit device"
+		},
+		{
+			"name": "accessibility_delete_device",
+			"value": "Delete device"
 		},
 		{
 			"name": "device_list_load_failed",
