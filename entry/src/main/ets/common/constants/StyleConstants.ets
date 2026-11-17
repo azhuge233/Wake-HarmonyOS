@@ -87,6 +87,10 @@ class StyleConstants {
     // 三档同值：分档会让胶囊在分屏与全屏之间跳宽；按英文「Add New Device」在 12fp 下的宽度定，留出胶囊内边距
     public readonly TAB_BAR_WIDTH = 140;
 
+    // 页签分段：槽高与槽内边距。槽圆角取高度折半，选中块圆角取内缩后的高度折半
+    public readonly TAB_SEGMENT_HEIGHT = 40;
+    public readonly TAB_SEGMENT_INSET = 2;
+
     // 可折叠分组头的线宽与文字、箭头尺寸
     public readonly DIVIDER_STOKE_WIDTH = 1;
     public readonly DIVIDER_FONT_SIZE = 12;

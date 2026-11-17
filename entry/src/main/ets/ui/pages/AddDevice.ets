@@ -1,5 +1,4 @@
 import {
-    hdsMaterial,
     HdsNavigationMenuContentOptions,
     HdsTabs,
     HdsTabsController
@@ -10,7 +9,6 @@ import { StyleConstants } from '../../common/constants/StyleConstants';
 import { Logger } from '../../common/log/Logger';
 import { PortInput } from '../../common/util/PortInput';
 import { isStringNullOrEmpty } from '../../common/util/Strings';
-import { CardBindingService } from '../../domain/CardBindingService';
 import { DeviceService } from '../../domain/DeviceService';
 import { NeighborCandidate, NeighborService } from '../../domain/NeighborService';
 import { DeviceAddViewModel, DraftIssue } from '../../viewmodel/DeviceAddViewModel';
@@ -35,6 +33,8 @@ struct AddDevice {
     private LOG_TAG = '[ui/pages/AddDevice]';
 
     @Local showAdvanced: boolean = false;
+    // 页签下标：自绘分段与内容区滑动双向联动共用的唯一状态
+    @Local activeTab: number = 0;
 
     private viewModel: DeviceAddViewModel = new DeviceAddViewModel(DeviceService.instance(),
         NeighborService.instance());
@@ -96,6 +96,12 @@ struct AddDevice {
 
     private clearInput(): void {
         this.viewModel.resetDraft();
+    }
+
+    /** 点自绘页签：先移高亮再切内容，两向由同一个下标驱动 */
+    private selectTab(index: number): void {
+        this.activeTab = index;
+        this.tabController.changeIndex(index);
     }
 
     private async saveDeviceManual(): Promise<void> {
@@ -343,26 +349,98 @@ struct AddDevice {
         .width('100%')
     }
 
+    /**
+     * 自绘胶囊分段：`background_secondary` 圆角槽 + `comp_background_primary` 选中块，槽两端各留 `PAGE_PADDING`。
+     *
+     * 原生页签栏由 `HdsTabs.barHeight(0)` 收起：原生 `SelectedMode.BOARD` 的底板贴住页签栏左右
+     * 边缘、首尾圆角被屏幕边缘裁掉，读作通栏标签，故两段改由本页自绘。槽底是控件自身的槽，
+     * 不是页面底分层，表单页仍不铺页面底。
+     */
+    @Builder
+    TabSegment() {
+        Row() {
+            Row() {
+                Text($r('app.string.manual_add_device_tab_title'))
+                    .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
+                    .fontWeight(this.activeTab === 0 ? FontWeight.Medium : FontWeight.Normal)
+                    .fontColor(this.activeTab === 0 ?
+                        $r('sys.color.font_primary') : $r('sys.color.font_secondary'))
+                    .textAlign(TextAlign.Center)
+                    .layoutWeight(1)
+                    .height(StyleConstants.FULL_PERCENT)
+                    // 选中块圆角取内缩后的高度折半：块高 36，圆角 18
+                    .borderRadius((StyleConstants.TAB_SEGMENT_HEIGHT -
+                        2 * StyleConstants.TAB_SEGMENT_INSET) / 2)
+                    .backgroundColor(this.activeTab === 0 ?
+                        $r('sys.color.comp_background_primary') : Color.Transparent)
+                    .accessibilitySelected(this.activeTab === 0)
+                    .onClick(() => {
+                        this.selectTab(0);
+                    })
+
+                Text($r('app.string.neigh_table_add_device_tab_title'))
+                    .fontSize(StyleConstants.TEXT_FONT_SIZE_FOURTEEN)
+                    .fontWeight(this.activeTab === 1 ? FontWeight.Medium : FontWeight.Normal)
+                    .fontColor(this.activeTab === 1 ?
+                        $r('sys.color.font_primary') : $r('sys.color.font_secondary'))
+                    .textAlign(TextAlign.Center)
+                    .layoutWeight(1)
+                    .height(StyleConstants.FULL_PERCENT)
+                    .borderRadius((StyleConstants.TAB_SEGMENT_HEIGHT -
+                        2 * StyleConstants.TAB_SEGMENT_INSET) / 2)
+                    .backgroundColor(this.activeTab === 1 ?
+                        $r('sys.color.comp_background_primary') : Color.Transparent)
+                    .accessibilitySelected(this.activeTab === 1)
+                    .onClick(() => {
+                        this.selectTab(1);
+                    })
+            }
+            .layoutWeight(1)
+            .height(StyleConstants.TAB_SEGMENT_HEIGHT)
+            .padding(StyleConstants.TAB_SEGMENT_INSET)
+            .backgroundColor($r('sys.color.background_secondary'))
+            .borderRadius(StyleConstants.TAB_SEGMENT_HEIGHT / 2)
+        }
+        .width(StyleConstants.FULL_PERCENT)
+        .padding({
+            top: StyleConstants.CARD_SPACE,
+            bottom: StyleConstants.CARD_SPACE,
+            left: StyleConstants.PAGE_PADDING,
+            right: StyleConstants.PAGE_PADDING
+        })
+    }
+
     @Builder
     PageContent() {
-        HdsTabs({
-            controller: this.tabController,
-            barPosition: BarPosition.Start
-        }) {
-            TabContent() {
-                this.ManualAdd();
-            }.tabBar(SubTabBarStyle.of($r('app.string.manual_add_device_tab_title'))
-                .selectedMode(SelectedMode.BOARD)
-                .board({ borderRadius: StyleConstants.CARD_RADIUS }))
+        Column() {
+            this.TabSegment();
 
-            TabContent() {
-                this.NeighTableAdd();
-            }.tabBar(SubTabBarStyle.of($r('app.string.neigh_table_add_device_tab_title'))
-                .selectedMode(SelectedMode.BOARD)
-                .board({ borderRadius: StyleConstants.CARD_RADIUS }))
+            HdsTabs({
+                controller: this.tabController,
+                barPosition: BarPosition.Start
+            }) {
+                TabContent() {
+                    this.ManualAdd();
+                }
+
+                TabContent() {
+                    this.NeighTableAdd();
+                }
+            }
+            // 原生页签栏收起：0 是 SDK 的合法取值，只有负值与超界值才回落默认高
+            .barHeight(0)
+            .layoutWeight(1)
+            .width(StyleConstants.FULL_PERCENT)
+            // 滑动内容区时高亮跟随：动画开始即移到目标段，切换完成再校正一次
+            .onAnimationStart((index: number, targetIndex: number) => {
+                this.activeTab = targetIndex;
+            })
+            .onChange((index: number) => {
+                this.activeTab = index;
+            })
         }
-        // 页签栏是控件不是页底：表单页不铺页面底分层，页签栏单独给一档底色，与内容区同色
-        .barBackgroundColor($r('sys.color.background_secondary'))
+        .width(StyleConstants.FULL_PERCENT)
+        .height(StyleConstants.FULL_PERCENT)
     }
 
     @Builder
