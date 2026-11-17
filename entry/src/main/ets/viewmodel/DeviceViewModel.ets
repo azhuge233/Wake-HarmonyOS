@@ -1,16 +1,18 @@
-import { Device } from "../model/Device";
-import { DeviceJsonObject } from "../model/JsonObject";
+import { Device } from '../common/model/Device';
+import { DeviceJsonObject } from '../common/model/DeviceJsonObject';
+import { PortInput } from '../common/util/PortInput';
 
+/** 一屏内一条设备的可观察状态 */
 @ObservedV2
 export class DeviceViewModel {
     @Trace ID: number = -1;
     @Trace MAC: string = '';
     @Trace Alias: string = '';
     @Trace Address: string = '';
-    @Trace Port: number = 9;
+    @Trace Port: number = PortInput.DEFAULT_PORT;
     @Trace OrderIndex: number = -1;
 
-    fromDevice(device: Device) {
+    fromDevice(device: Device): void {
         this.ID = device.ID;
         this.MAC = device.MAC;
         this.Alias = device.Alias;

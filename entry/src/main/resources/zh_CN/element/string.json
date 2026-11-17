@@ -650,6 +650,26 @@
 		{
 			"name": "neigh_table_permission_denied",
 			"value": "无法读取邻居表（权限不足），请使用“手动添加”"
+		},
+		{
+			"name": "device_list_load_failed",
+			"value": "加载设备失败"
+		},
+		{
+			"name": "button_retry_label",
+			"value": "重试"
+		},
+		{
+			"name": "card_refresh_failed",
+			"value": "刷新卡片失败"
+		},
+		{
+			"name": "card_bind_failed",
+			"value": "绑定设备失败"
+		},
+		{
+			"name": "clear_waiting_message",
+			"value": "正在清除，请稍候…"
 		}
     ]
 }

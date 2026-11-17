@@ -4,7 +4,7 @@
       "name": "MultipleDevicesWidget",
       "displayName": "$string:MultipleDevicesWidget_display_name",
       "description": "$string:MultipleDevicesWidget_desc",
-      "src": "./ets/multipledeviceswidget/pages/MultipleDevicesCard.ets",
+      "src": "./ets/ui/pages/widget/MultipleDevicesCard.ets",
       "uiSyntax": "arkts",
       "window": {
         "designWidth": 720,

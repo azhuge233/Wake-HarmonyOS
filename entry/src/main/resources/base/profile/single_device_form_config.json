@@ -4,7 +4,7 @@
       "name": "SingleDeviceWidget",
       "displayName": "$string:SingleDeviceWidget_display_name",
       "description": "$string:SingleDeviceWidget_desc",
-      "src": "./ets/singledevicewidget/pages/SingleDeviceCard.ets",
+      "src": "./ets/ui/pages/widget/SingleDeviceCard.ets",
       "uiSyntax": "arkts",
       "window": {
         "designWidth": 720,

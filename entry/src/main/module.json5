@@ -15,7 +15,7 @@
     "abilities": [
       {
         "name": "EntryAbility",
-        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "srcEntry": "./ets/ability/EntryAbility.ets",
         "description": "$string:EntryAbility_desc",
         "icon": "$media:app_icon_layered",
         "label": "$string:EntryAbility_label",
@@ -41,7 +41,7 @@
       },
       {
         "name": 'SingleDeviceWidgetEntryAbility',
-        "srcEntry": "./ets/singledevicewidget/singledevicewidgetentryability/SingleDeviceWidgetEntryAbility.ets",
+        "srcEntry": "./ets/ability/SingleDeviceWidgetEntryAbility.ets",
         "description": '$string:SingleDeviceWidgetEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:SingleDeviceWidgetEntryAbility_label",
@@ -51,7 +51,7 @@
       },
       {
         "name": 'MultipleDevicesWidgetEntryAbility',
-        "srcEntry": "./ets/multipledeviceswidget/multipledeviceswidgetentryability/MultipleDevicesWidgetEntryAbility.ets",
+        "srcEntry": "./ets/ability/MultipleDevicesWidgetEntryAbility.ets",
         "description": '$string:MultipleDevicesWidgetEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:MultipleDevicesWidgetEntryAbility_label",
@@ -61,7 +61,7 @@
       },
       {
         "name": 'SingleDeviceEditEntryAbility',
-        "srcEntry": "./ets/singledevicewidget/singledeviceeditentryability/SingleDeviceEditEntryAbility.ets",
+        "srcEntry": "./ets/ability/SingleDeviceEditEntryAbility.ets",
         "description": '$string:SingleDeviceEditEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:SingleDeviceEditEntryAbility_label",
@@ -72,7 +72,7 @@
       },
       {
         "name": 'MultipleDevicesEditEntryAbility',
-        "srcEntry": "./ets/multipledeviceswidget/multipledeviceseditentryability/MultipleDevicesEditEntryAbility.ets",
+        "srcEntry": "./ets/ability/MultipleDevicesEditEntryAbility.ets",
         "description": '$string:MultipleDevicesEditEntryAbility_desc',
         "icon": "$media:app_icon_layered",
         "label": "$string:MultipleDevicesEditEntryAbility_label",
@@ -85,7 +85,7 @@
     "extensionAbilities": [
       {
         "name": "EntryBackupAbility",
-        "srcEntry": "./ets/entrybackupability/EntryBackupAbility.ets",
+        "srcEntry": "./ets/ability/EntryBackupAbility.ets",
         "type": "backup",
         "exported": false,
         "metadata": [
@@ -97,7 +97,7 @@
       },
       {
         "name": "SingleDeviceFormAbility",
-        "srcEntry": "./ets/singledevicewidget/singledeviceformability/SingleDeviceFormAbility.ets",
+        "srcEntry": "./ets/ability/SingleDeviceFormAbility.ets",
         "label": "$string:SingleDeviceFormAbility_label",
         "description": "$string:SingleDeviceFormAbility_desc",
         "type": "form",
@@ -110,7 +110,7 @@
       },
       {
         "name": "MultipleDevicesFormAbility",
-        "srcEntry": "./ets/multipledeviceswidget/multipledevicesformability/MultipleDevicesFormAbility.ets",
+        "srcEntry": "./ets/ability/MultipleDevicesFormAbility.ets",
         "label": "$string:MultipleDevicesFormAbility_label",
         "description": "$string:MultipleDevicesFormAbility_desc",
         "type": "form",

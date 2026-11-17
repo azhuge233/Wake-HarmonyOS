@@ -634,6 +634,30 @@
 		{
 			"name": "neigh_table_loading_message",
 			"value": "Loading, please wait..."
+		},
+		{
+			"name": "device_list_load_failed",
+			"value": "Failed to load devices"
+		},
+		{
+			"name": "button_retry_label",
+			"value": "Retry"
+		},
+		{
+			"name": "card_refresh_failed",
+			"value": "Failed to refresh the widget"
+		},
+		{
+			"name": "card_bind_failed",
+			"value": "Failed to bind the device"
+		},
+		{
+			"name": "neigh_table_permission_denied",
+			"value": "Cannot read the neighbor table (missing permission). Use manual add instead."
+		},
+		{
+			"name": "clear_waiting_message",
+			"value": "Clearing, please wait..."
 		}
     ]
 }

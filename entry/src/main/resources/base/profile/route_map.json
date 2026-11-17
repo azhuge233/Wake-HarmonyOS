@@ -2,7 +2,7 @@
   "routerMap": [
     {
       "name": "Edit",
-      "pageSourceFile": "src/main/ets/pages/Edit.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/Edit.ets",
       "buildFunction": "EditBuilder",
       "data": {
         "description" : "Device edit page"
@@ -10,7 +10,7 @@
     },
     {
       "name": "Help",
-      "pageSourceFile": "src/main/ets/pages/Help.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/Help.ets",
       "buildFunction": "HelpBuilder",
       "data": {
         "description" : "Help page"
@@ -18,7 +18,7 @@
     },
     {
       "name": "More",
-      "pageSourceFile": "src/main/ets/pages/More.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/More.ets",
       "buildFunction": "MoreBuilder",
       "data": {
         "description" : "More function page"
@@ -26,7 +26,7 @@
     },
     {
       "name": "AddDevice",
-      "pageSourceFile": "src/main/ets/pages/AddDevice.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/AddDevice.ets",
       "buildFunction": "AddDeviceBuilder",
       "data": {
         "description" : "Add device page"
@@ -34,7 +34,7 @@
     },
     {
       "name": "ColorModeSettings",
-      "pageSourceFile": "src/main/ets/pages/ColorModeSettings.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/ColorModeSettings.ets",
       "buildFunction": "ColorModeSettingsBuilder",
       "data": {
         "description" : "Color mode settings page"
@@ -42,7 +42,7 @@
     },
     {
       "name": "NetworkInfo",
-      "pageSourceFile": "src/main/ets/pages/NetworkInfo.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/NetworkInfo.ets",
       "buildFunction": "NetworkInfoBuilder",
       "data": {
         "description" : "Network info page"
@@ -50,7 +50,7 @@
     },
     {
       "name": "InputDialog",
-      "pageSourceFile": "src/main/ets/view/InputDialog.ets",
+      "pageSourceFile": "src/main/ets/ui/pages/InputDialog.ets",
       "buildFunction": "InputDialogBuilder",
       "data": {
         "description" : "NeighTable devices input dialog"

@@ -1,13 +1,13 @@
 {
   "src": [
-    "pages/Index",
-    "pages/AddDevice",
-    "pages/More",
-    "pages/Help",
-    "pages/Edit",
-    "pages/SingleDeviceFormEdit",
-    "pages/MultipleDevicesFormEdit",
-    "pages/ColorModeSettings",
-    "pages/NetworkInfo"
+    "ui/pages/Index",
+    "ui/pages/AddDevice",
+    "ui/pages/More",
+    "ui/pages/Help",
+    "ui/pages/Edit",
+    "ui/pages/form/SingleDeviceFormEdit",
+    "ui/pages/form/MultipleDevicesFormEdit",
+    "ui/pages/ColorModeSettings",
+    "ui/pages/NetworkInfo"
   ]
 }
