@@ -350,7 +350,8 @@ struct AddDevice {
     }
 
     /**
-     * 自绘胶囊分段：`background_secondary` 圆角槽 + `comp_background_primary` 选中块，槽两端各留 `PAGE_PADDING`。
+     * 自绘胶囊分段：`background_secondary` 圆角槽（外沿 1vp `comp_divider` 描边）+
+     * `comp_background_primary` 选中块，槽两端各留 `PAGE_PADDING`。
      *
      * 原生页签栏由 `HdsTabs.barHeight(0)` 收起：原生 `SelectedMode.BOARD` 的底板贴住页签栏左右
      * 边缘、首尾圆角被屏幕边缘裁掉，读作通栏标签，故两段改由本页自绘。槽底是控件自身的槽，
@@ -368,7 +369,7 @@ struct AddDevice {
                     .textAlign(TextAlign.Center)
                     .layoutWeight(1)
                     .height(StyleConstants.FULL_PERCENT)
-                    // 选中块圆角取内缩后的高度折半：块高 36，圆角 18
+                    // 选中块圆角取内缩后的高度折半：槽的 1vp 描边也占内缩带，块实际高 34，圆角 18 超过半高
                     .borderRadius((StyleConstants.TAB_SEGMENT_HEIGHT -
                         2 * StyleConstants.TAB_SEGMENT_INSET) / 2)
                     .backgroundColor(this.activeTab === 0 ?
@@ -400,6 +401,11 @@ struct AddDevice {
             .padding(StyleConstants.TAB_SEGMENT_INSET)
             .backgroundColor($r('sys.color.background_secondary'))
             .borderRadius(StyleConstants.TAB_SEGMENT_HEIGHT / 2)
+            // 槽外沿 1vp 描边：深色下槽底与页面底同色，槽形由这条边读出
+            .border({
+                width: StyleConstants.CARD_BORDER_WIDTH,
+                color: $r('sys.color.comp_divider')
+            })
         }
         .width(StyleConstants.FULL_PERCENT)
         .padding({

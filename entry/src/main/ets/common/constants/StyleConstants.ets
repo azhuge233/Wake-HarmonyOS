@@ -60,9 +60,6 @@ class StyleConstants {
     public readonly BORDER_RADIUS_THIRTEEN = 13;
     public readonly BORDER_WIDTH = 0.5
 
-    // 输入框圆角：描边取 CARD_BORDER_WIDTH，底色透明
-    public readonly INPUT_BORDER_RADIUS = 8;
-
     public readonly FORM_ITEM_HEIGHT = 45;
 
     public readonly BAR_BOTTOM_MARGIN = 28;
@@ -87,7 +84,7 @@ class StyleConstants {
     // 三档同值：分档会让胶囊在分屏与全屏之间跳宽；按英文「Add New Device」在 12fp 下的宽度定，留出胶囊内边距
     public readonly TAB_BAR_WIDTH = 140;
 
-    // 页签分段：槽高与槽内边距。槽圆角取高度折半，选中块圆角取内缩后的高度折半
+    // 页签分段：槽高与槽内边距。槽圆角取高度折半；选中块圆角 18 = (槽高 − 2×内边距) ÷ 2（1vp 描边另占内缩带，块实际高 34）
     public readonly TAB_SEGMENT_HEIGHT = 40;
     public readonly TAB_SEGMENT_INSET = 2;
 
