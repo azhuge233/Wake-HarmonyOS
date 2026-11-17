@@ -5,7 +5,7 @@
  * 不放宽用户输入的合法性。
  */
 export class PortInput {
-    /** 端口留空时入库的值；`9` 在代码里只以这个名字出现 */
+    /** 端口留空时入库的值；端口输入的默认值只来自 PortInput.DEFAULT_PORT */
     static readonly DEFAULT_PORT: number = 9;
 
     /**

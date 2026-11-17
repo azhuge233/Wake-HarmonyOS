@@ -19,7 +19,6 @@ export class MoreViewModel {
     @Trace busy: BusyKind = 'idle';
     @Trace versionName: string = '';
     @Trace versionCode: string = '';
-    @Trace lastImport: string = '';
     @Trace cardRefreshError: string = '';
 
     private backupService: BackupService;
@@ -61,11 +60,7 @@ export class MoreViewModel {
     async importFromFile(uri: string): Promise<Result<ImportSummary>> {
         this.busy = 'importing';
         try {
-            const result = await this.backupService.importFromFile(uri);
-            if (result.ok && result.value !== null) {
-                this.lastImport = `restored:${result.value.restored}, failed:${result.value.failed}`;
-            }
-            return result;
+            return await this.backupService.importFromFile(uri);
         } finally {
             this.busy = 'idle';
         }
