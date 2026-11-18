@@ -741,7 +741,7 @@
 		},
 		{
 			"name": "help_add_tail",
-			"value": ". When installing the application, ensure that the correct permission Profile has been added to your account.\n"
+			"value": ". When installing the application, ensure that the correct permission Profile has been added to your account."
 		},
 		{
 			"name": "help_add_note_head",
@@ -796,10 +796,6 @@
 			"value": "If the domain name cannot be resolved, the packet will eventually be sent to the broadcast address."
 		},
 		{
-			"name": "help_project_label",
-			"value": "Project link: "
-		},
-		{
 			"name": "help_link_neigh_text",
 			"value": "connection.getIpNeighTable()"
 		},
@@ -822,14 +818,6 @@
 		{
 			"name": "help_link_agc_url",
 			"value": "https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/"
-		},
-		{
-			"name": "help_link_repo_text",
-			"value": "azhuge233/Wake-HarmonyOS"
-		},
-		{
-			"name": "help_link_repo_url",
-			"value": "https://github.com/azhuge233/Wake-HarmonyOS"
 		}
-    ]
+	]
 }

@@ -36,6 +36,7 @@ class StyleConstants {
     public readonly TEXT_FONT_SIZE_TWENTY_TWO = 22;
     public readonly TEXT_FONT_SIZE_EIGHTEEN = 18;
     public readonly TEXT_FONT_SIZE_SEVENTEEN = 17;
+    public readonly TEXT_FONT_SIZE_FIFTEEN = 15;
     public readonly TEXT_FONT_SIZE_FOURTEEN = 14;
     public readonly TEXT_FONT_SIZE_THIRTEEN = 13;
     public readonly TEXT_FONT_SIZE_TWELVE = 12;
@@ -71,7 +72,7 @@ class StyleConstants {
 
     public readonly DEVICE_TILE_HEIGHT = 76;
 
-    // 卡面四件套的取值：设备条目、设置四张卡与网络信息页签卡共用同一组
+    // 卡面四件套的取值：设备条目、设置页的卡与网络信息页签卡共用同一组
     public readonly CARD_RADIUS = 16;
     public readonly CARD_BORDER_WIDTH = 1;
     public readonly CARD_PADDING = 16;

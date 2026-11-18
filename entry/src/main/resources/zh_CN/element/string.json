@@ -737,11 +737,11 @@
 		},
 		{
 			"name": "help_add_mid",
-			"value": " API 获得， 该 API 需要受限权限 "
+			"value": " API 获得，该 API 需要受限权限 "
 		},
 		{
 			"name": "help_add_tail",
-			"value": "， 安装应用时需确保账户添加了正确的权限 Profile。\n"
+			"value": "，安装应用时需确保账户添加了正确的权限 Profile。"
 		},
 		{
 			"name": "help_add_note_head",
@@ -796,10 +796,6 @@
 			"value": "如果域名无法解析，数据包最终会被发送到广播地址。"
 		},
 		{
-			"name": "help_project_label",
-			"value": "项目地址："
-		},
-		{
 			"name": "help_link_neigh_text",
 			"value": "connection.getIpNeighTable()"
 		},
@@ -822,14 +818,6 @@
 		{
 			"name": "help_link_agc_url",
 			"value": "https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/"
-		},
-		{
-			"name": "help_link_repo_text",
-			"value": "azhuge233/Wake-HarmonyOS"
-		},
-		{
-			"name": "help_link_repo_url",
-			"value": "https://github.com/azhuge233/Wake-HarmonyOS"
 		}
-    ]
+	]
 }

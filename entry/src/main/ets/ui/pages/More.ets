@@ -42,7 +42,7 @@ export function MoreBuilder() {
 }
 
 /**
- * 设置首页：四张卡——颜色模式（行内选择）、网络信息、数据管理、关于。
+ * 设置首页：五张卡——颜色模式（行内选择）、网络信息、数据管理、帮助、关于。
  * 颜色模式的三档选项与「写共享状态 + 落盘 + 应用」逻辑只在本页；导出 / 导入 / 清除搬进 DataManagement，
  * 版本号搬进 About，本页不再有版本号页脚。
  */
@@ -170,6 +170,17 @@ struct More {
     }
 
     @Builder
+    HelpRow() {
+        MoreMenuItem({
+            menuTitleText: $r('app.string.help_title'),
+            menuIcon: $r('sys.symbol.questionmark_circle'),
+            onTap: () => {
+                this.pathStack?.pushPath({ name: 'Help', param: this.pathStack });
+            }
+        })
+    }
+
+    @Builder
     AboutRow() {
         MoreMenuItem({
             menuTitleText: $r('app.string.about_title'),
@@ -198,6 +209,13 @@ struct More {
             SettingGroup({
                 rows: (): void => {
                     this.DataManagementRow();
+                }
+            })
+
+            // 帮助自成一张卡：SettingGroup 与 SettingRow 都不画行间分隔线，并进「关于」卡会是两行相连
+            SettingGroup({
+                rows: (): void => {
+                    this.HelpRow();
                 }
             })
 

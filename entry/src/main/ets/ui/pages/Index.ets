@@ -54,16 +54,6 @@ struct Index {
             },
             {
                 content: {
-                    label: $r('app.string.help_title'),
-                    icon: $r('sys.symbol.info_circle'),
-                    action: () => {
-                        this.safeCloseSwipeActions();
-                        this.openPage('Help', false);
-                    }
-                }
-            },
-            {
-                content: {
                     label: $r('app.string.navigation_menu_settings'),
                     icon: $r('sys.symbol.gearshape'),
                     action: () => {

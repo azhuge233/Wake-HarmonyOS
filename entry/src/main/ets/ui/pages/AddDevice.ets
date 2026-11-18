@@ -52,7 +52,7 @@ struct AddDevice {
             {
                 content: {
                     label: $r('app.string.help_title'),
-                    icon: $r('sys.symbol.info_circle'),
+                    icon: $r('sys.symbol.questionmark_circle'),
                     action: () => {
                         this.pathStack?.pushPath({
                             name: 'Help',
