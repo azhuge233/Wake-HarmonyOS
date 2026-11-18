@@ -1,5 +1,5 @@
 import { common } from '@kit.AbilityKit';
-import { HdsTabs, HdsTabsController, hdsMaterial } from '@kit.UIDesignKit';
+import { HdsTabs, HdsTabsController } from '@kit.UIDesignKit';
 
 import { Logger } from '../../common/log/Logger';
 import { StyleConstants } from '../../common/constants/StyleConstants';
@@ -14,6 +14,7 @@ import {
 import { NetworkInfoService } from '../../domain/NetworkInfoService';
 import { NetworkInfoViewModel } from '../../viewmodel/NetworkInfoViewModel';
 import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
+import { TabSegment } from '../component/TabSegment';
 import { resourceText } from '../util/ResourceText';
 
 type InfoRow = [Resource, string | Resource];
@@ -69,6 +70,8 @@ struct NetworkInfo {
     @Local v4InfoList: Array<InfoRow> = [];
     @Local v6InfoList: Array<InfoRow> = [];
     @Local defaultNetInfoList: Array<InfoRow> = [];
+    // 页签下标：自绘分段与内容区滑动双向联动共用的唯一状态
+    @Local activeTab: number = 0;
 
     private viewModel: NetworkInfoViewModel = new NetworkInfoViewModel(NetworkInfoService.instance());
 
@@ -96,6 +99,12 @@ struct NetworkInfo {
         this.v4InfoList = this.ipv4Rows(snapshot.ipv4);
         this.v6InfoList = this.ipv6Rows(snapshot.ipv6);
         this.defaultNetInfoList = this.defaultNetRows(snapshot.defaultNet);
+    }
+
+    /** 点自绘页签：先移高亮再切内容，两向由同一个下标驱动 */
+    private selectTab(index: number): void {
+        this.activeTab = index;
+        this.tabController.changeIndex(index);
     }
 
     private basicRows(snapshot: NetworkSnapshot): Array<InfoRow> {
@@ -243,50 +252,55 @@ struct NetworkInfo {
 
     @Builder
     PageContent() {
-        HdsTabs({
-            controller: this.tabController,
-            barPosition: BarPosition.Start
-        }) {
-            TabContent() {
-                this.ListBuilder(this.basicInfoList, this.listScrollers[0]);
-            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_basic_tab_title'))
-                .indicator({
-                    color: $r('sys.color.font_emphasize'),
-                    height: 2
-                }))
+        Column() {
+            TabSegment({
+                titles: [
+                    $r('app.string.network_info_basic_tab_title'),
+                    $r('app.string.network_info_v4_tab_title'),
+                    $r('app.string.network_info_v6_tab_title'),
+                    $r('app.string.network_info_default_network_tab_title')
+                ],
+                activeIndex: this.activeTab,
+                onSelect: (index: number) => {
+                    this.selectTab(index);
+                }
+            })
 
-            TabContent() {
-                this.ListBuilder(this.v4InfoList, this.listScrollers[1]);
-            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_v4_tab_title'))
-                .indicator({
-                    color: $r('sys.color.font_emphasize'),
-                    height: 2
-                }))
+            HdsTabs({
+                controller: this.tabController,
+                barPosition: BarPosition.Start
+            }) {
+                TabContent() {
+                    this.ListBuilder(this.basicInfoList, this.listScrollers[0]);
+                }
 
-            TabContent() {
-                this.ListBuilder(this.v6InfoList, this.listScrollers[2]);
-            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_v6_tab_title'))
-                .indicator({
-                    color: $r('sys.color.font_emphasize'),
-                    height: 2
-                }))
+                TabContent() {
+                    this.ListBuilder(this.v4InfoList, this.listScrollers[1]);
+                }
 
-            TabContent() {
-                this.ListBuilder(this.defaultNetInfoList, this.listScrollers[3]);
-            }.tabBar(SubTabBarStyle.of($r('app.string.network_info_default_network_tab_title'))
-                .indicator({
-                    color: $r('sys.color.font_emphasize'),
-                    height: 2
-                }))
-        }
-        .barMode(BarMode.Scrollable)
-        .scrollable(true)
-        .barFloatingStyle({
-            systemMaterialEffect: {
-                materialType: hdsMaterial.MaterialType.ADAPTIVE,
-                materialLevel: hdsMaterial.MaterialLevel.ADAPTIVE
+                TabContent() {
+                    this.ListBuilder(this.v6InfoList, this.listScrollers[2]);
+                }
+
+                TabContent() {
+                    this.ListBuilder(this.defaultNetInfoList, this.listScrollers[3]);
+                }
             }
-        })
+            // 原生页签栏收起：0 是 SDK 的合法取值，只有负值与超界值才回落默认高
+            .barHeight(0)
+            .layoutWeight(1)
+            .width(StyleConstants.FULL_PERCENT)
+            .scrollable(true)
+            // 滑动内容区时高亮跟随：动画开始即移到目标段，切换完成再校正一次
+            .onAnimationStart((index: number, targetIndex: number) => {
+                this.activeTab = targetIndex;
+            })
+            .onChange((index: number) => {
+                this.activeTab = index;
+            })
+        }
+        .width(StyleConstants.FULL_PERCENT)
+        .height(StyleConstants.FULL_PERCENT)
     }
 
     @Builder

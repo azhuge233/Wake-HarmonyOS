@@ -2,7 +2,7 @@ import { StyleConstants } from '../../common/constants/StyleConstants';
 import { SettingRow } from './SettingRow';
 
 /**
- * 更多页的一行：图标 + 标题 + 描述行 + 点击。
+ * 设置页的一行：图标 + 标题 + 描述行 + 点击。
  * 行形状由 SettingRow 承载，描述行经 desc 传入，不另起第二套行。
  */
 @ComponentV2
@@ -22,6 +22,7 @@ export struct MoreMenuItem {
                 desc: this.menuDescText ?? '',
                 showArrow: true,
                 interactive: true,
+                titleColor: $r('sys.color.font_primary'),
                 onTap: () => this.onTap()
             })
         }

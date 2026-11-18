@@ -138,6 +138,7 @@ struct More {
             desc: $r('app.string.color_mode_desc'),
             showArrow: false,
             interactive: false,
+            titleColor: $r('sys.color.font_primary'),
             trailing: (): void => {
                 this.ColorModeSelect();
             }
@@ -217,7 +218,7 @@ struct More {
 
     build() {
         PageScaffold({
-            title: $r('app.string.more_title'),
+            title: $r('app.string.settings_title'),
             logTag: this.LOG_TAG,
             scrollable: true,
             pageBackground: $r('sys.color.background_secondary'),

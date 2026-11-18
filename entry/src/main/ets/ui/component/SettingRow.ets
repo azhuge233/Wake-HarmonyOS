@@ -3,7 +3,8 @@ import { StyleConstants } from '../../common/constants/StyleConstants';
 /**
  * 设置行：图标 +「标题 / 描述」列 + 右侧尾随槽（箭头 → 控件）。
  *
- * `showArrow` / `interactive` 必填：漏传在编译期报错，不静默渲染成另一种行。
+ * `showArrow` / `interactive` / `titleColor` 必填：漏传在编译期报错，不静默渲染成另一种行。
+ * `titleColor` 只染标题文字：图标仍取 `font_primary`，危险动作只靠文字色读出来。
  * 左右内边距由卡片承担（`CARD_PADDING`），本件只给上下内边距（`ROW_VERTICAL_PADDING`）。
  * `interactive` 为假时不挂任何点击回调：挂空回调会把整行变成点击目标，点击区随之变大。
  */
@@ -15,6 +16,7 @@ export struct SettingRow {
     @Param desc: ResourceStr = '';
     @Require @Param showArrow: boolean;
     @Require @Param interactive: boolean;
+    @Require @Param titleColor: ResourceColor;
     @Event onTap: () => void = () => {
     };
 
@@ -40,6 +42,7 @@ export struct SettingRow {
         Column() {
             Text(this.title)
                 .fontSize(StyleConstants.TEXT_FONT_SIZE_SEVENTEEN)
+                .fontColor(this.titleColor)
                 .fontWeight(FontWeight.Medium)
                 .textAlign(TextAlign.Start)
                 .width(StyleConstants.FULL_PERCENT)

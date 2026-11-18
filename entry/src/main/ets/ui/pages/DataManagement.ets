@@ -186,6 +186,7 @@ struct DataManagement {
             desc: $r('app.string.export_desc'),
             showArrow: false,
             interactive: true,
+            titleColor: $r('sys.color.font_primary'),
             onTap: () => {
                 if (this.viewModel.busy === 'idle') {
                     this.exportDevices().catch((err: Error) => {
@@ -207,6 +208,7 @@ struct DataManagement {
             desc: $r('app.string.import_desc'),
             showArrow: false,
             interactive: true,
+            titleColor: $r('sys.color.font_primary'),
             onTap: () => {
                 if (this.viewModel.busy === 'idle') {
                     this.importConfirm().catch((err: Error) => {
@@ -227,6 +229,7 @@ struct DataManagement {
             title: $r('app.string.page_more_clear'),
             showArrow: false,
             interactive: true,
+            titleColor: $r('sys.color.warning'),
             onTap: () => {
                 if (this.viewModel.busy !== 'idle') {
                     this.showBusy();
@@ -242,11 +245,16 @@ struct DataManagement {
 
     @Builder
     PageContent() {
-        Column() {
+        Column({ space: StyleConstants.CARD_SPACE }) {
             SettingGroup({
                 rows: (): void => {
                     this.ExportRow();
                     this.ImportRow();
+                }
+            })
+
+            SettingGroup({
+                rows: (): void => {
                     this.ClearRow();
                 }
             })

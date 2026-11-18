@@ -64,8 +64,8 @@ struct Index {
             },
             {
                 content: {
-                    label: $r('app.string.navigation_menu_more'),
-                    icon: $r('sys.symbol.dot_grid_2x2'),
+                    label: $r('app.string.navigation_menu_settings'),
+                    icon: $r('sys.symbol.gearshape'),
                     action: () => {
                         this.safeCloseSwipeActions();
                         this.openPage('More', true);

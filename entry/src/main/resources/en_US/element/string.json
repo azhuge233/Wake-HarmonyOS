@@ -257,8 +257,8 @@
 			"value": "Export failed!"
 		},
 		{
-			"name": "more_title",
-			"value": "More"
+			"name": "settings_title",
+			"value": "Settings"
 		},
 		{
 			"name": "page_more_import",
@@ -321,8 +321,8 @@
 			"value": "Save"
 		},
 		{
-        	"name": "navigation_menu_more",
-        	"value": "More"
+			"name": "navigation_menu_settings",
+			"value": "Settings"
 		},
 		{
 			"name": "no_device_message",
@@ -577,19 +577,19 @@
 		},
 		{
 			"name": "network_info_basic_tab_title",
-			"value": "Basic Info"
+			"value": "Basic"
 		},
 		{
 			"name": "network_info_v4_tab_title",
-			"value": "IPv4 Info"
+			"value": "IPv4"
 		},
 		{
 			"name": "network_info_v6_tab_title",
-			"value": "IPv6 Info"
+			"value": "IPv6"
 		},
 		{
 			"name": "network_info_default_network_tab_title",
-			"value": "Default Network"
+			"value": "Default"
 		},
 		{
 			"name": "deletion_dialog_title",

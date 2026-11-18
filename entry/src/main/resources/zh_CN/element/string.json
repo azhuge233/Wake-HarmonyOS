@@ -257,8 +257,8 @@
 			"value": "导出失败!"
 		},
 		{
-			"name": "more_title",
-			"value": "更多"
+			"name": "settings_title",
+			"value": "设置"
 		},
 		{
 			"name": "page_more_import",
@@ -321,8 +321,8 @@
 			"value": "保存"
 		},
 		{
-        	"name": "navigation_menu_more",
-        	"value": "更多"
+			"name": "navigation_menu_settings",
+			"value": "设置"
 		},
 		{
 			"name": "no_device_message",
