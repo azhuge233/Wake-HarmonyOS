@@ -9,16 +9,14 @@ export struct DeviceCard {
     };
 
     build() {
-        Row() {
+        Row({ space: StyleConstants.MARGIN_EIGHT }) {
             Image($r('app.media.foreground'))
-                .width(StyleConstants.THIRTY_PERCENT)
+                .width(StyleConstants.FORM_ITEM_ICON)
+                .height(StyleConstants.FORM_ITEM_ICON)
                 .objectFit(ImageFit.Auto)
-                .margin({
-                    left: StyleConstants.MARGIN_EIGHT
-                })
 
             Text(this.name)
-                .width(StyleConstants.SEVENTY_PERCENT)
+                .layoutWeight(1)
                 .textAlign(TextAlign.Center)
                 .fontWeight(FontWeight.Medium)
                 .fontColor(Color.White)
@@ -26,7 +24,11 @@ export struct DeviceCard {
                 .textOverflow({ overflow: TextOverflow.Ellipsis })
         }
         .height(StyleConstants.FORM_ITEM_HEIGHT)
-        .width(StyleConstants.EIGHTY_FIVE_PERCENT)
+        .width(StyleConstants.FULL_PERCENT)
+        .padding({
+            left: StyleConstants.MARGIN_TEN,
+            right: StyleConstants.MARGIN_TEN
+        })
         .borderRadius(StyleConstants.BORDER_RADIUS_THIRTEEN)
         .backgroundColor($r('app.color.multiple_devices_form_item_color'))
         .margin({

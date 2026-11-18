@@ -60,8 +60,8 @@ struct SingleDeviceCard {
             this.Logo();
 
             CardStateView({ state: 'unbound' })
-                .width(StyleConstants.SEVENTY_PERCENT)
                 .layoutWeight(1)
+                .height(StyleConstants.FULL_PERCENT)
         }
         .height('100%')
         .width('100%')
@@ -86,8 +86,8 @@ struct SingleDeviceCard {
             this.Logo();
 
             CardStateView({ state: 'running' })
-                .width(StyleConstants.SEVENTY_PERCENT)
                 .layoutWeight(1)
+                .height(StyleConstants.FULL_PERCENT)
         }
         .height('100%')
         .width('100%')
@@ -98,21 +98,25 @@ struct SingleDeviceCard {
     @Builder
     MainContent() {
         Row() {
-            this.Logo();
+            if (this.runResult !== '') {
+                CardStateView({ state: 'result', resultText: this.runResult })
+                    .layoutWeight(1)
+                    .height(StyleConstants.FULL_PERCENT)
+            } else {
+                this.Logo();
 
-            Column() {
-                if (this.runResult !== '') {
-                    CardStateView({ state: 'result', resultText: this.runResult })
-                } else {
+                Column() {
                     Text(this.alias ?? '')
                         .fontWeight(FontWeight.Medium)
                         .fontColor(Color.White)
                         .maxLines(StyleConstants.TEXT_INPUT_MAX_LINE)
                         .textOverflow({ overflow: TextOverflow.Ellipsis })
                 }
+                .width(StyleConstants.SEVENTY_PERCENT)
+                .layoutWeight(1)
+                .height(StyleConstants.FULL_PERCENT)
+                .justifyContent(FlexAlign.Center)
             }
-            .width(StyleConstants.SEVENTY_PERCENT)
-            .layoutWeight(1)
         }
         .height('100%')
         .width('100%')

@@ -59,9 +59,11 @@ class StyleConstants {
     public readonly LOADING_WIDTH = 128;
 
     public readonly BORDER_RADIUS_THIRTEEN = 13;
-    public readonly BORDER_WIDTH = 0.5
+    public readonly BORDER_WIDTH = 0.5;
 
     public readonly FORM_ITEM_HEIGHT = 45;
+    // 卡片条目内的图标：须小于 FORM_ITEM_HEIGHT，上下留白不小于 MARGIN_THREE
+    public readonly FORM_ITEM_ICON = 36;
 
     public readonly BAR_BOTTOM_MARGIN = 28;
 

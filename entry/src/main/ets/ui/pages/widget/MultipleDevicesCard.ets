@@ -89,9 +89,13 @@ struct MultipleDevicesCard {
                 }
             }, (device: WidgetDevice) => device.id.toString())
         }
-        .lanes(2)
+        .lanes(2, StyleConstants.MARGIN_TEN)
+        .scrollBar(BarState.Off)
+        .padding({
+            left: StyleConstants.MARGIN_TEN,
+            right: StyleConstants.MARGIN_TEN
+        })
         .layoutWeight(1)
-        .alignListItem(ListItemAlign.Center)
         .height('100%')
         .width('100%')
         .margin({

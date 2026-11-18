@@ -10,25 +10,20 @@ export struct CardStateView {
     @Prop resultText: string = '';
 
     build() {
-        Column() {
+        Stack({ alignContent: Alignment.Center }) {
             if (this.state === 'running') {
                 LoadingProgress()
                     .height(StyleConstants.SIXTY_PERCENT)
                     .width(StyleConstants.SIXTY_PERCENT)
                     .color(Color.White)
             } else if (this.state === 'result') {
-                Blank()
-
                 Text(this.resultText)
-                    .height(StyleConstants.EIGHTY_FIVE_PERCENT)
-                    .layoutWeight(1)
                     .fontColor(Color.White)
                     .textAlign(TextAlign.Center)
 
                 Text($r('app.string.form_run_complete_label'))
-                    .height(StyleConstants.TEN_PERCENT)
                     .width(StyleConstants.FULL_PERCENT)
-                    .alignSelf(ItemAlign.Center)
+                    .position({ bottom: StyleConstants.MARGIN_FIVE })
                     .textAlign(TextAlign.Center)
                     .fontSize(StyleConstants.TEXT_FONT_SIZE_EIGHT)
                     .fontWeight(FontWeight.Medium)
@@ -44,6 +39,5 @@ export struct CardStateView {
         }
         .width(StyleConstants.FULL_PERCENT)
         .height(StyleConstants.FULL_PERCENT)
-        .justifyContent(FlexAlign.Center)
     }
 }
