@@ -589,7 +589,7 @@
 		},
 		{
 			"name": "network_info_default_network_tab_title",
-			"value": "默认网络信息"
+			"value": "默认网络"
 		},
 		{
 			"name": "deletion_dialog_title",
@@ -706,6 +706,130 @@
 		{
 			"name": "import_partial_both",
 			"value": "导入完成，未入库 %d 条，卡片未刷新 %d 张"
+		},
+		{
+			"name": "help_intro",
+			"value": "欢迎使用本应用！以下是常见问题与操作指引"
+		},
+		{
+			"name": "help_group_usage",
+			"value": "使用说明"
+		},
+		{
+			"name": "help_usage_head",
+			"value": "本应用仅支持典型的魔法数据包网络唤醒。\n应用会在 Wi-Fi 网络发生变化时自动刷新广播地址，当自动计算的广播地址出现异常，可以点击主界面的刷新按钮手动刷新广播地址。\n广播地址根据当前设备的 Wi-Fi IPv4 地址和子网掩码于"
+		},
+		{
+			"name": "help_usage_bold",
+			"value": "本地计算"
+		},
+		{
+			"name": "help_usage_tail",
+			"value": "。"
+		},
+		{
+			"name": "help_group_add_device",
+			"value": "设备添加"
+		},
+		{
+			"name": "help_add_head",
+			"value": "应用支持手动输入信息和邻居表（即 ARP/NDP 表）添加设备。\n设备的邻居表通过 "
+		},
+		{
+			"name": "help_add_mid",
+			"value": " API 获得， 该 API 需要受限权限 "
+		},
+		{
+			"name": "help_add_tail",
+			"value": "， 安装应用时需确保账户添加了正确的权限 Profile。\n"
+		},
+		{
+			"name": "help_add_note_head",
+			"value": "在【"
+		},
+		{
+			"name": "help_add_note_tail",
+			"value": " -> 证书、App ID 和 Profile -> Profile】页面添加 Profile。\n调试 Profile 有效期只有 7 天，长期 Profile 需要上架 AppGallery 时申请。"
+		},
+		{
+			"name": "help_group_address_logic",
+			"value": "目标地址判断逻辑"
+		},
+		{
+			"name": "help_logic_default",
+			"value": "当没有手动指定发送地址时，应用会默认将数据包发送至本地 IPv4 广播地址。"
+		},
+		{
+			"name": "help_logic_v4v6",
+			"value": "发送地址设定为 IPv4 或 IPv6 时，应用会将数据包发送至指定地址。"
+		},
+		{
+			"name": "help_logic_domain",
+			"value": "发送地址设定为域名时，应用会先尝试使用系统 DNS 解析域名，然后将数据包发送至解析到的地址。"
+		},
+		{
+			"name": "help_group_address_port",
+			"value": "关于地址和端口设置"
+		},
+		{
+			"name": "help_port_no_address",
+			"value": "如果只设定了端口而没有设定地址，应用会忽略端口设置。"
+		},
+		{
+			"name": "help_port_v4",
+			"value": "手动设定 IPv4 地址时，请确保所处网络环境配置了正确的静态 ARP 绑定。"
+		},
+		{
+			"name": "help_port_v6",
+			"value": "手动设定 IPv6 地址时，请确保设备拥有 IPv6 地址，并且所处网络环境支持 IPv6 唤醒。"
+		},
+		{
+			"name": "help_port_domain",
+			"value": "手动设定域名时，请确保配置了正确的 DNS 解析，并配置正确的网络环境"
+		},
+		{
+			"name": "help_port_sub_validate",
+			"value": "应用不会判断域名是否合法，请确保输入了正确的域名。"
+		},
+		{
+			"name": "help_port_sub_fallback",
+			"value": "如果域名无法解析，数据包最终会被发送到广播地址。"
+		},
+		{
+			"name": "help_project_label",
+			"value": "项目地址："
+		},
+		{
+			"name": "help_link_neigh_text",
+			"value": "connection.getIpNeighTable()"
+		},
+		{
+			"name": "help_link_neigh_url",
+			"value": "https://developer.huawei.com/consumer/cn/doc/harmonyos-references/js-apis-net-connection#connectiongetipneightable22"
+		},
+		{
+			"name": "help_link_perm_text",
+			"value": "ohos.permission.GET_IP_MAC_INFO"
+		},
+		{
+			"name": "help_link_perm_url",
+			"value": "https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/restricted-permissions#ohospermissionget_ip_mac_info"
+		},
+		{
+			"name": "help_link_agc_text",
+			"value": "AppGallery Connect"
+		},
+		{
+			"name": "help_link_agc_url",
+			"value": "https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/"
+		},
+		{
+			"name": "help_link_repo_text",
+			"value": "azhuge233/Wake-HarmonyOS"
+		},
+		{
+			"name": "help_link_repo_url",
+			"value": "https://github.com/azhuge233/Wake-HarmonyOS"
 		}
     ]
 }

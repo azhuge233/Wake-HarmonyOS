@@ -707,6 +707,130 @@
     {
       "name": "import_partial_both",
       "value": "Import finished, not imported: %d, cards not refreshed: %d"
+    },
+    {
+      "name": "help_intro",
+      "value": "Welcome to the app! Here are some frequently asked questions and how-to guides:"
+    },
+    {
+      "name": "help_group_usage",
+      "value": "User Guide"
+    },
+    {
+      "name": "help_usage_head",
+      "value": "This app only supports standard Magic Packet network wake-up.\nThe app automatically refreshes the broadcast address when the Wi-Fi network changes. If the automatically calculated broadcast address is abnormal, you can manually refresh it by tapping the refresh button on the main screen.\nThe broadcast address is "
+    },
+    {
+      "name": "help_usage_bold",
+      "value": "calculated locally"
+    },
+    {
+      "name": "help_usage_tail",
+      "value": " based on the current device's Wi-Fi IPv4 address and subnet mask."
+    },
+    {
+      "name": "help_group_add_device",
+      "value": "Device Addition"
+    },
+    {
+      "name": "help_add_head",
+      "value": "The application supports adding devices by manually entering information or via the neighbor table (i.e., ARP/NDP table).\nThe device's neighbor table is obtained through the "
+    },
+    {
+      "name": "help_add_mid",
+      "value": " API, which requires the restricted permission "
+    },
+    {
+      "name": "help_add_tail",
+      "value": ". When installing the application, ensure that the correct permission Profile has been added to your account.\n"
+    },
+    {
+      "name": "help_add_note_head",
+      "value": "Debug Profiles are only valid for 7 days; a long-term Profile requires applying when publishing to AppGallery."
+    },
+    {
+      "name": "help_add_note_tail",
+      "value": " "
+    },
+    {
+      "name": "help_group_address_logic",
+      "value": "Target Address Resolution Logic"
+    },
+    {
+      "name": "help_logic_default",
+      "value": "When no target address is manually specified, the app will send the packet to the local IPv4 broadcast address by default."
+    },
+    {
+      "name": "help_logic_v4v6",
+      "value": "If the target address is set to an IPv4 or IPv6 address, the app will send the packet to that specific address."
+    },
+    {
+      "name": "help_logic_domain",
+      "value": "If the target address is set to a domain name, the app will first resolve it using the system DNS, then send the packet to the resolved address."
+    },
+    {
+      "name": "help_group_address_port",
+      "value": "About Address and Port Settings"
+    },
+    {
+      "name": "help_port_no_address",
+      "value": "If a port is set but without an address, the app will ignore the port setting."
+    },
+    {
+      "name": "help_port_v4",
+      "value": "When manually setting an IPv4 address, please ensure that the network environment has the correct static ARP binding configured."
+    },
+    {
+      "name": "help_port_v6",
+      "value": "When manually setting an IPv6 address, please ensure that the device has an IPv6 address and the network environment supports IPv6 wake-up."
+    },
+    {
+      "name": "help_port_domain",
+      "value": "When manually setting a domain name, please ensure that the correct DNS record is configured and the network environment is properly set up."
+    },
+    {
+      "name": "help_port_sub_validate",
+      "value": "The app does not validate the domain name; please ensure you have entered a correct one."
+    },
+    {
+      "name": "help_port_sub_fallback",
+      "value": "If the domain name cannot be resolved, the packet will eventually be sent to the broadcast address."
+    },
+    {
+      "name": "help_project_label",
+      "value": "Project link: "
+    },
+    {
+      "name": "help_link_neigh_text",
+      "value": "connection.getIpNeighTable()"
+    },
+    {
+      "name": "help_link_neigh_url",
+      "value": "https://developer.huawei.com/consumer/en/doc/harmonyos-references/js-apis-net-connection#connectiongetipneightable22"
+    },
+    {
+      "name": "help_link_perm_text",
+      "value": "ohos.permission.GET_IP_MAC_INFO"
+    },
+    {
+      "name": "help_link_perm_url",
+      "value": "https://developer.huawei.com/consumer/en/doc/harmonyos-guides/restricted-permissions#ohospermissionget_ip_mac_info"
+    },
+    {
+      "name": "help_link_agc_text",
+      "value": " "
+    },
+    {
+      "name": "help_link_agc_url",
+      "value": "https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/"
+    },
+    {
+      "name": "help_link_repo_text",
+      "value": "azhuge233/Wake-HarmonyOS"
+    },
+    {
+      "name": "help_link_repo_url",
+      "value": "https://github.com/azhuge233/Wake-HarmonyOS"
     }
   ]
 }
