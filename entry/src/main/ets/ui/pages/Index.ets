@@ -16,7 +16,6 @@ import { DeviceService } from '../../domain/DeviceService';
 import { WakeResult, WakeService } from '../../domain/WakeService';
 import { DeviceListViewModel } from '../../viewmodel/DeviceListViewModel';
 import { DeviceViewModel } from '../../viewmodel/DeviceViewModel';
-import { AppButton } from '../component/AppButton';
 import { AppEmptyState } from '../component/AppEmptyState';
 import { DeviceTile } from '../component/DeviceTile';
 import { LoadingOverlay } from '../component/LoadingOverlay';

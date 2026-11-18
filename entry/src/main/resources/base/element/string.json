@@ -269,10 +269,6 @@
       "value": "Export"
     },
     {
-      "name": "page_more_help",
-      "value": "Help"
-    },
-    {
       "name": "page_more_clear",
       "value": "Clear All Devices"
     },
@@ -482,7 +478,7 @@
     },
     {
       "name": "network_info_v6_secondary_dns",
-      "value": "IPv4 Secondary DNS"
+      "value": "IPv6 Secondary DNS"
     },
     {
       "name": "network_info_on",
@@ -814,7 +810,7 @@
     },
     {
       "name": "help_link_agc_text",
-      "value": " "
+      "value": "AppGallery Connect"
     },
     {
       "name": "help_link_agc_url",

@@ -1,7 +1,7 @@
 import { common } from '@kit.AbilityKit';
 
 import { StyleConstants } from '../../common/constants/StyleConstants';
-import { PageScaffold, PageReadyContext } from '../component/PageScaffold';
+import { PageScaffold } from '../component/PageScaffold';
 import { SettingGroup } from '../component/SettingGroup';
 import { SettingRow } from '../component/SettingRow';
 import { openInSystemBrowser } from '../util/ExternalLink';
@@ -23,8 +23,6 @@ struct Help {
 
     private uiContext = this.getUIContext();
     private context = this.uiContext.getHostContext() as common.UIAbilityContext;
-
-    pathStack: NavPathStack | undefined = undefined;
 
     @Local usageExpanded: boolean = false;
     @Local addDeviceExpanded: boolean = false;
@@ -349,9 +347,6 @@ struct Help {
             pageBackground: $r('sys.color.background_secondary'),
             content: (): void => {
                 this.PageContent();
-            },
-            onReady: (ctx: PageReadyContext) => {
-                this.pathStack = (ctx.param as NavPathStack | undefined) ?? ctx.pathStack;
             }
         })
     }
