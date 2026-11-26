@@ -2,7 +2,7 @@
 	"app": {
 		"bundleName": "com.azhuge233.Wake",
 		"vendor": "azhuge233",
-		"versionCode": 2900000,
+		"versionCode": 2901000,
 		"versionName": "2.9.0",
 		"icon": "$media:app_icon_layered",
 		"label": "$string:app_name"
