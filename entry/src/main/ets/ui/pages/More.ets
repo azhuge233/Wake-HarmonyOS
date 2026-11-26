@@ -245,6 +245,11 @@ struct More {
             },
             onReady: (ctx: PageReadyContext) => {
                 this.pathStack = (ctx.param as NavPathStack | undefined) ?? ctx.pathStack;
+            },
+            onBack: () => {
+                // 结果串是 Index 侧 onPop 重载设备列表的触发条件；默认返回不带 result，不会重载
+                this.pathStack?.pop('Back pressed');
+                return true;
             }
         })
     }
